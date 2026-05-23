@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beatles Lyrics Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f4f4f0; 
+            color: #111;
+            overflow-x: hidden; 
+        }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-lora { font-family: 'Lora', serif; }
+        
+        .eng-text { font-family: 'Lora', serif; font-size: 0.95rem; line-height: 1.8; color: #1a1a1a; letter-spacing: -0.01em; transition: color 0.3s; }
+        .dark .eng-text { color: #d4d4d8; } 
+        
+        .ja-text { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: #666; font-weight: 500; margin-top: 0.3rem; margin-bottom: 1.2rem; transition: opacity 0.3s, color 0.3s; }
+        .dark .ja-text { color: #a1a1aa; } 
+        .lyric-line { transition: all 0.3s ease; word-break: keep-all; overflow-wrap: break-word; }
+        
+        @media (min-width: 768px) {
+            .eng-text { font-size: 1.45rem; }
+            .ja-text { font-size: 0.9rem; margin-bottom: 1.5rem; }
+        }
+        
+        .word-marker { transition: all 0.2s; border-bottom: 1px dotted transparent; }
+        .word-marker:hover { background-color: #fef08a; cursor: help; border-bottom: 1px dotted #eab308; }
+        .dark .word-marker:hover { background-color: rgba(253, 224, 71, 0.2); border-bottom-color: #fde047; }
+        
+        .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; color: #0f172a; }
+        .idiom-blue:hover { background-color: #bae6fd; }
+        .dark .idiom-blue { background-color: rgba(56, 189, 248, 0.08); border-bottom-color: #0284c7; color: #7dd3fc; }
+        .dark .idiom-blue:hover { background-color: rgba(56, 189, 248, 0.15); }
+        
+        .idiom-orange { background-color: #fff7ed; border-bottom: 2px solid #fb923c; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; color: #0f172a; }
+        .idiom-orange:hover { background-color: #fed7aa; }
+        .dark .idiom-orange { background-color: rgba(251, 146, 60, 0.08); border-bottom-color: #ea580c; color: #fdba74; }
+        .dark .idiom-orange:hover { background-color: rgba(251, 146, 60, 0.15); }
+
+        @media (min-width: 768px) {
+            .idiom-blue, .idiom-orange { font-size: 1.45rem; }
+        }
+        
+        #tooltip { pointer-events: none; transition: opacity 0.1s; z-index: 100; }
+        
+        .lang-toggle { position: relative; width: 4.5rem; height: 1.75rem; background-color: #e2e8f0; border-radius: 9999px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 0.5rem; font-size: 0.75rem; font-weight: 700; color: #64748b; transition: all 0.3s ease; }
+        .dark .lang-toggle { background-color: #27272a; color: #a1a1aa; }
+        .lang-toggle-slider { position: absolute; top: 0.125rem; left: 0.125rem; width: 2.125rem; height: 1.5rem; background-color: white; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
+        .dark .lang-toggle-slider { background-color: #52525b; }
+        .lang-toggle-text { position: relative; z-index: 2; transition: color 0.3s ease; user-select: none; }
+        #langCheckbox:checked + .lang-toggle .lang-toggle-slider { transform: translateX(2.125rem); }
+        #langCheckbox:checked + .lang-toggle .text-jp { color: #0f172a; }
+        .dark #langCheckbox:checked + .lang-toggle .text-jp { color: #f4f4f5; }
+        #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #0f172a; }
+        .dark #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #f4f4f5; }
+
+        .custom-select-wrapper { position: relative; display: inline-block; }
+        .custom-select { 
+            appearance: none; -webkit-appearance: none; -moz-appearance: none; 
+            background-color: white; border: 1px solid #e2e8f0; border-radius: 9999px; 
+            padding: 0.5rem 2.5rem 0.5rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600; 
+            color: #334155; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); 
+        }
+        .dark .custom-select { background-color: #18181b; border-color: #27272a; color: #e4e4e7; }
+        .custom-select:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transform: translateY(-1px); }
+        .dark .custom-select:hover { border-color: #3f3f46; }
+        .custom-select:focus { outline: none; border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2); }
+        .dark .custom-select:focus { border-color: #52525b; box-shadow: 0 0 0 3px rgba(82, 82, 91, 0.2); }
+        .custom-select-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; }
+    </style>
+</head>
+<body class="transition-colors duration-300 dark:bg-zinc-950">
+
+    <header class="sticky top-0 z-40 backdrop-blur-lg bg-[#f4f4f0]/90 dark:bg-zinc-950/90 border-b border-gray-300 dark:border-zinc-800 transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-4 md:px-10 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+            <div class="flex items-baseline gap-3">
+                <h1 class="font-playfair text-2xl md:text-3xl font-black tracking-wider text-black dark:text-zinc-100 uppercase">Beatles Lyrics</h1>
+            </div>
+            
+            <div class="flex items-center gap-5 md:gap-8">
+                <!-- ダークモード切替 -->
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 transition-colors" title="ダークモード切替">
+                    <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </button>
+
+                <!-- EN/JP スライドスイッチ -->
+                <label class="relative inline-flex items-center cursor-pointer" title="日本語訳の表示/非表示">
+                    <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
+                    <div class="lang-toggle group-hover:ring-2 group-hover:ring-slate-300 transition-all">
+                        <div class="lang-toggle-slider"></div>
+                        <span class="lang-toggle-text text-en">EN</span>
+                        <span class="lang-toggle-text text-jp">JP</span>
+                    </div>
+                </label>
+                
+                <!-- 曲選択 -->
+                <div class="custom-select-wrapper">
+                    <select id="songSelector" onchange="loadSong(this.value)" class="custom-select">
+                        <option value="dayInLife">A Day in the Life</option>
+                        <option value="inMyLife">In My Life</option>
+                        <option value="walrus">I Am The Walrus</option>
+                        <option value="imSoTired">I'm So Tired</option>
+                        <option value="blackbird">Blackbird</option>
+                    </select>
+                    <svg class="custom-select-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="px-4 md:px-10 pb-20 mt-6 md:mt-10 max-w-4xl mx-auto flex justify-center">
+        <main class="w-full bg-white dark:bg-zinc-900 p-6 md:p-16 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
+            <div class="flex flex-col items-center mb-8 md:mb-12">
+                <h2 id="songTitle" class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-zinc-100 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
+            </div>
+            <!-- flex-grow と min-w-0 で横スクロールはみ出しを防止 -->
+            <div id="lyrics-container" class="lyrics-text pb-6 w-full flex-grow min-w-0"></div>
+        </main>
+    </div>
+
+    <div id="detailsModal" class="fixed inset-0 bg-slate-900/40 dark:bg-black/90 hidden items-center justify-center p-4 z-50 transition-opacity">
+        <div class="bg-white dark:bg-zinc-900 p-6 md:p-10 max-w-lg w-full shadow-2xl rounded-xl relative transition-colors duration-300 border border-transparent dark:border-zinc-800">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 text-3xl leading-none transition">&times;</button>
+            
+            <div class="flex justify-between items-start mb-2">
+                <h2 id="modalTitle" class="text-xl md:text-3xl font-bold text-slate-800 dark:text-zinc-100 font-playfair transition-colors"></h2>
+                <button onclick="speakTitle()" class="p-2 bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-zinc-300 rounded-full hover:bg-blue-100 dark:hover:bg-zinc-700 transition shadow-sm" title="熟語の発音を聞く">🔊</button>
+            </div>
+            
+            <div id="modalMeaning" class="text-base md:text-lg font-semibold text-blue-600 dark:text-sky-400 mb-5 transition-colors"></div>
+            
+            <div class="mb-6">
+                <p class="text-xs text-slate-400 dark:text-zinc-500 font-bold uppercase mb-1 tracking-wider">Grammar & Context</p>
+                <p id="modalDesc" class="text-slate-700 dark:text-zinc-300 leading-relaxed text-sm transition-colors"></p>
+            </div>
+            
+            <div id="modalExampleContainer" class="bg-slate-50 dark:bg-zinc-800/50 p-5 rounded-lg border-l-4 border-slate-300 dark:border-zinc-700 mb-8 hidden transition-colors">
+                <p class="text-xs text-slate-400 dark:text-zinc-500 font-bold uppercase mb-2 tracking-wider">Example</p>
+                <div class="flex justify-between items-start gap-4">
+                    <div>
+                        <p id="modalExample" class="text-slate-800 dark:text-zinc-200 italic text-sm mb-1.5 transition-colors"></p>
+                        <p id="modalExampleJa" class="text-slate-500 dark:text-zinc-400 text-xs font-medium transition-colors"></p>
+                    </div>
+                    <button onclick="speakExample()" class="p-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-300 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-700 transition shadow-sm flex-shrink-0" title="例文の発音を聞く">🔊</button>
+                </div>
+            </div>
+            
+            <button onclick="closeModal()" class="w-full bg-slate-900 dark:bg-zinc-800 text-white dark:text-zinc-100 py-3 rounded-lg font-bold hover:bg-slate-800 dark:hover:bg-zinc-700 transition shadow-md border border-transparent dark:border-zinc-700">閉じる</button>
+        </div>
+    </div>
+
+    <div id="yt-player-widget" class="fixed bottom-4 right-4 z-50 bg-white dark:bg-zinc-900 p-3 rounded-xl shadow-2xl border border-slate-200 dark:border-zinc-700 transition-all duration-300 transform translate-y-[150%] flex flex-col gap-2 w-[220px]">
+        <div class="flex justify-between items-center mb-1 px-1">
+            <span class="text-xs font-bold text-slate-600 dark:text-zinc-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                Phrase Loop
+            </span>
+            <button onclick="closeYtPlayer()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors outline-none">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="rounded overflow-hidden shadow-inner border border-slate-100 dark:border-zinc-800 bg-black aspect-video flex items-center justify-center relative">
+            <div id="ytplayer"></div>
+            <!-- エラー時フォールバック -->
+            <div id="yt-error-overlay" class="absolute inset-0 bg-zinc-900 flex flex-col items-center justify-center p-2 hidden text-center z-10">
+                 <p class="text-xs text-red-400 font-bold mb-1.5">公式制限により<br>埋め込み不可</p>
+                 <a id="yt-external-link" href="#" target="_blank" class="text-[10px] bg-red-500 text-white px-2.5 py-1 rounded shadow hover:bg-red-600 transition flex items-center gap-1">
+                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                     YouTubeで開く
+                 </a>
+            </div>
+        </div>
+        <p id="loop-status-text" class="text-[10px] text-slate-500 dark:text-zinc-500 text-center font-medium mt-1">待機中...</p>
+    </div>
+
+    <!-- 辞書ツールチップ -->
+    <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-1.5 rounded shadow-lg pointer-events-none transition-colors border border-transparent dark:border-zinc-700"></div>
+
+    <!-- バージョン表記（右下固定） -->
+    <div class="fixed bottom-2 right-2 z-40 text-[10px] font-mono font-bold text-slate-400 dark:text-zinc-500 bg-slate-200/80 dark:bg-zinc-800/80 px-2 py-0.5 rounded-full backdrop-blur-sm pointer-events-none transition-colors duration-300">
+        v1.2.2 (Mobile UI)
+    </div>
+
+    <script>
+        const songs = {
+            dayInLife: {
+                title: "A Day in the Life",
+                youtubeId: "usNsCeOV4GM",
+                lyrics: [
+                    {time: 13, en: "I read the news today, oh boy.", ja: "今日ニュースを読んだよ、やれやれ。"},
+                    {time: 17, en: "About a lucky man who made the grade.", ja: "成功を収めた幸運な男についてのね。"},
+                    {time: 22, en: "And though the news was rather sad,", ja: "そのニュースはどちらかと言えば悲しいものだったけど、"},
+                    {time: 26, en: "Well, I just had to laugh", ja: "僕は思わず笑ってしまった。"},
+                    {time: 30, en: "I saw the photograph", ja: "その写真を見たんだ。"},
+                    {time: 35, en: "He blew his mind out in a car;", ja: "彼は車の中で頭をぶち抜いてしまった。"},
+                    {time: 39, en: "He didn't notice that the lights had changed.", ja: "信号が変わったことに気づかなかったんだ。"},
+                    {time: 44, en: "A crowd of people stood and stared,", ja: "群衆が立ち止まってじっと見ていた、"},
+                    {time: 48, en: "They'd seen his face before,", ja: "彼らは以前にその顔を見たことがあった、"},
+                    {time: 50, en: "Nobody was really sure if he was from the House of Lords.", ja: "彼が貴族院の出身かどうか、誰も確信は持てなかったけれど。"},
+                    {en: "", ja: ""}, 
+                    {time: 56, en: "I saw a film today, oh boy;", ja: "今日映画を見たよ、やれやれ。"},
+                    {time: 60, en: "The English army had just won the war.", ja: "イギリス軍が戦争に勝ったところだった。"},
+                    {time: 65, en: "A crowd of people turned away,", ja: "群衆は目を背けたけど、"},
+                    {time: 68, en: "But I just had to look,", ja: "僕はどうしても見ずにはいられなかった、"},
+                    {time: 72, en: "Having read the book", ja: "その本を読んだことがあったから。"},
+                    {time: 76, en: "I'd love to turn you on.", ja: "君をハッとさせたいな。"},
+                    {en: "", ja: ""},
+                    {time: 136, en: "Woke up, fell out of bed,", ja: "目が覚めて、ベッドから転げ落ちて、"},
+                    {time: 139, en: "dragged a comb across my head.", ja: "急いで頭にクシを通した。"},
+                    {time: 142, en: "Found my way downstairs and drank a cup,", ja: "階下へ降りてお茶を一杯飲んで、"},
+                    {time: 145, en: "and looking up, I noticed I was late.", ja: "見上げると、遅刻していることに気づいた。"},
+                    {time: 150, en: "Found my coat and grabbed my hat", ja: "コートを見つけて帽子を掴み、"},
+                    {time: 153, en: "Made the bus in seconds flat.", ja: "あっという間にバスに間に合った。"},
+                    {time: 156, en: "Found my way upstairs and had a smoke.", ja: "2階へ上がってタバコを吸った。"},
+                    {time: 159, en: "And somebody spoke and I went into a dream.", ja: "誰かが話しかけてきて、僕は夢の中へ吸い込まれていった。"},
+                    {en: "", ja: ""},
+                    {time: 198, en: "Ah I read the news today, oh boy,", ja: "ああ、今日ニュースを読んだよ、やれやれ。"},
+                    {time: 202, en: "Four thousand holes in Blackburn, Lancashire", ja: "ランカシャー州ブラックバーンにある4千個の穴。"},
+                    {time: 207, en: "And though the holes were rather small,", ja: "その穴はかなり小さかったけれど、"},
+                    {time: 211, en: "They had to count them all", ja: "彼らはそれを全部数えなければならなかった。"},
+                    {time: 214, en: "Now they know how many holes it takes to fill the Albert Hall.", ja: "今や彼らはアルバート・ホールを満たすのにいくつの穴が必要か知っている。"},
+                    {time: 221, en: "I'd love to turn you on.", ja: "君をハッとさせたいな。"}
+                ],
+                idioms: {
+                    "I read the news": { meaning: "ニュースを読んだ", explanation: "[文法: SVO] 日常のルーティンを表すシンプルな表現ですが、この曲の象徴的な出だしです。", example: "I read the news about the election this morning.", exampleJa: "今朝、選挙についてのニュースを読んだ。" },
+                    "made the grade": { meaning: "合格する、成功する", explanation: "[文法: make + O] grade（水準）をmake（達成する）という構造から、要求される基準に達して出世するという意味のイディオムです。", example: "He worked hard for years and finally made the grade as a professional musician.", exampleJa: "彼は長年懸命に働き、ついにプロのミュージシャンとして成功を収めた。" },
+                    "had to": { meaning: "〜せずにはいられなかった", explanation: "[文法: 助動詞] have to の過去形ですが、ここでは「やむを得ない衝動」を表しています。", example: "The movie was so touching that I just had to cry.", exampleJa: "その映画はとても感動的で、思わず泣いてしまった。" },
+                    "blew his mind out": { meaning: "正気を失った、頭を撃ち抜いた", explanation: "[文法: blow out + O] blow out（吹き飛ぶ）に his mind が挟まれた形。物理的な事故の描写として使われています。", example: "The sudden accident completely blew his mind out.", exampleJa: "突然の事故に、彼は完全に正気を失ってしまった。" },
+                    "notice that": { meaning: "〜ということに気づく", explanation: "[文法: notice + that節] 視覚や感覚で何かの変化にハッと気づくこと。", example: "He didn't notice that it had started raining.", exampleJa: "彼は雨が降り始めたことに気づかなかった。" },
+                    "House of Lords": { meaning: "貴族院（イギリスの上院）", explanation: "[背景知識] イギリス議会は上院（House of Lords）と下院で構成されます。ここでは男性が上流階級であったことを暗示しています。", example: "Members of the House of Lords debated the new bill.", exampleJa: "貴族院のメンバーは新しい法案について議論した。" },
+                    "turned away": { meaning: "目を背けた、立ち去った", explanation: "[文法: 句動詞] turn awayで顔や視線を逸らすこと。群衆が直視できなかった様子を描写しています。", example: "She turned away to hide her tears.", exampleJa: "彼女は涙を隠すために目を背けた。" },
+                    "fell out of bed": { meaning: "ベッドから慌てて飛び起きた", explanation: "[文法: fall out of ~] 単に起きるのではなく、寝坊して転がり落ちるように急いで起きる様子を表現しています。", example: "I heard the alarm and literally fell out of bed this morning.", exampleJa: "今朝はアラームを聞いて、文字通りベッドから転げ落ちるように起きた。" },
+                    "dragged a comb": { meaning: "急いで髪にクシを通した", explanation: "[文法: drag A across B] 寝癖のついた髪を無理やりクシで引っ張って整える、慌ただしい朝を描写しています。", example: "He dragged a comb through his messy hair and ran to the station.", exampleJa: "彼はボサボサの髪に急いでクシを通し、駅へと走った。" },
+                    "found my way": { meaning: "なんとかたどり着いた", explanation: "[文法: find one's way] 苦労して進む道を見つける、目的地に向かうという意味。", example: "I finally found my way back to the hotel.", exampleJa: "ついにホテルへの帰り道を見つけた。" },
+                    "looking up": { meaning: "見上げると", explanation: "[文法: 分詞構文] and looking up (and as I looked up) と繋がっています。", example: "Looking up at the sky, I saw a shooting star.", exampleJa: "空を見上げると、流れ星が見えた。" },
+                    "Made the bus": { meaning: "バスに間に合った", explanation: "[文法: make + 乗り物] 「〜に間に合う」という意味の他動詞用法です。catch the bus と同じように頻繁に使われます。", example: "I ran as fast as I could and barely made the train.", exampleJa: "全力で走って、かろうじて電車に間に合った。" },
+                    "in seconds flat": { meaning: "きっかり数秒で、あっという間に", explanation: "[文法: in + 時間 + flat] flat は「きっかり、ちょうど」を意味する副詞で、驚くほど短い時間で成し遂げたことを強調します。", example: "She solved the math problem in ten seconds flat.", exampleJa: "彼女はその数学の問題をきっかり10秒で解いた。" },
+                    "went into a dream": { meaning: "夢の中に吸い込まれていった", explanation: "[文法: go into ~] 「〜の状態に入る」。日常の慌しさから、再び幻想的な世界へと移行する様子を表す詩的な表現です。", example: "As the soft music played, she closed her eyes and went into a dream.", exampleJa: "柔らかい音楽が流れる中、彼女は目を閉じて夢の中へ入っていった。" },
+                    "turn you on": { meaning: "魅了する、ハッとさせる", explanation: "[文法: turn + O + on] 「〜のスイッチを入れる」という句動詞。本来は「興奮させる、新しい世界を見せる」という意味です。", example: "This new book will completely turn you on to modern art.", exampleJa: "この新しい本は、あなたを現代アートの虜にするだろう。" }
+                }
+            },
+            inMyLife: {
+                title: "In My Life",
+                youtubeId: "YBcdt6JCwTk",
+                lyrics: [
+                    {time: 8, en: "There are places I'll remember", ja: "僕の人生でずっと覚えている場所がある。"},
+                    {time: 13, en: "All my life, though some have changed.", ja: "いくつか変わってしまったものもあるけれど。"},
+                    {time: 18, en: "Some forever, not for better;", ja: "永遠に変わったものもあれば、良い方向へではないものもある。"},
+                    {time: 22, en: "Some have gone and some remain.", ja: "なくなってしまったものもあれば、残っているものもある。"},
+                    {en: "", ja: ""},
+                    {time: 28, en: "All these places had their moments", ja: "これらの場所にはすべて、それぞれの瞬間があった。"},
+                    {time: 33, en: "With lovers and friends I still can recall.", ja: "僕が今でも思い出せる、恋人たちや友人たちとのね。"},
+                    {time: 38, en: "Some are dead and some are living,", ja: "亡くなった人もいれば、生きている人もいる。"},
+                    {time: 43, en: "In my life I've loved them all.", ja: "僕の人生において、彼らすべてを愛してきた。"},
+                    {en: "", ja: ""},
+                    {time: 51, en: "But of all these friends and lovers", ja: "でも、これらすべての友人や恋人たちの中で、"},
+                    {time: 56, en: "There is no one compares with you.", ja: "君に匹敵する人は誰もいない。"},
+                    {time: 61, en: "And these mem'ries lose their meaning", ja: "こうした思い出も意味を失ってしまう。"},
+                    {time: 66, en: "When I think of love as something new.", ja: "愛を何か新しいものとして考えるときには。"},
+                    {en: "", ja: ""},
+                    {time: 71, en: "Tho' I know I'll never lose affection", ja: "以前そこにいた人々や物事への愛情を、"},
+                    {time: 76, en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
+                    {time: 81, en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって彼らのことを考えるだろう、"},
+                    {time: 85, en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"},
+                    {en: "", ja: ""},
+                    {time: 113, en: "Tho' I know I'll never lose affection", ja: "以前そこにいた人々や物事への愛情を、"},
+                    {time: 118, en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
+                    {time: 123, en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって彼らのことを考えるだろう、"},
+                    {time: 127, en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"},
+                    {time: 136, en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"}
+                ],
+                idioms: {
+                    "all my life": { meaning: "私のこれまでの人生ずっと", explanation: "[文法: 副詞句] 期間を表す強調表現です。", example: "I have lived in this town all my life.", exampleJa: "私はこれまでの人生ずっとこの町に住んでいます。" },
+                    "some have changed": { meaning: "いくつかは変わってしまった", explanation: "[文法: 現在完了形] 過去から現在にかけての変化を表しています。", example: "My old friends are great, though some have changed.", exampleJa: "昔の友人は素晴らしいが、いくつかは変わってしまった。" },
+                    "places I'll remember": { meaning: "記憶に残り続ける場所", explanation: "[文法: 接触節] placesを先行詞とし、関係代名詞thatが省略されています。「ずっと忘れない」という強い意志が込められています。", example: "There are certain places I'll remember forever.", exampleJa: "永遠に記憶に残り続けるであろう場所がある。" },
+                    "not for better": { meaning: "良い方向へではなく", explanation: "[文法: 前置詞句] 通常は for the better（好転する）ですが、ここでは「悪い方向へ変わってしまった」という寂しさを表しています。", example: "The town has changed over the years, and unfortunately, not for better.", exampleJa: "その町は年月を経て変わってしまったが、残念ながら良い方向へではなかった。" },
+                    "had their moments": { meaning: "それぞれに良い瞬間（思い出）があった", explanation: "[文法: SVO] 素晴らしい時期や輝かしい瞬間があったことを意味します。", example: "Even the hardest times had their moments.", exampleJa: "どんなに辛い時期にも、良い瞬間はあった。" },
+                    "compares with you": { meaning: "君に匹敵する、君と比べられる", explanation: "[文法: 自動詞のcompare] compare with A で「Aに匹敵する」。誰も君にはかなわないという究極の愛を表現しています。", example: "I've visited many cities, but nothing compares with Kyoto in autumn.", exampleJa: "多くの都市を訪れたが、秋の京都に匹敵するものはない。" },
+                    "lose their meaning": { meaning: "意味を失う、色褪せる", explanation: "[文法: SVO文型] 過去の美しい思い出でさえも、現在の新しい愛の前では価値を失ってしまうという比喩です。", example: "All my previous worries seemed to lose their meaning when I saw her smile.", exampleJa: "彼女の笑顔を見たとき、これまでの心配事がすべて意味を失ったように思えた。" },
+                    "think of": { meaning: "〜について考える、〜を思い浮かべる", explanation: "[文法: 句動詞] 特定の物事や人に思いを馳せること。", example: "I always think of my family when I eat this dish.", exampleJa: "この料理を食べるといつも家族のことを思い出す。" },
+                    "went before": { meaning: "以前にあった、過ぎ去った", explanation: "[文法: 関係代名詞節] that went beforeで「過去の」という意味を表します。", example: "We should respect the traditions that went before.", exampleJa: "以前からある伝統を尊重すべきだ。" },
+                    "stop and think": { meaning: "立ち止まって考える", explanation: "[文法: 等位接続詞] stop と think という2つの動詞が and で繋がれた形。日常の中でふと足を止める様子を表します。", example: "Sometimes you need to stop and think about what is really important.", exampleJa: "時には立ち止まって、本当に大切なことは何かを考える必要がある。" }
+                }
+            },
+            walrus: {
+                title: "I Am The Walrus",
+                youtubeId: "t1Jm5epn1Qk",
+                lyrics: [
+                    {time: 14, en: "I am he", ja: "僕は彼だ"},
+                    {time: 17, en: "As you are he", ja: "君が彼であるように"},
+                    {time: 20, en: "As you are me", ja: "君が僕であるように"},
+                    {time: 22, en: "And we are all together", ja: "そして僕らは皆一緒だ"},
+                    {en: "", ja: ""},
+                    {time: 25, en: "See how they run,", ja: "彼らがどう走るか見てごらん、"},
+                    {time: 28, en: "Like pigs from a gun,", ja: "銃から逃げる豚のように、"},
+                    {time: 30, en: "See how they fly.", ja: "どう飛ぶか見てごらん。"},
+                    {time: 34, en: "I'm crying.", ja: "僕は泣いている。"},
+                    {en: "", ja: ""},
+                    {time: 38, en: "Sitting on a cornflake,", ja: "コーンフレークの上に座って、"},
+                    {time: 42, en: "Waiting for the van to come.", ja: "バンが来るのを待っている。"},
+                    {time: 45, en: "Corporation tee shirt,", ja: "会社のTシャツ、"},
+                    {time: 48, en: "Stupid bloody Tuesday", ja: "馬鹿げた忌まわしい火曜日"},
+                    {time: 51, en: "Man, you been a naughty boy,", ja: "なあ、君は悪い子だったね、"},
+                    {time: 53, en: "You let your face grow long.", ja: "浮かない顔をして。"},
+                    {en: "", ja: ""},
+                    {time: 57, en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
+                    {time: 59, en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
+                    {time: 61, en: "I am the walrus,", ja: "僕はセイウチ、"},
+                    {time: 63, en: "Goo goo g' joob.", ja: "グー・グー・ガ・ジューブ。"},
+                    {en: "", ja: ""},
+                    {en: "Mister city p'liceman sitting pretty", ja: "気取って座る街のお巡りさん"},
+                    {en: "Little p'licemen in a row", ja: "小さなお巡りさんが一列に並ぶ"},
+                    {en: "See how they fly,", ja: "どう飛ぶか見てごらん、"},
+                    {en: "Like Lucy in the sky", ja: "空のルーシーのように"},
+                    {en: "See how they run", ja: "どう走るか見てごらん"},
+                    {en: "I'm crying.", ja: "僕は泣いている。"},
+                    {en: "I'm crying, I'm crying, I'm crying.", ja: "泣いている、泣いている、泣いている。"},
+                    {en: "", ja: ""},
+                    {en: "Yellow matter custard,", ja: "黄色いカスタードみたいな物質が、"},
+                    {en: "Dripping from a dead dog's eye.", ja: "死んだ犬の目から滴り落ちる。"},
+                    {en: "Crabalocker fishwife pornographic priestess,", ja: "クラバロッカーの魚売りの女、ポルノの女祭司、"},
+                    {en: "Boy you been a naughty girl,", ja: "おや、君は悪い女の子だったね、"},
+                    {en: "You let your knickers down.", ja: "下着を下ろすなんて。"},
+                    {en: "", ja: ""},
+                    {en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
+                    {en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
+                    {en: "I am the walrus,", ja: "僕はセイウチ、"},
+                    {en: "Goo goo g' joob.", ja: "グー・グー・ガ・ジューブ。"},
+                    {en: "", ja: ""},
+                    {en: "Sitting in an English", ja: "イギリスの庭に"},
+                    {en: "Garden waiting for the sun.", ja: "座って太陽を待っている。"},
+                    {en: "If the sun don't come,", ja: "もし太陽が来なくても、"},
+                    {en: "You get a tan from standing in the English rain.", ja: "イギリスの雨の中に立っていれば日焼けするさ。"},
+                    {en: "", ja: ""},
+                    {en: "I am the eggman.", ja: "僕はエッグマン。"},
+                    {en: "They are the eggmen.", ja: "彼らはエッグマンたち。"},
+                    {en: "I am the walrus.", ja: "僕はセイウチ。"},
+                    {en: "Goo goo g' joob g' goo goo g' joob.", ja: "グー・グー・ガ・ジューブ..."},
+                    {en: "", ja: ""},
+                    {en: "Expert texpert choking smokers,", ja: "専門家ぶった連中が煙にむせぶ、"},
+                    {en: "Don't you think the joker laughs at you?", ja: "ジョーカーが君を笑っていると思わないか？"},
+                    {en: "See how they smile,", ja: "彼らがどう笑うか見てごらん、"},
+                    {en: "Like pigs in a sty, see how they snied.", ja: "豚小屋の豚のように、どう鼻で笑うかを。"},
+                    {en: "I'm crying.", ja: "僕は泣いている。"},
+                    {en: "", ja: ""},
+                    {en: "Semolina pilchards", ja: "セモリナのイワシが"},
+                    {en: "Climbing up the Eiffel Tower.", ja: "エッフェル塔を登っていく。"},
+                    {en: "Element'ry penguin singing Hare Krishna,", ja: "初歩的なペンギンがハレ・クリシュナを歌う、"},
+                    {en: "Man, you should have seen them kicking Edgar Allan Poe.", ja: "彼らがエドガー・アラン・ポーを蹴り飛ばすのを見るべきだったよ。"},
+                    {en: "", ja: ""},
+                    {en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
+                    {en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
+                    {en: "I am the walrus,", ja: "僕はセイウチ、"},
+                    {en: "Goo goo g' joob..", ja: "グー・グー・ガ・ジューブ..."},
+                    {en: "Goo goo g' joob,", ja: "グー・グー・ガ・ジューブ、"},
+                    {en: "G' goo goo g' joob,", ja: "グ・グー・グー・ガ・ジューブ、"},
+                    {en: "Goo goo g' joob, goo goo g' goo g' goo goo g' joob joob", ja: "グー・グー・ガ・ジューブ... "}
+                ],
+                idioms: {
+                    "we are all together": { meaning: "僕らはみんな一緒だ", explanation: "[文法: SVC] 境界線のない一体感を表す、哲学的でサイケデリックな表現です。", example: "In the end, we are all together in this world.", exampleJa: "結局のところ、僕らは皆この世界で一緒なんだ。" },
+                    "waiting for": { meaning: "〜を待つ", explanation: "[文法: wait + for + 名詞] 特定の事柄がやってくるのを待つ。", example: "I'm waiting for the bus to come.", exampleJa: "バスが来るのを待っている。" },
+                    "let your face grow long": { meaning: "浮かない顔をする、落ち込む", explanation: "[文法: 使役動詞 let + O + C] let + O + 原形不定詞。「表情を長いままにさせる」＝「悲しそうにしている」様子を表します。", example: "Don't let your face grow long over such a small mistake.", exampleJa: "そんな小さなミスで浮かない顔をしないで。" },
+                    "sitting pretty": { meaning: "優雅に構えている、有利な状況にある", explanation: "[文法: 擬似補語] sit + C（形容詞）で「〜の状態で座っている」。苦労せずに快適な状況にいる様子を皮肉を込めて表現するイディオムです。", example: "With his new promotion and a big raise, he is really sitting pretty.", exampleJa: "新しい昇進と大幅な昇給で、彼は本当に優雅に構えている。" },
+                    "laughs at you": { meaning: "君を笑いものにする", explanation: "[文法: laugh at + O] 人を馬鹿にして笑う、嘲笑うという意味。", example: "Don't let them laugh at your dreams.", exampleJa: "彼らに君の夢を笑わせてはいけない。" },
+                    "let your knickers down": { meaning: "無防備になる、恥ずかしい振る舞いをする", explanation: "[文法: 句動詞 let down] let down に目的語が挟まれた形。公の場で無防備な状態を見せるというナンセンスなメタファーです。", example: "You shouldn't let your knickers down in front of your rivals.", exampleJa: "ライバルの前で無防備な姿を見せるべきではない。" },
+                    "climbing up": { meaning: "登っていく", explanation: "[文法: 句動詞] 上へ上へと登る動作を表します。", example: "The monkey is climbing up the tall tree.", exampleJa: "猿が高い木を登っている。" },
+                    "should have seen": { meaning: "〜を見るべきだったのに（見逃して残念だ）", explanation: "[文法: 助動詞 + 完了形] should have + 過去分詞で「〜すべきだった（のにしなかった）」。後悔や強い推奨を表します。", example: "You really should have seen the movie; it was absolutely fantastic!", exampleJa: "本当にあの映画を見るべきだったのに。最高だったよ！" }
+                }
+            },
+            imSoTired: {
+                title: "I'm So Tired",
+                youtubeId: "9Htoz0F48Qc",
+                lyrics: [
+                    {time: 0, en: "I'm so tired, I haven't slept a wink,", ja: "すごく疲れている、一睡もしていない、"},
+                    {time: 7, en: "I'm so tired, my mind is on the blink.", ja: "すごく疲れている、頭がちゃんと働かない。"},
+                    {time: 13, en: "I wonder should I get up and fix myself a drink.", ja: "起き上がって、お酒でも作ろうかな。"},
+                    {time: 21, en: "No, no, no.", ja: "いや、いや、いや。"},
+                    {en: "", ja: ""},
+                    {time: 25, en: "I'm so tired I don't know what to do.", ja: "すごく疲れている、どうすればいいか分からない。"},
+                    {time: 31, en: "I'm so tired my mind is set on you.", ja: "すごく疲れている、心は君に囚われたままだ。"},
+                    {time: 37, en: "I wonder should I call you but I know what you'd do.", ja: "君に電話しようかと思うけど、君がどうするかは分かってる。"},
+                    {en: "", ja: ""},
+                    {time: 47, en: "You'd say I'm putting you on.", ja: "君は僕がからかっていると言うだろう。"},
+                    {time: 50, en: "But it's no joke, it's doing me harm.", ja: "でも冗談じゃない、僕を痛めつけているんだ。"},
+                    {time: 53, en: "You know I can't sleep, I can't stop my brain", ja: "眠れないんだ、脳を止められない。"},
+                    {time: 56, en: "You know it's three weeks, I'm going insane.", ja: "もう3週間だ、気が狂いそうだよ。"},
+                    {time: 60, en: "You know I'd give you everything I've got", ja: "持っているものすべてを君にあげてもいい"},
+                    {time: 64, en: "For a little peace of mind.", ja: "少しの心の平穏のためなら。"},
+                    {en: "", ja: ""},
+                    {en: "I'm so tired, I'm feeling so upset", ja: "すごく疲れている、とても動揺している"},
+                    {en: "Although I'm so tired, I'll have another cigarette", ja: "すごく疲れているけれど、もう一本タバコを吸おう"},
+                    {en: "And curse Sir Walter Raleigh.", ja: "そしてサー・ウォルター・ローリーを呪うんだ。"},
+                    {en: "He was such a stupid get", ja: "あいつはなんて馬鹿な奴だったんだ"},
+                    {en: "", ja: ""},
+                    {en: "You'd say I'm putting you on.", ja: "君は僕がからかっていると言うだろう。"},
+                    {en: "But it's no joke, it's doing me harm.", ja: "でも冗談じゃない、僕を痛めつけているんだ。"},
+                    {en: "You know I can't sleep, I can't stop my brain", ja: "眠れないんだ、脳を止められない。"},
+                    {en: "You know it's three weeks, I'm going insane.", ja: "もう3週間だ、気が狂いそうだよ。"},
+                    {en: "You know I'd give you everything I've got", ja: "持っているものすべてを君にあげてもいい"},
+                    {en: "For a little peace of mind.", ja: "少しの心の平穏のためなら。"}
+                ],
+                idioms: {
+                    "I wonder": { meaning: "〜かなと思う", explanation: "[文法: SVO] wonder の後に節を続け、自問自答や疑問を表す頻出の表現です。", example: "I wonder what he is doing right now.", exampleJa: "彼は今何をしているのかな。" },
+                    "slept a wink": { meaning: "一睡もする（通常は否定形で一睡もしていない）", explanation: "[文法: not sleep a wink] winkはまばたき。まばたきする間も眠れない＝一睡もできない、という強調表現です。", example: "I was so worried about the exam that I haven't slept a wink.", exampleJa: "試験のことがとても心配で、一睡もしていない。" },
+                    "on the blink": { meaning: "調子が悪い、故障して", explanation: "[文法: 前置詞句] 機械などがチカチカ点滅して壊れかけている様子から。ここでは自分の頭（mind）が正常に働かないことを表しています。", example: "My computer is on the blink again.", exampleJa: "私のパソコンがまた調子が悪い。" },
+                    "fix myself a drink": { meaning: "自分にお酒（飲み物）を作る", explanation: "[文法: fix + O1 + O2] fixには「（食事や飲み物を）用意する」という意味があります。眠れない夜に一杯やる情景です。", example: "Let me fix you a drink while you wait.", exampleJa: "待っている間に飲み物を作らせて。" },
+                    "don't know what to do": { meaning: "どうすればいいか分からない", explanation: "[文法: 疑問詞 + to不定詞] what to do（何をすべきか）を知らない、という頻出フレーズ。", example: "I'm so lost, I don't know what to do.", exampleJa: "とても迷っていて、どうすればいいか分からない。" },
+                    "set on you": { meaning: "君に夢中だ、心が君に囚われている", explanation: "[文法: set on + 名詞] 心や意識が特定の対象に集中している状態。", example: "Since they met, her mind is set on him.", exampleJa: "出会ってから、彼女の心は彼に夢中だ。" },
+                    "putting you on": { meaning: "君をからかっている、騙している", explanation: "[文法: put + O + on] 句動詞で「（人を）からかう、かつぐ」。真剣な悩みを相手に信じてもらえないもどかしさを表します。", example: "You won the lottery? You must be putting me on!", exampleJa: "宝くじに当たったって？からかってるんでしょう！" },
+                    "doing me harm": { meaning: "僕に害を与えている、痛めつけている", explanation: "[文法: do + O1 + O2] do harm（害をなす）の形。不眠や悩みが実際の肉体的・精神的なダメージになっていること。", example: "Lack of sleep is really doing me harm.", exampleJa: "睡眠不足は本当に私に悪影響を与えている。" },
+                    "going insane": { meaning: "気が狂いそうになる", explanation: "[文法: go + C（形容詞）] goは「（悪い状態へ）変化する」。insane（正気でない）状態に向かっているという強いストレス表現。", example: "The constant noise from the construction site is driving me to go insane.", exampleJa: "建設現場からの絶え間ない騒音で、気が狂いそうになっている。" },
+                    "peace of mind": { meaning: "心の平穏、安心", explanation: "[文法: 名詞句] 悩みや心配事がない穏やかな心理状態のこと。", example: "Having health insurance gives me peace of mind.", exampleJa: "健康保険があることで、安心感が得られる。" },
+                    "Sir Walter Raleigh": { meaning: "サー・ウォルター・ローリー", explanation: "[背景知識] 16世紀のイギリスの探検家で、イギリスにタバコを持ち込んだとされる人物。タバコをやめられない苛立ちを彼にぶつけています。", example: "Sir Walter Raleigh popularized tobacco smoking in England.", exampleJa: "サー・ウォルター・ローリーはイングランドにタバコを普及させた。" }
+                }
+            },
+            blackbird: {
+                title: "Blackbird",
+                youtubeId: "Man4Xw8Xypo",
+                lyrics: [
+                    {time: 0, en: "Blackbird singing in the dead of night,", ja: "真夜中に歌うブラックバード、"},
+                    {time: 6, en: "Take these broken wings and learn to fly.", ja: "この折れた翼で飛ぶことを学びなさい。"},
+                    {time: 11, en: "All your life,", ja: "君のこれまでの人生は、"},
+                    {time: 14, en: "You were only waiting for the moment to arise.", ja: "ただ飛び立つこの瞬間を待っていただけなんだ。"},
+                    {en: "", ja: ""},
+                    {time: 22, en: "Blackbird singing in the dead of night,", ja: "真夜中に歌うブラックバード、"},
+                    {time: 28, en: "Take these sunken eyes and learn to see.", ja: "このくぼんだ目で見ることを学びなさい。"},
+                    {time: 32, en: "All your life,", ja: "君のこれまでの人生は、"},
+                    {time: 35, en: "You were only waiting for the moment to be free.", ja: "ただ自由になるこの瞬間を待っていただけなんだ。"},
+                    {en: "", ja: ""},
+                    {time: 43, en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
+                    {time: 51, en: "Into the light of the dark black night.", ja: "この暗い漆黒の夜の光の中へ。"},
+                    {en: "", ja: ""},
+                    {en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
+                    {en: "Into the light of the dark black night.", ja: "この暗い漆黒の夜の光の中へ。"},
+                    {en: "", ja: ""},
+                    {en: "Blackbird singing in the dead of night", ja: "真夜中に歌うブラックバード、"},
+                    {en: "Take these broken wings and learn to fly.", ja: "この折れた翼で飛ぶことを学びなさい。"},
+                    {en: "All your life", ja: "君のこれまでの人生は、"},
+                    {en: "You were only waiting for this moment to arise", ja: "ただ飛び立つこの瞬間を待っていただけなんだ。"},
+                    {en: "You were only waiting for this moment to arise", ja: "ただ飛び立つこの瞬間を待っていただけなんだ。"},
+                    {en: "You were only waiting for this moment to arise", ja: "ただ飛び立つこの瞬間を待っていただけなんだ。"}
+                ],
+                idioms: {
+                    "dead of night": { meaning: "真夜中、丑三つ時", explanation: "[文法: 名詞句] in the dead of night で、完全に静まり返った真夜中を表します。", example: "The alarm rang in the dead of night.", exampleJa: "真夜中にアラームが鳴った。" },
+                    "broken wings": { meaning: "折れた翼", explanation: "[文法: 過去分詞 + 名詞] 傷ついた状態や挫折のメタファー（隠喩）として使われます。", example: "He is trying to heal his broken wings.", exampleJa: "彼は折れた翼（傷ついた心）を癒やそうとしている。" },
+                    "learn to": { meaning: "〜できるようになる、〜する方法を学ぶ", explanation: "[文法: learn + to不定詞] 努力や経験を通じて技術や能力を身につけること。", example: "It took her years to learn to play the piano.", exampleJa: "彼女がピアノを弾けるようになるまで何年もかかった。" },
+                    "moment to arise": { meaning: "飛び立つ瞬間、立ち上がる時", explanation: "[文法: 不定詞の形容詞的用法] moment（瞬間）を to arise（立ち上がるための）が修飾しています。", example: "She has been waiting for the moment to arise.", exampleJa: "彼女は立ち上がる瞬間を待っていた。" },
+                    "sunken eyes": { meaning: "くぼんだ目、疲れ果てた目", explanation: "[文法: 過去分詞 + 名詞] 苦労や悲しみを経験したことを示唆する表現。", example: "The old man looked at me with sunken eyes.", exampleJa: "その老人はくぼんだ目で私を見た。" },
+                    "waiting for": { meaning: "〜を待つ", explanation: "[文法: wait + for + 名詞] 特定の時や人、事柄がやってくるのを待つ。", example: "I've been waiting for this moment all my life.", exampleJa: "私はこの瞬間をずっと待っていた。" },
+                    "to be free": { meaning: "自由になること", explanation: "[文法: to不定詞] 束縛から解放され、自由を得る状態。", example: "Everyone is looking for a way to be free.", exampleJa: "誰もが自由になる方法を探している。" }
+                }
+            }
+        };
+
+        const dict = { 
+            "read": "読む、読んだ", "news": "ニュース", "today": "今日", "boy": "少年、おや", "lucky": "幸運な", "man": "男", "made": "作った", "grade": "等級、成績", "though": "〜だけれども", "rather": "どちらかと言えば", "sad": "悲しい", "well": "ええと、さて", "just": "ただ、ちょうど", "laugh": "笑う", "saw": "見た", "photograph": "写真", "blew": "吹いた", "mind": "心、精神", "car": "車", "notice": "気付く", "lights": "信号", "changed": "変わった", "crowd": "群衆", "people": "人々", "stood": "立った", "stared": "じっと見た", "seen": "見た", "face": "顔", "before": "以前に", "nobody": "誰も〜ない", "really": "本当に", "sure": "確信して", "film": "映画", "english": "イギリスの", "army": "軍隊", "won": "勝った", "war": "戦争", "turned": "向いた", "away": "離れて", "look": "見る", "having": "〜したこと", "book": "本", "turn": "回す、向ける", "woke": "目が覚めた", "fell": "落ちた", "bed": "ベッド", "dragged": "引きずった", "comb": "クシ", "across": "〜を横切って", "head": "頭", "found": "見つけた", "way": "道", "downstairs": "階下へ", "drank": "飲んだ", "cup": "カップ", "looking": "見ること", "up": "上へ", "late": "遅れた", "coat": "コート", "grabbed": "掴んだ", "hat": "帽子", "bus": "バス", "seconds": "秒", "flat": "平らな、きっかり", "upstairs": "階上へ", "smoke": "煙草を吸う", "somebody": "誰か", "spoke": "話した", "went": "行った", "dream": "夢", "thousand": "千", "holes": "穴", "small": "小さい", "count": "数える", "know": "知っている", "many": "多くの", "takes": "必要とする", "fill": "満たす", 
+            "places": "場所", "remember": "覚えている", "all": "すべての", "life": "人生", "some": "いくつか", "forever": "永遠に", "better": "より良い", "gone": "去った", "remain": "残る", "moments": "瞬間", "lovers": "恋人", "friends": "友人", "still": "まだ", "recall": "思い出す", "dead": "死んだ、真っただ中", "living": "生きている", "loved": "愛した", "compares": "匹敵する", "memries": "思い出", "memories": "思い出", "lose": "失う", "meaning": "意味", "think": "考える", "something": "何か", "new": "新しい", "never": "決して〜ない", "affection": "愛情", "things": "物事", "often": "しばしば", "stop": "止まる", "more": "もっと", 
+            "together": "一緒に", "see": "見る", "run": "走る", "pigs": "豚", "gun": "銃", "fly": "飛ぶ", "crying": "泣いている", "sitting": "座っている", "cornflake": "コーンフレーク", "waiting": "待っている", "van": "バン（車）", "come": "来る", "corporation": "会社", "tee": "TシャツのT", "shirt": "シャツ", "stupid": "馬鹿な", "bloody": "ひどい", "tuesday": "火曜日", "naughty": "いたずらな", "let": "させる", "grow": "なる、育つ", "long": "長い", "eggman": "卵男", "eggmen": "卵男たち", "walrus": "セイウチ", "mister": "〜氏", "city": "都市", "pliceman": "警官", "plicemen": "警官たち", "pretty": "かわいらしい", "little": "小さい", "row": "列", "sky": "空", "yellow": "黄色い", "matter": "物質", "custard": "カスタード", "dripping": "滴り落ちる", "dogs": "犬の", "eye": "目", "fishwife": "口やかましい女", "pornographic": "ポルノの", "priestess": "女祭司", "girl": "女の子", "knickers": "下着", "down": "下へ", "garden": "庭", "sun": "太陽", "dont": "〜しない", "get": "得る、（英俗）嫌な奴", "tan": "日焼け", "standing": "立っている", "rain": "雨", "expert": "専門家", "texpert": "（造語）", "choking": "むせている", "smokers": "喫煙者", "joker": "ジョーカー", "laughs": "笑う", "smile": "微笑む", "sty": "豚小屋", "snied": "（造語）", "semolina": "セモリナ", "pilchards": "イワシ", "climbing": "登る", "eiffel": "エッフェル", "tower": "塔", "elementry": "初歩の", "penguin": "ペンギン", "singing": "歌っている", "hare": "ハレ", "krishna": "クリシュナ", "should": "すべきである", "kicking": "蹴っている", "four": "4", "albert": "アルバート", "hall": "ホール", "lucy": "ルーシー", "crabalocker": "（造語）", "edgar": "エドガー", "allan": "アラン", "poe": "ポー",
+            "tired": "疲れた", "slept": "眠った", "wink": "まばたき、一睡", "wonder": "〜かしらと思う", "fix": "用意する、直す", "drink": "飲み物", "call": "電話する", "putting": "置く（putの進行形）、からかう", "joke": "冗談", "harm": "害", "sleep": "眠る", "brain": "脳", "three": "3", "weeks": "週間", "insane": "狂気の", "give": "与える", "everything": "すべて", "ive": "I have の短縮形", "got": "得た、持っている", "peace": "平穏", "feeling": "感じている", "upset": "動揺した", "although": "〜だけれども", "ill": "I will の短縮形", "another": "もう一つの", "cigarette": "タバコ", "curse": "呪う", "sir": "サー（敬称）", "walter": "ウォルター", "raleigh": "ローリー",
+            "blackbird": "クロウタドリ", "take": "取る、持って行く", "these": "これらの", "broken": "壊れた、折れた", "wings": "翼", "learn": "学ぶ", "your": "君の", "only": "ただ〜だけ", "moment": "瞬間", "arise": "起こる、飛び立つ", "sunken": "くぼんだ、沈んだ", "eyes": "目", "free": "自由な", "light": "光", "dark": "暗い", "black": "黒い", "night": "夜", "this": "この", "bird": "鳥"
+        };
+        
+        // 発音記号辞書 (IPA)
+        const pronDict = {
+            "read": "ríːd", "news": "njúːz", "today": "tədéɪ", "boy": "bɔɪ", "lucky": "lʌ́ki", "man": "mǽn", "made": "méɪd", "grade": "gréɪd", "though": "ðóʊ", "rather": "rǽðɚ", "sad": "sǽd", "well": "wél", "just": "dʒʌ́st", "laugh": "lǽf", "saw": "sɔ́ː", "photograph": "fóʊtəgræ̀f", "blew": "blúː", "mind": "máɪnd", "car": "kɑ́ɚ", "notice": "nóʊtɪs", "lights": "láɪts", "changed": "tʃéɪndʒd", "crowd": "kráʊd", "people": "píːpl", "stood": "stʊ́d", "stared": "stéɚd", "seen": "síːn", "face": "féɪs", "before": "bɪfɔ́ɚ", "nobody": "nóʊbədi", "really": "ríːəli", "sure": "ʃʊ́ɚ", "film": "fílm", "english": "íŋglɪʃ", "army": "ɑ́ɚmi", "won": "wʌ́n", "war": "wɔ́ɚ", "turned": "tɚ́nd", "away": "əwéɪ", "look": "lʊ́k", "book": "bʊ́k", "turn": "tɚ́n", "woke": "wóʊk", "fell": "fél", "bed": "béd", "dragged": "drǽgd", "comb": "kóʊm", "across": "əkrɔ́s", "head": "héd", "found": "fáʊnd", "way": "wéɪ", "downstairs": "dáʊnstéɚz", "drank": "drǽŋk", "cup": "kʌ́p", "looking": "lʊ́kɪŋ", "up": "ʌ́p", "late": "léɪt", "coat": "kóʊt", "grabbed": "grǽbd", "hat": "hǽt", "bus": "bʌ́s", "seconds": "sékəndz", "flat": "flǽt", "upstairs": "ʌ́pstéɚz", "smoke": "smóʊk", "somebody": "sʌ́mbədi", "spoke": "spóʊk", "went": "wént", "dream": "dríːm", "thousand": "θáʊzənd", "holes": "hóʊlz", "small": "smɔ́ːl", "count": "káʊnt", "know": "nóʊ", "many": "méni", "takes": "téɪks", "fill": "fíl"
+        };
+        
+        const ignoreSet = new Set(['i', 'a', 'an', 'the', 'is', 'of', 'and', 'in', 'to', 'that', 'but', 'you', 'he', 'she', 'it', 'my', 'his', 'her', 'their', 'with', 'for', 'was', 'if', 'from', 'had', 'as', 'are', 'we', 'they', 'how', 'like', 'on', 'at', 'be']);
+
+        let player;
+        let isPlayerReady = false;
+        let loopInterval;
+        let currentLoopIndex = -1;
+        let currentLoopStartTime = 0;
+        let currentEndTime = 0;
+        let currentVideoId = '';
+        let isSeeking = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytplayer', {
+                height: '100%',
+                width: '100%',
+                videoId: songs['dayInLife'].youtubeId,
+                playerVars: { 'playsinline': 1, 'controls': 1, 'rel': 0, 'fs': 0 },
+                events: {
+                    'onReady': () => { isPlayerReady = true; },
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerError(event) {
+            clearInterval(loopInterval);
+            const errorOverlay = document.getElementById('yt-error-overlay');
+            const externalLink = document.getElementById('yt-external-link');
+            
+            if (errorOverlay && externalLink) {
+                externalLink.href = `https://www.youtube.com/watch?v=${currentVideoId}&t=${currentLoopStartTime}s`;
+                errorOverlay.classList.remove('hidden');
+                document.getElementById('loop-status-text').innerText = "⚠️ 著作権保護によりブロックされました";
+            }
+        }
+
+        function togglePhraseLoop(lineIdx, startTime) {
+            if (!isPlayerReady || !player) {
+                alert("YouTubeプレーヤーの準備中です。数秒待ってから再度お試しください。");
+                return;
+            }
+
+            const data = songs[document.getElementById('songSelector').value];
+            const widget = document.getElementById('yt-player-widget');
+            
+            const errorOverlay = document.getElementById('yt-error-overlay');
+            if (errorOverlay) errorOverlay.classList.add('hidden');
+            
+            if (currentLoopIndex === lineIdx) {
+                closeYtPlayer();
+                return;
+            }
+
+            let endTime = startTime + 4;
+            for (let i = lineIdx + 1; i < data.lyrics.length; i++) {
+                if (data.lyrics[i].time !== undefined) {
+                    endTime = data.lyrics[i].time;
+                    break;
+                }
+            }
+            if (endTime - startTime < 2) endTime = startTime + 3;
+            if (endTime - startTime > 10) endTime = startTime + 6;
+
+            currentLoopIndex = lineIdx;
+            currentLoopStartTime = startTime;
+            currentEndTime = endTime;
+            currentVideoId = data.youtubeId;
+            
+            widget.classList.remove('translate-y-[150%]');
+            widget.classList.add('translate-y-0');
+            document.getElementById('loop-status-text').innerText = `🔁 ${startTime}s - ${endTime}s ループ再生中`;
+
+            clearInterval(loopInterval);
+            isSeeking = false;
+
+            // 安定版ロジック: 常時新規読み込み
+            player.loadVideoById(currentVideoId, startTime);
+            
+            loopInterval = setInterval(() => {
+                if (!player || typeof player.getPlayerState !== 'function') return;
+                
+                if (player.getPlayerState() === YT.PlayerState.PLAYING && !isSeeking) {
+                    const currentTime = player.getCurrentTime();
+                    
+                    if (currentTime >= currentEndTime - 0.1) {
+                        isSeeking = true;
+                        player.seekTo(currentLoopStartTime, true);
+                        
+                        setTimeout(() => {
+                            isSeeking = false;
+                        }, 500); 
+                    }
+                }
+            }, 50);
+
+            updateLoopButtonsUI();
+        }
+
+        function closeYtPlayer() {
+            clearInterval(loopInterval);
+            isSeeking = false;
+            if (player && isPlayerReady && typeof player.pauseVideo === 'function') player.pauseVideo();
+            currentLoopIndex = -1;
+            document.getElementById('yt-player-widget').classList.remove('translate-y-0');
+            document.getElementById('yt-player-widget').classList.add('translate-y-[150%]');
+            updateLoopButtonsUI();
+        }
+
+        function updateLoopButtonsUI() {
+            document.querySelectorAll('.loop-btn').forEach(btn => {
+                const idx = parseInt(btn.dataset.index);
+                if (idx === currentLoopIndex) {
+                    btn.innerText = '⏹';
+                    btn.classList.add('text-red-500', 'animate-pulse');
+                    btn.classList.remove('text-slate-400', 'dark:text-zinc-500', 'hover:text-blue-500', 'dark:hover:text-sky-400');
+                    btn.title = "ループを停止する";
+                } else {
+                    btn.innerText = '🔁';
+                    btn.classList.remove('text-red-500', 'animate-pulse');
+                    btn.classList.add('text-slate-400', 'dark:text-zinc-500', 'hover:text-blue-500', 'dark:hover:text-sky-400');
+                    btn.title = "このフレーズをループ再生";
+                }
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // 単語分解・辞書マッチング機能
+        function tokenizeWords(text) {
+            const words = text.split(/([a-zA-Z']+)/);
+            return words.map(w => {
+                const cleanW = w.replace(/^'|'$/g, ''); 
+                const cw = cleanW.toLowerCase().replace(/'/g, ''); 
+                if (cleanW.length > 0 && !ignoreSet.has(cw)) {
+                    const meaning = dict[cw];
+                    const pron = pronDict[cw] ? ` data-pron="${escapeHtml(pronDict[cw])}"` : '';
+                    if (meaning) {
+                        return `<span class="eng-text word-hover word-marker" onclick="void(0)" data-meaning="${escapeHtml(meaning)}"${pron}>${w}</span>`;
+                    }
+                }
+                if (w.length > 0 && /[a-zA-Z']/.test(w)) {
+                    return `<span class="eng-text">${w}</span>`;
+                }
+                return w; 
+            }).join('');
+        }
+
+        function loadSong(id) {
+            const data = songs[id];
+            document.getElementById('songTitle').innerText = data.title;
+            
+            closeYtPlayer();
+            currentVideoId = ''; 
+
+            const container = document.getElementById('lyrics-container');
+            
+            container.innerHTML = data.lyrics.map((line, lineIdx) => {
+                let enHtml = line.en;
+                if (line.en.trim()) {
+                    const idiomPlaceholders = {};
+                    let phIndex = 0;
+                    
+                    const sortedIdioms = Object.keys(data.idioms).sort((a, b) => b.length - a.length);
+
+                    // まず熟語をプレースホルダーに置換
+                    sortedIdioms.forEach((idiom, index) => {
+                        const escapedIdiom = idiom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        const regex = new RegExp(`(^|[^a-zA-Z0-9'])(${escapedIdiom})(?=[^a-zA-Z0-9']|$)`, 'gi');
+                        
+                        const color = index % 2 === 0 ? 'idiom-blue' : 'idiom-orange';
+                        const idmObj = data.idioms[idiom];
+                        
+                        enHtml = enHtml.replace(regex, (match, p1, p2) => {
+                            const ph = `__IDIOM_${phIndex}__`;
+                            const meaning = escapeHtml(idmObj.meaning);
+                            const explanation = escapeHtml(idmObj.explanation);
+                            const example = escapeHtml(idmObj.example);
+                            const exampleJa = escapeHtml(idmObj.exampleJa);
+
+                            // 熟語の中身も単語分解する
+                            const tokenizedInner = tokenizeWords(p2);
+
+                            idiomPlaceholders[ph] = `<span class="${color} idiom-marker" onclick="void(0)" data-title="${escapeHtml(idiom)}" data-meaning="${meaning}" data-explanation="${explanation}" data-example="${example}" data-example-ja="${exampleJa}">${tokenizedInner}</span>`;
+                            
+                            phIndex++;
+                            return p1 + ph;
+                        });
+                    });
+
+                    // 残りの地の文を単語分解
+                    const subParts = enHtml.split(/(__IDIOM_\d+__)/);
+                    enHtml = subParts.map(part => {
+                        if (part.startsWith('__IDIOM_') && part.endsWith('__')) return part;
+                        return tokenizeWords(part);
+                    }).join('');
+
+                    // 熟語プレースホルダーをHTMLに戻す
+                    Object.keys(idiomPlaceholders).forEach(ph => {
+                        enHtml = enHtml.replace(ph, idiomPlaceholders[ph]);
+                    });
+                }
+                
+                if (!line.en.trim()) return `<div class="h-6"></div>`;
+
+                const loopBtn = line.time !== undefined 
+                    ? `<button class="loop-btn ml-4 text-slate-400 dark:text-zinc-500 hover:text-blue-500 dark:hover:text-sky-400 transition-all focus:outline-none flex-shrink-0 text-lg" data-index="${lineIdx}" onclick="togglePhraseLoop(${lineIdx}, ${line.time})" title="このフレーズをループ再生">🔁</button>` 
+                    : `<div class="ml-4 w-6 flex-shrink-0"></div>`; 
+
+                return `<div class="mb-5 lyric-line group flex items-start justify-between">
+                          <div class="flex-grow min-w-0">
+                            <div class="leading-relaxed">${enHtml}</div>
+                            <div class="ja-text hidden">${line.ja}</div>
+                          </div>
+                          <div class="pt-1 opacity-30 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center">
+                            ${loopBtn}
+                          </div>
+                        </div>`;
+            }).join('');
+            
+            toggleTranslation(); 
+        }
+
+        let isTouchDevice = false;
+        window.addEventListener('touchstart', () => { isTouchDevice = true; }, { passive: true });
+        let lastTappedWord = null;
+
+        const tooltip = document.getElementById('tooltip');
+
+        document.getElementById('lyrics-container').addEventListener('click', (e) => {
+            const wordEl = e.target.closest('.word-marker');
+            const idiomEl = e.target.closest('.idiom-marker');
+
+            // スマホ（タッチデバイス）の特別処理: 1回目で単語表示、2回目で熟語モーダル
+            if (isTouchDevice && wordEl) {
+                if (lastTappedWord === wordEl && idiomEl) {
+                    showModal(
+                        idiomEl.dataset.title,
+                        idiomEl.dataset.meaning,
+                        idiomEl.dataset.explanation,
+                        idiomEl.dataset.example,
+                        idiomEl.dataset.exampleJa
+                    );
+                    tooltip.classList.add('hidden');
+                    lastTappedWord = null;
+                    return;
+                }
+                
+                const meaning = wordEl.dataset.meaning;
+                const pron = wordEl.dataset.pron;
+                
+                let tooltipHtml = '';
+                if (pron) {
+                    tooltipHtml += `<span class="text-sky-300 dark:text-sky-400 font-mono text-[11px] block mb-0.5">${pron}</span>`;
+                }
+                tooltipHtml += `<span>${meaning}</span>`;
+                
+                if (idiomEl) {
+                    tooltipHtml += `<div class="mt-1 pt-1 border-t border-slate-600 dark:border-zinc-600 text-yellow-300 text-[9px] font-bold tracking-wide">💡もう一度タップで熟語の詳細</div>`;
+                }
+                
+                tooltip.innerHTML = tooltipHtml;
+                tooltip.style.left = Math.max(10, e.clientX - 20) + 'px'; 
+                tooltip.style.top = (e.clientY - 55) + 'px'; 
+                tooltip.classList.remove('hidden');
+                
+                lastTappedWord = wordEl;
+                return;
+            }
+
+            // PCまたは単語以外の熟語部分クリック
+            if (idiomEl) {
+                showModal(
+                    idiomEl.dataset.title,
+                    idiomEl.dataset.meaning,
+                    idiomEl.dataset.explanation,
+                    idiomEl.dataset.example,
+                    idiomEl.dataset.exampleJa
+                );
+                lastTappedWord = null;
+            }
+        });
+        
+        document.getElementById('lyrics-container').addEventListener('mouseover', (e) => {
+            if (isTouchDevice) return; 
+            const wordEl = e.target.closest('.word-marker');
+            if (wordEl) {
+                const meaning = wordEl.dataset.meaning;
+                const pron = wordEl.dataset.pron;
+                
+                let tooltipHtml = '';
+                if (pron) {
+                    tooltipHtml += `<span class="text-sky-300 dark:text-sky-400 font-mono text-[11px] block mb-0.5">${pron}</span>`;
+                }
+                tooltipHtml += `<span>${meaning}</span>`;
+                
+                tooltip.innerHTML = tooltipHtml;
+                tooltip.style.left = (e.clientX + 15) + 'px'; 
+                tooltip.style.top = (e.clientY - 25) + 'px';
+                tooltip.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('lyrics-container').addEventListener('mousemove', (e) => {
+            if (isTouchDevice) return;
+            const wordEl = e.target.closest('.word-marker');
+            if (wordEl && !tooltip.classList.contains('hidden')) {
+                tooltip.style.left = (e.clientX + 15) + 'px';
+                tooltip.style.top = (e.clientY - 25) + 'px';
+            }
+        });
+
+        document.getElementById('lyrics-container').addEventListener('mouseout', (e) => {
+            if (e.target.closest('.word-marker')) {
+                tooltip.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('touchstart', (e) => {
+            if (!e.target.closest('.word-marker') && !tooltip.classList.contains('hidden')) {
+                tooltip.classList.add('hidden');
+                lastTappedWord = null; 
+            }
+        });
+
+        function toggleTranslation() {
+            const checkbox = document.getElementById('langCheckbox');
+            if (!checkbox) return;
+            const isTranslationVisible = checkbox.checked;
+            document.querySelectorAll('.ja-text').forEach(el => {
+                if (isTranslationVisible) {
+                    el.classList.remove('hidden');
+                    el.style.opacity = 1;
+                } else {
+                    el.classList.add('hidden');
+                    el.style.opacity = 0;
+                }
+            });
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            document.getElementById('icon-moon').classList.toggle('hidden', isDark);
+            document.getElementById('icon-sun').classList.toggle('hidden', !isDark);
+        }
+
+        function getVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            return voices.find(v => v.lang.startsWith('en-') && (v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Siri'))) || voices.find(v => v.lang.startsWith('en'));
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel(); 
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0; 
+            const enVoice = getVoice();
+            if (enVoice) utterance.voice = enVoice;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakTitle() {
+            speakText(document.getElementById('modalTitle').innerText);
+        }
+
+        function speakExample() {
+            speakText(document.getElementById('modalExample').innerText);
+        }
+
+        function showModal(title, meaning, desc, example, exampleJa) {
+            document.getElementById('modalTitle').innerText = title || '';
+            document.getElementById('modalMeaning').innerText = meaning || '';
+            document.getElementById('modalDesc').innerText = desc || '';
+            
+            const exContainer = document.getElementById('modalExampleContainer');
+            if (example && example !== "undefined") {
+                document.getElementById('modalExample').innerText = example;
+                document.getElementById('modalExampleJa').innerText = exampleJa && exampleJa !== "undefined" ? exampleJa : '';
+                exContainer.classList.remove('hidden');
+            } else {
+                exContainer.classList.add('hidden');
+            }
+            
+            document.getElementById('detailsModal').classList.remove('hidden');
+            document.getElementById('detailsModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').classList.remove('flex');
+            document.getElementById('detailsModal').classList.add('hidden');
+            
+            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        window.onload = () => {
+            loadSong('dayInLife');
+        };
+    </script>
+</body>
+</html>
