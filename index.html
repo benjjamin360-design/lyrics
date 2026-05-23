@@ -121,30 +121,32 @@
         </div>
     </header>
 
-    <div class="px-2 md:px-10 pb-16 mt-4 md:mt-10 max-w-4xl mx-auto flex justify-center">
-        <main class="w-full bg-white dark:bg-zinc-900 p-5 md:p-16 rounded-2xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative overflow-hidden">
-            <!-- 楽曲ヘッダー -->
-            <div class="flex flex-col items-center mb-8 md:mb-12 pt-4">
-                <div id="songColorAccent" class="w-12 h-1 mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></div>
-                <h2 id="songTitle" class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-zinc-100 text-center font-playfair tracking-tight mb-2"></h2>
-                <p id="songAlbum" class="text-xs md:text-sm text-slate-500 dark:text-zinc-400 font-medium uppercase tracking-widest"></p>
-            </div>
-            
-            <!-- 歌詞 -->
-            <div id="lyrics-container" class="lyrics-text pb-10 w-full flex-grow min-w-0 border-b border-dashed border-slate-200 dark:border-zinc-700"></div>
-            
-            <!-- ライナーノーツ領域 -->
-            <div class="pt-10 px-2 md:px-8">
-                <h3 class="font-playfair text-xl md:text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.536l8-1.6V12.114A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
-                    About this song
-                </h3>
-                <p id="linerNotesText" class="font-lora text-slate-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed md:leading-loose"></p>
-            </div>
-        </main>
-    </div>
+    <div class="px-2 md:px-10 pb-6 mt-4 md:mt-10 max-w-4xl mx-auto flex justify-center">
+        <main class="w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative overflow-hidden flex flex-col">
+            <!-- 歌詞エリア -->
+            <div class="p-5 md:p-16 flex-grow">
+                <!-- 楽曲ヘッダー -->
+                <div class="flex flex-col items-center mb-8 md:mb-12 pt-4">
+                    <div id="songColorAccent" class="w-12 h-1 mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></div>
+                    <h2 id="songTitle" class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-zinc-100 text-center font-playfair tracking-tight mb-2"></h2>
+                    <p id="songAlbum" class="text-xs md:text-sm text-slate-500 dark:text-zinc-400 font-medium uppercase tracking-widest"></p>
+                </div>
+                
+                <!-- 歌詞 -->
+            <div id="lyrics-container" class="lyrics-text pb-6 w-full flex-grow min-w-0"></div>
+        </div>
+        
+        <!-- ライナーノーツ領域 (Genius Style) -->
+        <div class="bg-slate-50 dark:bg-[#121212] p-6 md:px-16 md:py-12 border-t border-slate-200 dark:border-zinc-800/80">
+            <h3 class="text-[12px] md:text-[13px] font-bold text-slate-500 dark:text-zinc-500 uppercase tracking-[0.15em] mb-4">
+                About this song
+            </h3>
+            <p id="linerNotesText" class="font-sans text-slate-900 dark:text-zinc-200 text-[15px] md:text-[17px] leading-[1.8] md:leading-[1.9] font-medium"></p>
+        </div>
+    </main>
+</div>
 
-    <div id="song-drawer" class="fixed inset-0 z-50 bg-slate-100/95 dark:bg-zinc-950/95 backdrop-blur-md flex flex-col transition-all duration-500 transform -translate-y-full opacity-0 pointer-events-none">
+<div id="song-drawer" class="fixed inset-0 z-50 bg-slate-100/95 dark:bg-zinc-950/95 backdrop-blur-md flex flex-col transition-all duration-500 transform -translate-y-full opacity-0 pointer-events-none">
         <div class="max-w-4xl mx-auto w-full p-6 md:p-10 flex flex-col h-full">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="font-playfair text-3xl font-black text-slate-900 dark:text-zinc-100">Library</h2>
@@ -215,7 +217,7 @@
     <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-2 rounded-lg shadow-xl pointer-events-none transition-colors border border-transparent dark:border-zinc-700 flex flex-col gap-0.5"></div>
 
     <!-- フッター（バージョン表記） -->
-    <footer class="pb-8 pt-4 text-center">
+    <footer class="pb-6 pt-2 text-center">
         <span class="text-[10px] font-mono font-bold text-slate-400/80 dark:text-zinc-600/80">v2.0.0 (Genius Edition)</span>
     </footer>
 
