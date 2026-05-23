@@ -8,42 +8,43 @@
     <script>
         tailwind.config = {
             darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                        playfair: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
-    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        /* ベーススタイルとタイポグラフィ */
         body { 
-            font-family: 'Inter', sans-serif; 
             background-color: #f4f4f0; 
             color: #111;
             overflow-x: hidden; 
         }
-        .font-playfair { font-family: 'Playfair Display', serif; }
-        .font-lora { font-family: 'Lora', serif; }
         
-        /* 歌詞のスタイル (スマホ向けにGenius風に高密度化・余白と文字間隔を調整) */
-        .eng-text { font-family: 'Lora', serif; font-size: 0.85rem; line-height: 1.5; color: #1a1a1a; letter-spacing: -0.02em; transition: color 0.3s; }
+        /* 歌詞のスタイル (スマホ向け高密度化・余白調整) */
+        .eng-text { font-family: 'Lora', serif; font-size: 0.9rem; line-height: 1.6; color: #1a1a1a; letter-spacing: -0.015em; transition: color 0.3s; }
         .dark .eng-text { color: #d4d4d8; } 
         
         .ja-text { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: #666; font-weight: 500; margin-top: 0.15rem; margin-bottom: 0.8rem; transition: opacity 0.3s, color 0.3s; }
         .dark .ja-text { color: #a1a1aa; } 
-        .lyric-line { transition: all 0.3s ease; word-break: keep-all; overflow-wrap: break-word; margin-bottom: 0.8rem; }
+        .lyric-line { transition: all 0.3s ease; word-break: keep-all; overflow-wrap: break-word; }
         
         /* PC向けのゆったりとした表示 */
         @media (min-width: 768px) {
-            .eng-text { font-size: 1.35rem; line-height: 1.6; letter-spacing: -0.01em; }
-            .ja-text { font-size: 0.85rem; margin-bottom: 1.2rem; }
-            .lyric-line { margin-bottom: 1.25rem; }
+            .eng-text { font-size: 1.35rem; line-height: 1.7; letter-spacing: -0.01em; }
+            .ja-text { font-size: 0.85rem; margin-bottom: 1.5rem; }
         }
         
-        /* 辞書ホバー機能 */
         .word-marker { transition: all 0.2s; border-bottom: 1px dotted transparent; }
         .word-marker:hover { background-color: #fef08a; cursor: help; border-bottom: 1px dotted #eab308; }
         .dark .word-marker:hover { background-color: rgba(253, 224, 71, 0.2); border-bottom-color: #fde047; }
         
-        /* イディオムのスタイル（フォントサイズを英語テキストと同期） */
         .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; cursor: pointer; padding: 0 2px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem; letter-spacing: -0.02em; transition: all 0.2s; color: #0f172a; }
         .idiom-blue:hover { background-color: #bae6fd; }
         .dark .idiom-blue { background-color: rgba(56, 189, 248, 0.08); border-bottom-color: #0284c7; color: #7dd3fc; }
@@ -55,13 +56,11 @@
         .dark .idiom-orange:hover { background-color: rgba(251, 146, 60, 0.15); }
 
         @media (min-width: 768px) {
-            .idiom-blue, .idiom-orange { font-size: 1.35rem; padding: 0 4px; letter-spacing: -0.01em; }
+            .idiom-blue, .idiom-orange { font-size: 1.25rem; padding: 0 4px; letter-spacing: -0.01em; }
         }
         
-        /* ツールチップ */
         #tooltip { pointer-events: none; transition: opacity 0.1s; z-index: 100; }
         
-        /* カスタム言語トグルスイッチ */
         .lang-toggle { position: relative; width: 4.5rem; height: 1.75rem; background-color: #e2e8f0; border-radius: 9999px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 0.5rem; font-size: 0.75rem; font-weight: 700; color: #64748b; transition: all 0.3s ease; }
         .dark .lang-toggle { background-color: #27272a; color: #a1a1aa; }
         .lang-toggle-slider { position: absolute; top: 0.125rem; left: 0.125rem; width: 2.125rem; height: 1.5rem; background-color: white; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
@@ -73,184 +72,195 @@
         #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #0f172a; }
         .dark #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #f4f4f5; }
 
-        /* スタイリッシュなカスタムセレクトボックス */
-        .custom-select-wrapper { position: relative; display: inline-block; }
-        .custom-select { 
-            appearance: none; -webkit-appearance: none; -moz-appearance: none; 
-            background-color: white; border: 1px solid #e2e8f0; border-radius: 9999px; 
-            padding: 0.5rem 2.5rem 0.5rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600; 
-            color: #334155; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); 
-        }
-        .dark .custom-select { background-color: #18181b; border-color: #27272a; color: #e4e4e7; }
-        .custom-select:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transform: translateY(-1px); }
-        .dark .custom-select:hover { border-color: #3f3f46; }
-        .custom-select:focus { outline: none; border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2); }
-        .dark .custom-select:focus { border-color: #52525b; box-shadow: 0 0 0 3px rgba(82, 82, 91, 0.2); }
-        .custom-select-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; }
+        /* スクロールバーの非表示（ドロワー用） */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="transition-colors duration-300 dark:bg-zinc-950">
 
-    <!-- ヘッダー（上部固定・すりガラス効果）-->
-    <header class="sticky top-0 z-40 backdrop-blur-lg bg-[#f4f4f0]/90 dark:bg-zinc-950/90 border-b border-gray-300 dark:border-zinc-800 transition-colors duration-300">
-        <div class="max-w-4xl mx-auto px-4 md:px-10 py-2 md:py-4 flex flex-row justify-between items-center gap-2 md:gap-6">
-            <!-- スマホではタイトルを非表示にしてヘッダー領域をコンパクト化 -->
-            <div class="hidden md:flex items-baseline gap-3 flex-shrink-0">
-                <h1 class="font-playfair text-2xl md:text-3xl font-black tracking-wider text-black dark:text-zinc-100 uppercase">Beatles Lyrics</h1>
+    <header class="sticky top-0 z-40 backdrop-blur-lg bg-[#f4f4f0]/80 dark:bg-zinc-950/80 border-b border-gray-300 dark:border-zinc-800 transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-4 md:px-10 py-2.5 md:py-4 flex flex-row justify-between items-center">
+            <!-- スマホ非表示のタイトル -->
+            <div class="hidden md:flex items-baseline gap-3">
+                <h1 class="font-playfair text-2xl font-black tracking-wider text-black dark:text-zinc-100 uppercase">Beatles Lyrics</h1>
             </div>
             
-            <div class="flex items-center justify-between w-full md:w-auto gap-3 md:gap-8">
+            <!-- スマホ用の楽曲選択ボタン（ドロワーを開く） -->
+            <button onclick="openDrawer()" class="md:hidden flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-zinc-800 rounded-full shadow-sm border border-slate-200 dark:border-zinc-700 text-sm font-bold text-slate-700 dark:text-zinc-200">
+                <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                <span id="mobileHeaderSongName" class="truncate max-w-[120px]">Select Song</span>
+                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            
+            <div class="flex items-center gap-4 md:gap-8">
+                <!-- PC用の楽曲選択ボタン -->
+                <button onclick="openDrawer()" class="hidden md:flex items-center gap-2 px-4 py-2 hover:bg-slate-200 dark:hover:bg-zinc-800 rounded-full transition-colors text-sm font-bold text-slate-700 dark:text-zinc-200">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                    Library
+                </button>
+
                 <div class="flex items-center gap-3 md:gap-5">
                     <!-- ダークモード切替 -->
-                    <button onclick="toggleDarkMode()" class="p-1.5 md:p-2 rounded-full hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 transition-colors" title="ダークモード切替">
-                        <svg id="icon-moon" class="w-5 h-5 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                        <svg id="icon-sun" class="w-5 h-5 md:w-5 md:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <button onclick="toggleDarkMode()" class="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 transition-colors" title="ダークモード切替">
+                        <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     </button>
 
-                    <!-- EN/JP スライドスイッチ -->
-                    <label class="relative inline-flex items-center cursor-pointer" title="日本語訳の表示/非表示">
+                    <!-- EN/JP スイッチ -->
+                    <label class="relative inline-flex items-center cursor-pointer scale-90 md:scale-100 origin-right">
                         <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
-                        <div class="lang-toggle group-hover:ring-2 group-hover:ring-slate-300 transition-all scale-90 md:scale-100 origin-left">
+                        <div class="lang-toggle group-hover:ring-2 group-hover:ring-slate-300 transition-all">
                             <div class="lang-toggle-slider"></div>
                             <span class="lang-toggle-text text-en">EN</span>
                             <span class="lang-toggle-text text-jp">JP</span>
                         </div>
                     </label>
                 </div>
-                
-                <!-- 曲選択 -->
-                <div class="custom-select-wrapper max-w-[160px] md:max-w-none">
-                    <select id="songSelector" onchange="loadSong(this.value)" class="custom-select !py-1.5 !pl-3 !pr-8 md:!py-2 md:!pl-5 md:!pr-10 text-xs md:text-sm w-full text-ellipsis">
-                        <option value="dayInLife">A Day in the Life</option>
-                        <option value="inMyLife">In My Life</option>
-                        <option value="walrus">I Am The Walrus</option>
-                        <option value="imSoTired">I'm So Tired</option>
-                        <option value="blackbird">Blackbird</option>
-                    </select>
-                    <svg class="custom-select-icon w-3 h-3 md:w-4 md:h-4 right-2.5 md:right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
             </div>
         </div>
     </header>
 
-    <!-- メインコンテンツ（スマホでは左右のパディングを極力削り文字領域を確保） -->
-    <div class="px-2 md:px-10 pb-10 mt-4 md:mt-10 max-w-4xl mx-auto flex justify-center">
-        <main class="w-full bg-white dark:bg-zinc-900 p-4 md:p-16 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
-            <div class="flex flex-col items-center mb-6 md:mb-12">
-                <h2 id="songTitle" class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-zinc-100 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
+    <div class="px-2 md:px-10 pb-16 mt-4 md:mt-10 max-w-4xl mx-auto flex justify-center">
+        <main class="w-full bg-white dark:bg-zinc-900 p-5 md:p-16 rounded-2xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative overflow-hidden">
+            <!-- 楽曲ヘッダー -->
+            <div class="flex flex-col items-center mb-8 md:mb-12 pt-4">
+                <div id="songColorAccent" class="w-12 h-1 mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></div>
+                <h2 id="songTitle" class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-zinc-100 text-center font-playfair tracking-tight mb-2"></h2>
+                <p id="songAlbum" class="text-xs md:text-sm text-slate-500 dark:text-zinc-400 font-medium uppercase tracking-widest"></p>
             </div>
-            <!-- flex-grow と min-w-0 で横スクロールはみ出しを防止 -->
-            <div id="lyrics-container" class="lyrics-text pb-6 w-full flex-grow min-w-0"></div>
+            
+            <!-- 歌詞 -->
+            <div id="lyrics-container" class="lyrics-text pb-10 w-full flex-grow min-w-0 border-b border-dashed border-slate-200 dark:border-zinc-700"></div>
+            
+            <!-- ライナーノーツ領域 -->
+            <div class="pt-10 px-2 md:px-8">
+                <h3 class="font-playfair text-xl md:text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.536l8-1.6V12.114A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+                    About this song
+                </h3>
+                <p id="linerNotesText" class="font-lora text-slate-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed md:leading-loose"></p>
+            </div>
         </main>
     </div>
 
-    <!-- 詳細解説ポップアウト -->
-    <div id="detailsModal" class="fixed inset-0 bg-slate-900/40 dark:bg-black/90 hidden items-center justify-center p-4 z-50 transition-opacity">
-        <div class="bg-white dark:bg-zinc-900 p-6 md:p-10 max-w-lg w-full shadow-2xl rounded-xl relative transition-colors duration-300 border border-transparent dark:border-zinc-800">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 text-3xl leading-none transition">&times;</button>
-            
-            <div class="flex justify-between items-start mb-2">
-                <h2 id="modalTitle" class="text-xl md:text-3xl font-bold text-slate-800 dark:text-zinc-100 font-playfair transition-colors"></h2>
-                <button onclick="speakTitle()" class="p-2 bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-zinc-300 rounded-full hover:bg-blue-100 dark:hover:bg-zinc-700 transition shadow-sm" title="熟語の発音を聞く">🔊</button>
+    <div id="song-drawer" class="fixed inset-0 z-50 bg-slate-100/95 dark:bg-zinc-950/95 backdrop-blur-md flex flex-col transition-all duration-500 transform -translate-y-full opacity-0 pointer-events-none">
+        <div class="max-w-4xl mx-auto w-full p-6 md:p-10 flex flex-col h-full">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="font-playfair text-3xl font-black text-slate-900 dark:text-zinc-100">Library</h2>
+                <button onclick="closeDrawer()" class="p-2 bg-slate-200 dark:bg-zinc-800 rounded-full text-slate-600 dark:text-zinc-300 hover:bg-slate-300 dark:hover:bg-zinc-700 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
-            
-            <div id="modalMeaning" class="text-base md:text-lg font-semibold text-blue-600 dark:text-sky-400 mb-5 transition-colors"></div>
-            
-            <div class="mb-6">
-                <p class="text-xs text-slate-400 dark:text-zinc-500 font-bold uppercase mb-1 tracking-wider">Grammar & Context</p>
-                <p id="modalDesc" class="text-slate-700 dark:text-zinc-300 leading-relaxed text-sm transition-colors"></p>
+            <!-- 曲リストコンテナ -->
+            <div id="drawer-song-list" class="flex-grow overflow-y-auto no-scrollbar grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-20">
+                <!-- JSで動的生成 -->
             </div>
-            
-            <div id="modalExampleContainer" class="bg-slate-50 dark:bg-zinc-800/50 p-5 rounded-lg border-l-4 border-slate-300 dark:border-zinc-700 mb-8 hidden transition-colors">
-                <p class="text-xs text-slate-400 dark:text-zinc-500 font-bold uppercase mb-2 tracking-wider">Example</p>
-                <div class="flex justify-between items-start gap-4">
-                    <div>
-                        <p id="modalExample" class="text-slate-800 dark:text-zinc-200 italic text-sm mb-1.5 transition-colors"></p>
-                        <p id="modalExampleJa" class="text-slate-500 dark:text-zinc-400 text-xs font-medium transition-colors"></p>
-                    </div>
-                    <button onclick="speakExample()" class="p-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-300 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-700 transition shadow-sm flex-shrink-0" title="例文の発音を聞く">🔊</button>
-                </div>
-            </div>
-            
-            <button onclick="closeModal()" class="w-full bg-slate-900 dark:bg-zinc-800 text-white dark:text-zinc-100 py-3 rounded-lg font-bold hover:bg-slate-800 dark:hover:bg-zinc-700 transition shadow-md border border-transparent dark:border-zinc-700">閉じる</button>
         </div>
     </div>
 
-    <!-- YouTubeプレーヤー (ループ廃止・Now Playing) -->
-    <div id="yt-player-widget" class="fixed bottom-4 right-4 z-50 bg-white dark:bg-zinc-900 p-3 rounded-xl shadow-2xl border border-slate-200 dark:border-zinc-700 transition-all duration-300 transform translate-y-[150%] flex flex-col gap-2 w-[220px]">
-        <div class="flex justify-between items-center mb-1 px-1">
-            <span class="text-xs font-bold text-slate-600 dark:text-zinc-300 flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                Now Playing
-            </span>
-            <button onclick="closeYtPlayer()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors outline-none">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <div id="panel-overlay" onclick="closePanel()" class="fixed inset-0 bg-black/20 dark:bg-black/60 z-40 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm"></div>
+    
+    <div id="annotation-panel" class="fixed z-50 bg-white dark:bg-zinc-900 shadow-2xl transition-transform duration-300 ease-in-out transform flex flex-col
+        /* スマホ: ボトムシート */
+        bottom-0 left-0 right-0 h-[75vh] rounded-t-3xl translate-y-full
+        /* PC: 右サイドパネル */
+        md:top-0 md:bottom-auto md:right-0 md:left-auto md:w-[450px] md:h-full md:rounded-none md:rounded-l-3xl md:translate-x-full md:translate-y-0 border-l border-slate-200 dark:border-zinc-800">
+        
+        <!-- スマホ用ドラッグハンドル -->
+        <div class="md:hidden w-full pt-4 pb-2 flex justify-center" onclick="closePanel()">
+            <div class="w-12 h-1.5 bg-slate-300 dark:bg-zinc-700 rounded-full"></div>
+        </div>
+
+        <!-- PC用閉じるボタン -->
+        <div class="hidden md:flex justify-end p-4">
+            <button onclick="closePanel()" class="text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 transition">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
-        <div class="rounded overflow-hidden shadow-inner border border-slate-100 dark:border-zinc-800 bg-black aspect-video flex items-center justify-center relative">
-            <div id="ytplayer"></div>
-            <!-- エラー時フォールバック -->
-            <div id="yt-error-overlay" class="absolute inset-0 bg-zinc-900 flex flex-col items-center justify-center p-2 hidden text-center z-10">
-                 <p class="text-xs text-red-400 font-bold mb-1.5">公式制限により<br>埋め込み不可</p>
-                 <a id="yt-external-link" href="#" target="_blank" class="text-[10px] bg-red-500 text-white px-2.5 py-1 rounded shadow hover:bg-red-600 transition flex items-center gap-1">
-                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                     YouTubeで開く
-                 </a>
+
+        <div class="px-6 md:px-10 pb-10 overflow-y-auto flex-grow no-scrollbar">
+            <div class="flex justify-between items-start mb-3 pt-2 md:pt-0">
+                <h2 id="panelTitle" class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-zinc-100 font-playfair leading-tight"></h2>
+                <button onclick="speakTitle()" class="p-2.5 bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-sky-400 rounded-full hover:bg-blue-100 dark:hover:bg-zinc-700 transition shadow-sm flex-shrink-0" title="熟語の発音を聞く">🔊</button>
+            </div>
+            
+            <div id="panelMeaning" class="text-lg md:text-xl font-semibold text-blue-600 dark:text-sky-400 mb-6 pb-4 border-b border-slate-100 dark:border-zinc-800"></div>
+            
+            <div class="mb-8">
+                <p class="text-[11px] text-slate-400 dark:text-zinc-500 font-bold uppercase mb-2 tracking-widest flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    Grammar & Context
+                </p>
+                <p id="panelDesc" class="text-slate-700 dark:text-zinc-300 leading-relaxed text-sm md:text-base"></p>
+            </div>
+            
+            <div id="panelExampleContainer" class="bg-slate-50 dark:bg-zinc-800/50 p-5 md:p-6 rounded-2xl border border-slate-200 dark:border-zinc-700/50 hidden">
+                <p class="text-[11px] text-slate-400 dark:text-zinc-500 font-bold uppercase mb-3 tracking-widest flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                    Example
+                </p>
+                <div class="flex justify-between items-start gap-4">
+                    <div>
+                        <p id="panelExample" class="text-slate-800 dark:text-zinc-200 italic text-sm md:text-base font-serif mb-2"></p>
+                        <p id="panelExampleJa" class="text-slate-500 dark:text-zinc-400 text-xs md:text-sm font-medium"></p>
+                    </div>
+                    <button onclick="speakExample()" class="p-2 bg-white dark:bg-zinc-700 border border-slate-200 dark:border-zinc-600 text-slate-600 dark:text-zinc-300 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-600 transition shadow-sm flex-shrink-0">🔊</button>
+                </div>
             </div>
         </div>
-        <p id="play-status-text" class="text-[10px] text-slate-500 dark:text-zinc-500 text-center font-medium mt-1">待機中...</p>
     </div>
 
     <!-- 辞書ツールチップ -->
-    <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-1.5 rounded shadow-lg pointer-events-none transition-colors border border-transparent dark:border-zinc-700"></div>
+    <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-2 rounded-lg shadow-xl pointer-events-none transition-colors border border-transparent dark:border-zinc-700 flex flex-col gap-0.5"></div>
 
-    <!-- バージョン表記 -->
-    <div class="text-center pb-8 pt-2">
-        <span class="text-[10px] font-mono font-bold text-slate-400/80 dark:text-zinc-600/80">v1.2.2 (Compact & Play)</span>
-    </div>
+    <!-- フッター（バージョン表記） -->
+    <footer class="pb-8 pt-4 text-center">
+        <span class="text-[10px] font-mono font-bold text-slate-400/80 dark:text-zinc-600/80">v2.0.0 (Genius Edition)</span>
+    </footer>
 
     <script>
-        // ==========================================
-        // 楽曲＆イディオム・頻出表現データベース
-        // ==========================================
         const songs = {
             dayInLife: {
                 title: "A Day in the Life",
-                youtubeId: "usNsCeOV4GM",
+                album: "Sgt. Pepper's Lonely Hearts Club Band",
+                year: "1967",
+                color: "from-blue-500 to-indigo-600",
+                about: "ジョン・レノンとポール・マッカートニーの全く異なる2つの未完成曲を繋ぎ合わせて作られた、ビートルズの最高傑作の一つ。\n\n新聞記事から着想を得たジョンの退廃的なパートと、慌ただしい日常を歌うポールのパートが、40人編成のオーケストラによる狂気的なクレッシェンドで結ばれています。\n最後の一斉に鳴らされるEコードの余韻は、4台のピアノで同時に弾かれ、約40秒間もスタジオに響き続けました。",
                 lyrics: [
-                    {time: 13, en: "I read the news today, oh boy.", ja: "今日ニュースを読んだよ、やれやれ。"},
-                    {time: 17, en: "About a lucky man who made the grade.", ja: "成功を収めた幸運な男についてのね。"},
-                    {time: 22, en: "And though the news was rather sad,", ja: "そのニュースはどちらかと言えば悲しいものだったけど、"},
-                    {time: 26, en: "Well, I just had to laugh", ja: "僕は思わず笑ってしまった。"},
-                    {time: 30, en: "I saw the photograph", ja: "その写真を見たんだ。"},
-                    {time: 35, en: "He blew his mind out in a car;", ja: "彼は車の中で頭をぶち抜いてしまった。"},
-                    {time: 39, en: "He didn't notice that the lights had changed.", ja: "信号が変わったことに気づかなかったんだ。"},
-                    {time: 44, en: "A crowd of people stood and stared,", ja: "群衆が立ち止まってじっと見ていた、"},
-                    {time: 48, en: "They'd seen his face before,", ja: "彼らは以前にその顔を見たことがあった、"},
-                    {time: 50, en: "Nobody was really sure if he was from the House of Lords.", ja: "彼が貴族院の出身かどうか、誰も確信は持てなかったけれど。"},
+                    {en: "I read the news today, oh boy.", ja: "今日ニュースを読んだよ、やれやれ。"},
+                    {en: "About a lucky man who made the grade.", ja: "成功を収めた幸運な男についてのね。"},
+                    {en: "And though the news was rather sad,", ja: "そのニュースはどちらかと言えば悲しいものだったけど、"},
+                    {en: "Well, I just had to laugh", ja: "僕は思わず笑ってしまった。"},
+                    {en: "I saw the photograph", ja: "その写真を見たんだ。"},
+                    {en: "He blew his mind out in a car;", ja: "彼は車の中で頭をぶち抜いてしまった。"},
+                    {en: "He didn't notice that the lights had changed.", ja: "信号が変わったことに気づかなかったんだ。"},
+                    {en: "A crowd of people stood and stared,", ja: "群衆が立ち止まってじっと見ていた、"},
+                    {en: "They'd seen his face before,", ja: "彼らは以前にその顔を見たことがあった、"},
+                    {en: "Nobody was really sure if he was from the House of Lords.", ja: "彼が貴族院の出身かどうか、誰も確信は持てなかったけれど。"},
                     {en: "", ja: ""}, 
-                    {time: 56, en: "I saw a film today, oh boy;", ja: "今日映画を見たよ、やれやれ。"},
-                    {time: 60, en: "The English army had just won the war.", ja: "イギリス軍が戦争に勝ったところだった。"},
-                    {time: 65, en: "A crowd of people turned away,", ja: "群衆は目を背けたけど、"},
-                    {time: 68, en: "But I just had to look,", ja: "僕はどうしても見ずにはいられなかった、"},
-                    {time: 72, en: "Having read the book", ja: "その本を読んだことがあったから。"},
-                    {time: 76, en: "I'd love to turn you on.", ja: "君をハッとさせたいな。"},
+                    {en: "I saw a film today, oh boy;", ja: "今日映画を見たよ、やれやれ。"},
+                    {en: "The English army had just won the war.", ja: "イギリス軍が戦争に勝ったところだった。"},
+                    {en: "A crowd of people turned away,", ja: "群衆は目を背けたけど、"},
+                    {en: "But I just had to look,", ja: "僕はどうしても見ずにはいられなかった、"},
+                    {en: "Having read the book", ja: "その本を読んだことがあったから。"},
+                    {en: "I'd love to turn you on.", ja: "君をハッとさせたいな。"},
                     {en: "", ja: ""},
-                    {time: 136, en: "Woke up, fell out of bed,", ja: "目が覚めて、ベッドから転げ落ちて、"},
-                    {time: 139, en: "dragged a comb across my head.", ja: "急いで頭にクシを通した。"},
-                    {time: 142, en: "Found my way downstairs and drank a cup,", ja: "階下へ降りてお茶を一杯飲んで、"},
-                    {time: 145, en: "and looking up, I noticed I was late.", ja: "見上げると、遅刻していることに気づいた。"},
-                    {time: 150, en: "Found my coat and grabbed my hat", ja: "コートを見つけて帽子を掴み、"},
-                    {time: 153, en: "Made the bus in seconds flat.", ja: "あっという間にバスに間に合った。"},
-                    {time: 156, en: "Found my way upstairs and had a smoke.", ja: "2階へ上がってタバコを吸った。"},
-                    {time: 159, en: "And somebody spoke and I went into a dream.", ja: "誰かが話しかけてきて、僕は夢の中へ吸い込まれていった。"},
+                    {en: "Woke up, fell out of bed,", ja: "目が覚めて、ベッドから転げ落ちて、"},
+                    {en: "dragged a comb across my head.", ja: "急いで頭にクシを通した。"},
+                    {en: "Found my way downstairs and drank a cup,", ja: "階下へ降りてお茶を一杯飲んで、"},
+                    {en: "and looking up, I noticed I was late.", ja: "見上げると、遅刻していることに気づいた。"},
+                    {en: "Found my coat and grabbed my hat", ja: "コートを見つけて帽子を掴み、"},
+                    {en: "Made the bus in seconds flat.", ja: "あっという間にバスに間に合った。"},
+                    {en: "Found my way upstairs and had a smoke.", ja: "2階へ上がってタバコを吸った。"},
+                    {en: "And somebody spoke and I went into a dream.", ja: "誰かが話しかけてきて、僕は夢の中へ吸い込まれていった。"},
                     {en: "", ja: ""},
-                    {time: 198, en: "Ah I read the news today, oh boy,", ja: "ああ、今日ニュースを読んだよ、やれやれ。"},
-                    {time: 202, en: "Four thousand holes in Blackburn, Lancashire", ja: "ランカシャー州ブラックバーンにある4千個の穴。"},
-                    {time: 207, en: "And though the holes were rather small,", ja: "その穴はかなり小さかったけれど、"},
-                    {time: 211, en: "They had to count them all", ja: "彼らはそれを全部数えなければならなかった。"},
-                    {time: 214, en: "Now they know how many holes it takes to fill the Albert Hall.", ja: "今や彼らはアルバート・ホールを満たすのにいくつの穴が必要か知っている。"},
-                    {time: 221, en: "I'd love to turn you on.", ja: "君をハッとさせたいな。"}
+                    {en: "Ah I read the news today, oh boy,", ja: "ああ、今日ニュースを読んだよ、やれやれ。"},
+                    {en: "Four thousand holes in Blackburn, Lancashire", ja: "ランカシャー州ブラックバーンにある4千個の穴。"},
+                    {en: "And though the holes were rather small,", ja: "その穴はかなり小さかったけれど、"},
+                    {en: "They had to count them all", ja: "彼らはそれを全部数えなければならなかった。"},
+                    {en: "Now they know how many holes it takes to fill the Albert Hall.", ja: "今や彼らはアルバート・ホールを満たすのにいくつの穴が必要か知っている。"},
+                    {en: "I'd love to turn you on.", ja: "君をハッとさせたいな。"}
                 ],
                 idioms: {
                     "I read the news": { meaning: "ニュースを読んだ", explanation: "[文法: SVO] 日常のルーティンを表すシンプルな表現ですが、この曲の象徴的な出だしです。", example: "I read the news about the election this morning.", exampleJa: "今朝、選挙についてのニュースを読んだ。" },
@@ -272,33 +282,36 @@
             },
             inMyLife: {
                 title: "In My Life",
-                youtubeId: "YBcdt6JCwTk",
+                album: "Rubber Soul",
+                year: "1965",
+                color: "from-green-500 to-emerald-700",
+                about: "ジョン・レノンが自身の幼少期から青年期にかけての故郷リバプールの思い出を振り返り、書かれた自伝的な名曲です。\n\n当初は具体的なバス停や通りの名前が入った長い詩でしたが、最終的にそれらを削ぎ落とし、誰の人生にも当てはまる普遍的な愛と記憶の歌に昇華されました。\n間奏で聴こえるバロック調のハープシコードのような音は、実はプロデューサーのジョージ・マーティンがピアノを半分のテンポで弾き、テープの回転速度を倍にして録音したという有名な逸話があります。",
                 lyrics: [
-                    {time: 8, en: "There are places I'll remember", ja: "僕の人生でずっと覚えている場所がある。"},
-                    {time: 13, en: "All my life, though some have changed.", ja: "いくつか変わってしまったものもあるけれど。"},
-                    {time: 18, en: "Some forever, not for better;", ja: "永遠に変わったものもあれば、良い方向へではないものもある。"},
-                    {time: 22, en: "Some have gone and some remain.", ja: "なくなってしまったものもあれば、残っているものもある。"},
+                    {en: "There are places I'll remember", ja: "僕の人生でずっと覚えている場所がある。"},
+                    {en: "All my life, though some have changed.", ja: "いくつか変わってしまったものもあるけれど。"},
+                    {en: "Some forever, not for better;", ja: "永遠に変わったものもあれば、良い方向へではないものもある。"},
+                    {en: "Some have gone and some remain.", ja: "なくなってしまったものもあれば、残っているものもある。"},
                     {en: "", ja: ""},
-                    {time: 28, en: "All these places had their moments", ja: "これらの場所にはすべて、それぞれの瞬間があった。"},
-                    {time: 33, en: "With lovers and friends I still can recall.", ja: "僕が今でも思い出せる、恋人たちや友人たちとのね。"},
-                    {time: 38, en: "Some are dead and some are living,", ja: "亡くなった人もいれば、生きている人もいる。"},
-                    {time: 43, en: "In my life I've loved them all.", ja: "僕の人生において、彼らすべてを愛してきた。"},
+                    {en: "All these places had their moments", ja: "これらの場所にはすべて、それぞれの瞬間があった。"},
+                    {en: "With lovers and friends I still can recall.", ja: "僕が今でも思い出せる、恋人たちや友人たちとのね。"},
+                    {en: "Some are dead and some are living,", ja: "亡くなった人もいれば、生きている人もいる。"},
+                    {en: "In my life I've loved them all.", ja: "僕の人生において、彼らすべてを愛してきた。"},
                     {en: "", ja: ""},
-                    {time: 51, en: "But of all these friends and lovers", ja: "でも、これらすべての友人や恋人たちの中で、"},
-                    {time: 56, en: "There is no one compares with you.", ja: "君に匹敵する人は誰もいない。"},
-                    {time: 61, en: "And these mem'ries lose their meaning", ja: "こうした思い出も意味を失ってしまう。"},
-                    {time: 66, en: "When I think of love as something new.", ja: "愛を何か新しいものとして考えるときには。"},
+                    {en: "But of all these friends and lovers", ja: "でも、これらすべての友人や恋人たちの中で、"},
+                    {en: "There is no one compares with you.", ja: "君に匹敵する人は誰もいない。"},
+                    {en: "And these mem'ries lose their meaning", ja: "こうした思い出も意味を失ってしまう。"},
+                    {en: "When I think of love as something new.", ja: "愛を何か新しいものとして考えるときには。"},
                     {en: "", ja: ""},
-                    {time: 71, en: "Tho' I know I'll never lose affection", ja: "以前そこにいた人々や物事への愛情を、"},
-                    {time: 76, en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
-                    {time: 81, en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって彼らのことを考えるだろう、"},
-                    {time: 85, en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"},
+                    {en: "Tho' I know I'll never lose affection", ja: "以前そこにいた人々や物事への愛情を、"},
+                    {en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
+                    {en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって彼らのことを考えるだろう、"},
+                    {en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"},
                     {en: "", ja: ""},
-                    {time: 113, en: "Tho' I know I'll never lose affection", ja: "以前そこにいた人々や物事への愛情を、"},
-                    {time: 118, en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
-                    {time: 123, en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって彼らのことを考えるだろう、"},
-                    {time: 127, en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"},
-                    {time: 136, en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"}
+                    {en: "Tho' I know I'll never lose affection", ja: "以前そこにいた人々や物事への愛情を、"},
+                    {en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
+                    {en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって彼らのことを考えるだろう、"},
+                    {en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"},
+                    {en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"}
                 ],
                 idioms: {
                     "all my life": { meaning: "私のこれまでの人生ずっと", explanation: "[文法: 副詞句] 期間を表す強調表現です。", example: "I have lived in this town all my life.", exampleJa: "私はこれまでの人生ずっとこの町に住んでいます。" },
@@ -315,29 +328,32 @@
             },
             walrus: {
                 title: "I Am The Walrus",
-                youtubeId: "t1Jm5epn1Qk",
+                album: "Magical Mystery Tour",
+                year: "1967",
+                color: "from-orange-400 to-red-600",
+                about: "ジョン・レノンがドラッグの影響下で書いたとされる、究極のサイケデリック・ナンセンス・ソング。\n\n「学校の先生がビートルズの歌詞を真面目に分析している」という手紙を受け取ったジョンが、「それなら絶対に意味のわからない歌詞を書いてやる」と悪ふざけで作ったと言われています。\nルイス・キャロルの『不思議の国のアリス』に登場するセイウチ（Walrus）や、警察官のサイレンの音（Ooh Ooh...）など、様々な混沌としたイメージがコラージュされています。",
                 lyrics: [
-                    {time: 14, en: "I am he", ja: "僕は彼だ"},
-                    {time: 17, en: "As you are he", ja: "君が彼であるように"},
-                    {time: 20, en: "As you are me", ja: "君が僕であるように"},
-                    {time: 22, en: "And we are all together", ja: "そして僕らは皆一緒だ"},
+                    {en: "I am he", ja: "僕は彼だ"},
+                    {en: "As you are he", ja: "君が彼であるように"},
+                    {en: "As you are me", ja: "君が僕であるように"},
+                    {en: "And we are all together", ja: "そして僕らは皆一緒だ"},
                     {en: "", ja: ""},
-                    {time: 25, en: "See how they run,", ja: "彼らがどう走るか見てごらん、"},
-                    {time: 28, en: "Like pigs from a gun,", ja: "銃から逃げる豚のように、"},
-                    {time: 30, en: "See how they fly.", ja: "どう飛ぶか見てごらん。"},
-                    {time: 34, en: "I'm crying.", ja: "僕は泣いている。"},
+                    {en: "See how they run,", ja: "彼らがどう走るか見てごらん、"},
+                    {en: "Like pigs from a gun,", ja: "銃から逃げる豚のように、"},
+                    {en: "See how they fly.", ja: "どう飛ぶか見てごらん。"},
+                    {en: "I'm crying.", ja: "僕は泣いている。"},
                     {en: "", ja: ""},
-                    {time: 38, en: "Sitting on a cornflake,", ja: "コーンフレークの上に座って、"},
-                    {time: 42, en: "Waiting for the van to come.", ja: "バンが来るのを待っている。"},
-                    {time: 45, en: "Corporation tee shirt,", ja: "会社のTシャツ、"},
-                    {time: 48, en: "Stupid bloody Tuesday", ja: "馬鹿げた忌まわしい火曜日"},
-                    {time: 51, en: "Man, you been a naughty boy,", ja: "なあ、君は悪い子だったね、"},
-                    {time: 53, en: "You let your face grow long.", ja: "浮かない顔をして。"},
+                    {en: "Sitting on a cornflake,", ja: "コーンフレークの上に座って、"},
+                    {en: "Waiting for the van to come.", ja: "バンが来るのを待っている。"},
+                    {en: "Corporation tee shirt,", ja: "会社のTシャツ、"},
+                    {en: "Stupid bloody Tuesday", ja: "馬鹿げた忌まわしい火曜日"},
+                    {en: "Man, you been a naughty boy,", ja: "なあ、君は悪い子だったね、"},
+                    {en: "You let your face grow long.", ja: "浮かない顔をして。"},
                     {en: "", ja: ""},
-                    {time: 57, en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
-                    {time: 59, en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
-                    {time: 61, en: "I am the walrus,", ja: "僕はセイウチ、"},
-                    {time: 63, en: "Goo goo g' joob.", ja: "グー・グー・ガ・ジューブ。"},
+                    {en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
+                    {en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
+                    {en: "I am the walrus,", ja: "僕はセイウチ、"},
+                    {en: "Goo goo g' joob.", ja: "グー・グー・ガ・ジューブ。"},
                     {en: "", ja: ""},
                     {en: "Mister city p'liceman sitting pretty", ja: "気取って座る街のお巡りさん"},
                     {en: "Little p'licemen in a row", ja: "小さなお巡りさんが一列に並ぶ"},
@@ -400,23 +416,26 @@
             },
             imSoTired: {
                 title: "I'm So Tired",
-                youtubeId: "9Htoz0F48Qc",
+                album: "The Beatles (White Album)",
+                year: "1968",
+                color: "from-gray-300 to-gray-600",
+                about: "ビートルズがインドのリシケシュに赴き、マハリシ・マヘーシュ・ヨーギーのもとで超越瞑想の合宿に参加していた際に書かれた曲です。\n\nジョン・レノンは瞑想キャンプ中のストイックな生活や、当時の妻とは別に心を奪われていたオノ・ヨーコへの思慕から、深刻な不眠症に悩まされていました。\nその疲労困憊した精神状態と、タバコへの渇望、やり場のない苛立ちが、気怠くもパワフルなサウンドに乗せて生々しく歌われています。",
                 lyrics: [
-                    {time: 0, en: "I'm so tired, I haven't slept a wink,", ja: "すごく疲れている、一睡もしていない、"},
-                    {time: 7, en: "I'm so tired, my mind is on the blink.", ja: "すごく疲れている、頭がちゃんと働かない。"},
-                    {time: 13, en: "I wonder should I get up and fix myself a drink.", ja: "起き上がって、お酒でも作ろうかな。"},
-                    {time: 21, en: "No, no, no.", ja: "いや、いや、いや。"},
+                    {en: "I'm so tired, I haven't slept a wink,", ja: "すごく疲れている、一睡もしていない、"},
+                    {en: "I'm so tired, my mind is on the blink.", ja: "すごく疲れている、頭がちゃんと働かない。"},
+                    {en: "I wonder should I get up and fix myself a drink.", ja: "起き上がって、お酒でも作ろうかな。"},
+                    {en: "No, no, no.", ja: "いや、いや、いや。"},
                     {en: "", ja: ""},
-                    {time: 25, en: "I'm so tired I don't know what to do.", ja: "すごく疲れている、どうすればいいか分からない。"},
-                    {time: 31, en: "I'm so tired my mind is set on you.", ja: "すごく疲れている、心は君に囚われたままだ。"},
-                    {time: 37, en: "I wonder should I call you but I know what you'd do.", ja: "君に電話しようかと思うけど、君がどうするかは分かってる。"},
+                    {en: "I'm so tired I don't know what to do.", ja: "すごく疲れている、どうすればいいか分からない。"},
+                    {en: "I'm so tired my mind is set on you.", ja: "すごく疲れている、心は君に囚われたままだ。"},
+                    {en: "I wonder should I call you but I know what you'd do.", ja: "君に電話しようかと思うけど、君がどうするかは分かってる。"},
                     {en: "", ja: ""},
-                    {time: 47, en: "You'd say I'm putting you on.", ja: "君は僕がからかっていると言うだろう。"},
-                    {time: 50, en: "But it's no joke, it's doing me harm.", ja: "でも冗談じゃない、僕を痛めつけているんだ。"},
-                    {time: 53, en: "You know I can't sleep, I can't stop my brain", ja: "眠れないんだ、脳を止められない。"},
-                    {time: 56, en: "You know it's three weeks, I'm going insane.", ja: "もう3週間だ、気が狂いそうだよ。"},
-                    {time: 60, en: "You know I'd give you everything I've got", ja: "持っているものすべてを君にあげてもいい"},
-                    {time: 64, en: "For a little peace of mind.", ja: "少しの心の平穏のためなら。"},
+                    {en: "You'd say I'm putting you on.", ja: "君は僕がからかっていると言うだろう。"},
+                    {en: "But it's no joke, it's doing me harm.", ja: "でも冗談じゃない、僕を痛めつけているんだ。"},
+                    {en: "You know I can't sleep, I can't stop my brain", ja: "眠れないんだ、脳を止められない。"},
+                    {en: "You know it's three weeks, I'm going insane.", ja: "もう3週間だ、気が狂いそうだよ。"},
+                    {en: "You know I'd give you everything I've got", ja: "持っているものすべてを君にあげてもいい"},
+                    {en: "For a little peace of mind.", ja: "少しの心の平穏のためなら。"},
                     {en: "", ja: ""},
                     {en: "I'm so tired, I'm feeling so upset", ja: "すごく疲れている、とても動揺している"},
                     {en: "Although I'm so tired, I'll have another cigarette", ja: "すごく疲れているけれど、もう一本タバコを吸おう"},
@@ -446,20 +465,23 @@
             },
             blackbird: {
                 title: "Blackbird",
-                youtubeId: "Man4Xw8Xypo",
+                album: "The Beatles (White Album)",
+                year: "1968",
+                color: "from-slate-700 to-black",
+                about: "ポール・マッカートニーのアコースティックギターと歌、そして足でのタップ音のみで作られた、シンプルで美しい名曲。\n\n一見すると自然の中の鳥について歌っているように聞こえますが、実際は1960年代のアメリカにおける公民権運動（黒人差別の撤廃運動）にインスピレーションを受けて書かれました。\n「Blackbird（黒い鳥）」は抑圧された黒人女性を暗喩しており、「折れた翼で飛ぶことを学べ」という励ましのメッセージが込められています。",
                 lyrics: [
-                    {time: 0, en: "Blackbird singing in the dead of night,", ja: "真夜中に歌うブラックバード、"},
-                    {time: 6, en: "Take these broken wings and learn to fly.", ja: "この折れた翼で飛ぶことを学びなさい。"},
-                    {time: 11, en: "All your life,", ja: "君のこれまでの人生は、"},
-                    {time: 14, en: "You were only waiting for the moment to arise.", ja: "ただ飛び立つこの瞬間を待っていただけなんだ。"},
+                    {en: "Blackbird singing in the dead of night,", ja: "真夜中に歌うブラックバード、"},
+                    {en: "Take these broken wings and learn to fly.", ja: "この折れた翼で飛ぶことを学びなさい。"},
+                    {en: "All your life,", ja: "君のこれまでの人生は、"},
+                    {en: "You were only waiting for the moment to arise.", ja: "ただ飛び立つこの瞬間を待っていただけなんだ。"},
                     {en: "", ja: ""},
-                    {time: 22, en: "Blackbird singing in the dead of night,", ja: "真夜中に歌うブラックバード、"},
-                    {time: 28, en: "Take these sunken eyes and learn to see.", ja: "このくぼんだ目で見ることを学びなさい。"},
-                    {time: 32, en: "All your life,", ja: "君のこれまでの人生は、"},
-                    {time: 35, en: "You were only waiting for the moment to be free.", ja: "ただ自由になるこの瞬間を待っていただけなんだ。"},
+                    {en: "Blackbird singing in the dead of night,", ja: "真夜中に歌うブラックバード、"},
+                    {en: "Take these sunken eyes and learn to see.", ja: "このくぼんだ目で見ることを学びなさい。"},
+                    {en: "All your life,", ja: "君のこれまでの人生は、"},
+                    {en: "You were only waiting for the moment to be free.", ja: "ただ自由になるこの瞬間を待っていただけなんだ。"},
                     {en: "", ja: ""},
-                    {time: 43, en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
-                    {time: 51, en: "Into the light of the dark black night.", ja: "この暗い漆黒の夜の光の中へ。"},
+                    {en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
+                    {en: "Into the light of the dark black night.", ja: "この暗い漆黒の夜の光の中へ。"},
                     {en: "", ja: ""},
                     {en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
                     {en: "Into the light of the dark black night.", ja: "この暗い漆黒の夜の光の中へ。"},
@@ -483,7 +505,6 @@
             }
         };
 
-        // 辞書データベース
         const dict = { 
             "read": "読む、読んだ", "news": "ニュース", "today": "今日", "boy": "少年、おや", "lucky": "幸運な", "man": "男", "made": "作った", "grade": "等級、成績", "though": "〜だけれども", "rather": "どちらかと言えば", "sad": "悲しい", "well": "ええと、さて", "just": "ただ、ちょうど", "laugh": "笑う", "saw": "見た", "photograph": "写真", "blew": "吹いた", "mind": "心、精神", "car": "車", "notice": "気付く", "lights": "信号", "changed": "変わった", "crowd": "群衆", "people": "人々", "stood": "立った", "stared": "じっと見た", "seen": "見た", "face": "顔", "before": "以前に", "nobody": "誰も〜ない", "really": "本当に", "sure": "確信して", "film": "映画", "english": "イギリスの", "army": "軍隊", "won": "勝った", "war": "戦争", "turned": "向いた", "away": "離れて", "look": "見る", "having": "〜したこと", "book": "本", "turn": "回す、向ける", "woke": "目が覚めた", "fell": "落ちた", "bed": "ベッド", "dragged": "引きずった", "comb": "クシ", "across": "〜を横切って", "head": "頭", "found": "見つけた", "way": "道", "downstairs": "階下へ", "drank": "飲んだ", "cup": "カップ", "looking": "見ること", "up": "上へ", "late": "遅れた", "coat": "コート", "grabbed": "掴んだ", "hat": "帽子", "bus": "バス", "seconds": "秒", "flat": "平らな、きっかり", "upstairs": "階上へ", "smoke": "煙草を吸う", "somebody": "誰か", "spoke": "話した", "went": "行った", "dream": "夢", "thousand": "千", "holes": "穴", "small": "小さい", "count": "数える", "know": "知っている", "many": "多くの", "takes": "必要とする", "fill": "満たす", 
             "places": "場所", "remember": "覚えている", "all": "すべての", "life": "人生", "some": "いくつか", "forever": "永遠に", "better": "より良い", "gone": "去った", "remain": "残る", "moments": "瞬間", "lovers": "恋人", "friends": "友人", "still": "まだ", "recall": "思い出す", "dead": "死んだ、真っただ中", "living": "生きている", "loved": "愛した", "compares": "匹敵する", "memries": "思い出", "memories": "思い出", "lose": "失う", "meaning": "意味", "think": "考える", "something": "何か", "new": "新しい", "never": "決して〜ない", "affection": "愛情", "things": "物事", "often": "しばしば", "stop": "止まる", "more": "もっと", 
@@ -492,111 +513,16 @@
             "blackbird": "クロウタドリ", "take": "取る、持って行く", "these": "これらの", "broken": "壊れた、折れた", "wings": "翼", "learn": "学ぶ", "your": "君の", "only": "ただ〜だけ", "moment": "瞬間", "arise": "起こる、飛び立つ", "sunken": "くぼんだ、沈んだ", "eyes": "目", "free": "自由な", "light": "光", "dark": "暗い", "black": "黒い", "night": "夜", "this": "この", "bird": "鳥"
         };
         
-        // 発音記号辞書 (IPA)
         const pronDict = {
             "read": "ríːd", "news": "njúːz", "today": "tədéɪ", "boy": "bɔɪ", "lucky": "lʌ́ki", "man": "mǽn", "made": "méɪd", "grade": "gréɪd", "though": "ðóʊ", "rather": "rǽðɚ", "sad": "sǽd", "well": "wél", "just": "dʒʌ́st", "laugh": "lǽf", "saw": "sɔ́ː", "photograph": "fóʊtəgræ̀f", "blew": "blúː", "mind": "máɪnd", "car": "kɑ́ɚ", "notice": "nóʊtɪs", "lights": "láɪts", "changed": "tʃéɪndʒd", "crowd": "kráʊd", "people": "píːpl", "stood": "stʊ́d", "stared": "stéɚd", "seen": "síːn", "face": "féɪs", "before": "bɪfɔ́ɚ", "nobody": "nóʊbədi", "really": "ríːəli", "sure": "ʃʊ́ɚ", "film": "fílm", "english": "íŋglɪʃ", "army": "ɑ́ɚmi", "won": "wʌ́n", "war": "wɔ́ɚ", "turned": "tɚ́nd", "away": "əwéɪ", "look": "lʊ́k", "book": "bʊ́k", "turn": "tɚ́n", "woke": "wóʊk", "fell": "fél", "bed": "béd", "dragged": "drǽgd", "comb": "kóʊm", "across": "əkrɔ́s", "head": "héd", "found": "fáʊnd", "way": "wéɪ", "downstairs": "dáʊnstéɚz", "drank": "drǽŋk", "cup": "kʌ́p", "looking": "lʊ́kɪŋ", "up": "ʌ́p", "late": "léɪt", "coat": "kóʊt", "grabbed": "grǽbd", "hat": "hǽt", "bus": "bʌ́s", "seconds": "sékəndz", "flat": "flǽt", "upstairs": "ʌ́pstéɚz", "smoke": "smóʊk", "somebody": "sʌ́mbədi", "spoke": "spóʊk", "went": "wént", "dream": "dríːm", "thousand": "θáʊzənd", "holes": "hóʊlz", "small": "smɔ́ːl", "count": "káʊnt", "know": "nóʊ", "many": "méni", "takes": "téɪks", "fill": "fíl"
         };
         const ignoreSet = new Set(['i', 'a', 'an', 'the', 'is', 'of', 'and', 'in', 'to', 'that', 'but', 'you', 'he', 'she', 'it', 'my', 'his', 'her', 'their', 'with', 'for', 'was', 'if', 'from', 'had', 'as', 'are', 'we', 'they', 'how', 'like', 'on', 'at', 'be']);
 
-        // ==========================================
-        // YouTube Player Logic (ループ削除・単なる再生)
-        // ==========================================
-        let player;
-        let isPlayerReady = false;
-        let currentPlayIndex = -1;
-        let currentPlayStartTime = 0;
-        let currentVideoId = '';
-
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('ytplayer', {
-                height: '100%',
-                width: '100%',
-                videoId: songs['dayInLife'].youtubeId,
-                playerVars: { 'playsinline': 1, 'controls': 1, 'rel': 0, 'fs': 0 },
-                events: {
-                    'onReady': () => { isPlayerReady = true; },
-                    'onError': onPlayerError
-                }
-            });
-        }
-
-        function onPlayerError(event) {
-            const errorOverlay = document.getElementById('yt-error-overlay');
-            const externalLink = document.getElementById('yt-external-link');
-            
-            if (errorOverlay && externalLink) {
-                externalLink.href = `https://www.youtube.com/watch?v=${currentVideoId}&t=${currentPlayStartTime}s`;
-                errorOverlay.classList.remove('hidden');
-                document.getElementById('play-status-text').innerText = "⚠️ 著作権保護によりブロックされました";
-            }
-        }
-
-        function playFromTime(lineIdx, startTime) {
-            if (!isPlayerReady || !player) {
-                alert("YouTubeプレーヤーの準備中です。数秒待ってから再度お試しください。");
-                return;
-            }
-
-            const data = songs[document.getElementById('songSelector').value];
-            const widget = document.getElementById('yt-player-widget');
-            
-            const errorOverlay = document.getElementById('yt-error-overlay');
-            if (errorOverlay) errorOverlay.classList.add('hidden');
-            
-            // 同じボタンを押したら停止
-            if (currentPlayIndex === lineIdx) {
-                closeYtPlayer();
-                return;
-            }
-
-            currentPlayIndex = lineIdx;
-            currentPlayStartTime = startTime;
-            currentVideoId = data.youtubeId;
-            
-            widget.classList.remove('translate-y-[150%]');
-            widget.classList.add('translate-y-0');
-            document.getElementById('play-status-text').innerText = `▶ ${startTime}s〜 再生中`;
-
-            // ループ処理を廃止し、指定時間から新規読み込みで再生を開始し続けるだけにする
-            player.loadVideoById(currentVideoId, startTime);
-
-            updatePlayButtonsUI();
-        }
-
-        function closeYtPlayer() {
-            if (player && isPlayerReady && typeof player.pauseVideo === 'function') player.pauseVideo();
-            currentPlayIndex = -1;
-            document.getElementById('yt-player-widget').classList.remove('translate-y-0');
-            document.getElementById('yt-player-widget').classList.add('translate-y-[150%]');
-            updatePlayButtonsUI();
-        }
-
-        function updatePlayButtonsUI() {
-            document.querySelectorAll('.play-btn').forEach(btn => {
-                const idx = parseInt(btn.dataset.index);
-                if (idx === currentPlayIndex) {
-                    btn.innerText = '⏹';
-                    btn.classList.add('text-red-500', 'animate-pulse');
-                    btn.classList.remove('text-slate-400', 'dark:text-zinc-500', 'hover:text-blue-500', 'dark:hover:text-sky-400');
-                    btn.title = "停止する";
-                } else {
-                    btn.innerText = '▶';
-                    btn.classList.remove('text-red-500', 'animate-pulse');
-                    btn.classList.add('text-slate-400', 'dark:text-zinc-500', 'hover:text-blue-500', 'dark:hover:text-sky-400');
-                    btn.title = "ここから再生";
-                }
-            });
-        }
-
-        // ==========================================
-        // UI & 描画ロジック
-        // ==========================================
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // 単語分解・辞書マッチング機能
         function tokenizeWords(text) {
             const words = text.split(/([a-zA-Z']+)/);
             return words.map(w => {
@@ -618,14 +544,23 @@
 
         function loadSong(id) {
             const data = songs[id];
-            document.getElementById('songTitle').innerText = data.title;
             
-            closeYtPlayer();
-            currentVideoId = ''; 
+            // ヘッダー・タイトルの設定
+            document.getElementById('songTitle').innerText = data.title;
+            document.getElementById('mobileHeaderSongName').innerText = data.title;
+            document.getElementById('songAlbum').innerText = `${data.album} • ${data.year}`;
+            
+            // アクセントカラーの適用
+            const colorAccent = document.getElementById('songColorAccent');
+            colorAccent.className = `w-12 h-1.5 mb-5 rounded-full bg-gradient-to-r ${data.color}`;
+            
+            // ライナーノーツの適用
+            document.getElementById('linerNotesText').innerHTML = data.about.replace(/\n/g, '<br>');
 
             const container = document.getElementById('lyrics-container');
             
-            container.innerHTML = data.lyrics.map((line, lineIdx) => {
+            // 歌詞の描画
+            container.innerHTML = data.lyrics.map((line) => {
                 let enHtml = line.en;
                 if (line.en.trim()) {
                     const idiomPlaceholders = {};
@@ -633,7 +568,6 @@
                     
                     const sortedIdioms = Object.keys(data.idioms).sort((a, b) => b.length - a.length);
 
-                    // まず熟語をプレースホルダーに置換
                     sortedIdioms.forEach((idiom, index) => {
                         const escapedIdiom = idiom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                         const regex = new RegExp(`(^|[^a-zA-Z0-9'])(${escapedIdiom})(?=[^a-zA-Z0-9']|$)`, 'gi');
@@ -648,7 +582,6 @@
                             const example = escapeHtml(idmObj.example);
                             const exampleJa = escapeHtml(idmObj.exampleJa);
 
-                            // 熟語の中身も単語分解する
                             const tokenizedInner = tokenizeWords(p2);
 
                             idiomPlaceholders[ph] = `<span class="${color} idiom-marker" onclick="void(0)" data-title="${escapeHtml(idiom)}" data-meaning="${meaning}" data-explanation="${explanation}" data-example="${example}" data-example-ja="${exampleJa}">${tokenizedInner}</span>`;
@@ -658,14 +591,12 @@
                         });
                     });
 
-                    // 残りの地の文を単語分解
                     const subParts = enHtml.split(/(__IDIOM_\d+__)/);
                     enHtml = subParts.map(part => {
                         if (part.startsWith('__IDIOM_') && part.endsWith('__')) return part;
                         return tokenizeWords(part);
                     }).join('');
 
-                    // 熟語プレースホルダーをHTMLに戻す
                     Object.keys(idiomPlaceholders).forEach(ph => {
                         enHtml = enHtml.replace(ph, idiomPlaceholders[ph]);
                     });
@@ -673,41 +604,65 @@
                 
                 if (!line.en.trim()) return `<div class="h-6"></div>`;
 
-                const playBtn = line.time !== undefined 
-                    ? `<button class="play-btn ml-3 text-slate-400 dark:text-zinc-500 hover:text-blue-500 dark:hover:text-sky-400 transition-all focus:outline-none flex-shrink-0 text-lg" data-index="${lineIdx}" onclick="playFromTime(${lineIdx}, ${line.time})" title="ここから再生">▶</button>` 
-                    : `<div class="ml-3 w-5 flex-shrink-0"></div>`; 
-
-                return `<div class="lyric-line group flex items-start justify-between">
-                          <div class="flex-grow min-w-0">
+                return `<div class="lyric-line mb-1.5 md:mb-3">
                             <div class="leading-relaxed">${enHtml}</div>
                             <div class="ja-text hidden">${line.ja}</div>
-                          </div>
-                          <div class="pt-1 opacity-30 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center">
-                            ${playBtn}
-                          </div>
                         </div>`;
             }).join('');
             
             toggleTranslation(); 
         }
 
-        // ==========================================
-        // タッチイベント & ツールチップ管理
-        // ==========================================
+        function generateDrawerSongs() {
+            const container = document.getElementById('drawer-song-list');
+            let html = '';
+            for (const id in songs) {
+                const s = songs[id];
+                html += `
+                    <div onclick="selectSong('${id}')" class="group cursor-pointer p-4 rounded-xl bg-white dark:bg-zinc-800/50 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all border border-transparent hover:border-slate-300 dark:hover:border-zinc-700 shadow-sm hover:shadow-md flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-lg bg-gradient-to-br ${s.color} shadow-inner flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-playfair font-black text-2xl drop-shadow-md">${s.title.charAt(0)}</span>
+                        </div>
+                        <div class="overflow-hidden">
+                            <h3 class="font-playfair text-lg md:text-xl font-bold text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors truncate">${s.title}</h3>
+                            <p class="text-[11px] md:text-xs text-slate-500 dark:text-zinc-400 font-medium truncate mt-0.5">${s.album}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function openDrawer() {
+            const drawer = document.getElementById('song-drawer');
+            drawer.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('song-drawer');
+            drawer.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+            document.body.style.overflow = '';
+        }
+
+        function selectSong(id) {
+            loadSong(id);
+            closeDrawer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         let isTouchDevice = false;
         window.addEventListener('touchstart', () => { isTouchDevice = true; }, { passive: true });
         let lastTappedWord = null;
-
         const tooltip = document.getElementById('tooltip');
 
         document.getElementById('lyrics-container').addEventListener('click', (e) => {
             const wordEl = e.target.closest('.word-marker');
             const idiomEl = e.target.closest('.idiom-marker');
 
-            // スマホ（タッチデバイス）の特別処理: 1回目で単語表示、2回目で熟語モーダル
             if (isTouchDevice && wordEl) {
                 if (lastTappedWord === wordEl && idiomEl) {
-                    showModal(
+                    openPanel(
                         idiomEl.dataset.title,
                         idiomEl.dataset.meaning,
                         idiomEl.dataset.explanation,
@@ -723,27 +678,24 @@
                 const pron = wordEl.dataset.pron;
                 
                 let tooltipHtml = '';
-                if (pron) {
-                    tooltipHtml += `<span class="text-sky-300 dark:text-sky-400 font-mono text-[11px] block mb-0.5">${pron}</span>`;
-                }
-                tooltipHtml += `<span>${meaning}</span>`;
+                if (pron) tooltipHtml += `<span class="text-sky-300 dark:text-sky-400 font-mono text-[10px] tracking-wider">${pron}</span>`;
+                tooltipHtml += `<span class="font-bold text-sm">${meaning}</span>`;
                 
                 if (idiomEl) {
-                    tooltipHtml += `<div class="mt-1 pt-1 border-t border-slate-600 dark:border-zinc-600 text-yellow-300 text-[9px] font-bold tracking-wide">💡もう一度タップで熟語の詳細</div>`;
+                    tooltipHtml += `<div class="mt-1.5 pt-1.5 border-t border-slate-600 dark:border-zinc-600 text-yellow-300 text-[9px] font-bold tracking-widest uppercase">💡 Tap again for details</div>`;
                 }
                 
                 tooltip.innerHTML = tooltipHtml;
                 tooltip.style.left = Math.max(10, e.clientX - 20) + 'px'; 
-                tooltip.style.top = (e.clientY - 55) + 'px'; 
+                tooltip.style.top = (e.clientY - 65) + 'px'; 
                 tooltip.classList.remove('hidden');
                 
                 lastTappedWord = wordEl;
                 return;
             }
 
-            // PCまたは単語以外の熟語部分クリック
             if (idiomEl) {
-                showModal(
+                openPanel(
                     idiomEl.dataset.title,
                     idiomEl.dataset.meaning,
                     idiomEl.dataset.explanation,
@@ -762,14 +714,12 @@
                 const pron = wordEl.dataset.pron;
                 
                 let tooltipHtml = '';
-                if (pron) {
-                    tooltipHtml += `<span class="text-sky-300 dark:text-sky-400 font-mono text-[11px] block mb-0.5">${pron}</span>`;
-                }
-                tooltipHtml += `<span>${meaning}</span>`;
+                if (pron) tooltipHtml += `<span class="text-sky-300 dark:text-sky-400 font-mono text-[10px] tracking-wider">${pron}</span>`;
+                tooltipHtml += `<span class="font-bold text-sm">${meaning}</span>`;
                 
                 tooltip.innerHTML = tooltipHtml;
                 tooltip.style.left = (e.clientX + 15) + 'px'; 
-                tooltip.style.top = (e.clientY - 25) + 'px';
+                tooltip.style.top = (e.clientY - 35) + 'px';
                 tooltip.classList.remove('hidden');
             }
         });
@@ -779,7 +729,7 @@
             const wordEl = e.target.closest('.word-marker');
             if (wordEl && !tooltip.classList.contains('hidden')) {
                 tooltip.style.left = (e.clientX + 15) + 'px';
-                tooltip.style.top = (e.clientY - 25) + 'px';
+                tooltip.style.top = (e.clientY - 35) + 'px';
             }
         });
 
@@ -790,11 +740,56 @@
         });
 
         document.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('.word-marker') && !tooltip.classList.contains('hidden')) {
+            if (!e.target.closest('.word-marker') && !tooltip.classList.contains('hidden') && !e.target.closest('#annotation-panel')) {
                 tooltip.classList.add('hidden');
                 lastTappedWord = null; 
             }
         });
+
+        function openPanel(title, meaning, desc, example, exampleJa) {
+            document.getElementById('panelTitle').innerText = title || '';
+            document.getElementById('panelMeaning').innerText = meaning || '';
+            document.getElementById('panelDesc').innerText = desc || '';
+            
+            const exContainer = document.getElementById('panelExampleContainer');
+            if (example && example !== "undefined") {
+                document.getElementById('panelExample').innerText = example;
+                document.getElementById('panelExampleJa').innerText = exampleJa && exampleJa !== "undefined" ? exampleJa : '';
+                exContainer.classList.remove('hidden');
+            } else {
+                exContainer.classList.add('hidden');
+            }
+            
+            const panel = document.getElementById('annotation-panel');
+            const overlay = document.getElementById('panel-overlay');
+            
+            panel.classList.remove('translate-y-full', 'md:translate-x-full');
+            overlay.classList.remove('hidden');
+            // setTimeout to allow display block to apply before opacity transition
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closePanel() {
+            const panel = document.getElementById('annotation-panel');
+            const overlay = document.getElementById('panel-overlay');
+            
+            panel.classList.add('translate-y-full', 'md:translate-x-full');
+            overlay.classList.remove('opacity-100');
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+            
+            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+            
+            document.body.style.overflow = '';
+        }
 
         function toggleTranslation() {
             const checkbox = document.getElementById('langCheckbox');
@@ -825,10 +820,7 @@
 
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
-            
-            if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel(); 
-            }
+            if (window.speechSynthesis.speaking) window.speechSynthesis.cancel(); 
             
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
@@ -838,46 +830,15 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        function speakTitle() {
-            speakText(document.getElementById('modalTitle').innerText);
-        }
-
-        function speakExample() {
-            speakText(document.getElementById('modalExample').innerText);
-        }
-
-        function showModal(title, meaning, desc, example, exampleJa) {
-            document.getElementById('modalTitle').innerText = title || '';
-            document.getElementById('modalMeaning').innerText = meaning || '';
-            document.getElementById('modalDesc').innerText = desc || '';
-            
-            const exContainer = document.getElementById('modalExampleContainer');
-            if (example && example !== "undefined") {
-                document.getElementById('modalExample').innerText = example;
-                document.getElementById('modalExampleJa').innerText = exampleJa && exampleJa !== "undefined" ? exampleJa : '';
-                exContainer.classList.remove('hidden');
-            } else {
-                exContainer.classList.add('hidden');
-            }
-            
-            document.getElementById('detailsModal').classList.remove('hidden');
-            document.getElementById('detailsModal').classList.add('flex');
-        }
-
-        function closeModal() {
-            document.getElementById('detailsModal').classList.remove('flex');
-            document.getElementById('detailsModal').classList.add('hidden');
-            
-            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-            }
-        }
+        function speakTitle() { speakText(document.getElementById('panelTitle').innerText); }
+        function speakExample() { speakText(document.getElementById('panelExample').innerText); }
 
         if ('speechSynthesis' in window) {
             window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
         }
 
         window.onload = () => {
+            generateDrawerSongs();
             loadSong('dayInLife');
         };
     </script>
