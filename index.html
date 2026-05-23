@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
+        /* ベーススタイルとタイポグラフィ */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #f4f4f0; 
@@ -22,38 +23,45 @@
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-lora { font-family: 'Lora', serif; }
         
-        .eng-text { font-family: 'Lora', serif; font-size: 0.95rem; line-height: 1.8; color: #1a1a1a; letter-spacing: -0.01em; transition: color 0.3s; }
+        /* 歌詞のスタイル (スマホ向けにGenius風に高密度化・余白と文字間隔を調整) */
+        .eng-text { font-family: 'Lora', serif; font-size: 0.85rem; line-height: 1.5; color: #1a1a1a; letter-spacing: -0.02em; transition: color 0.3s; }
         .dark .eng-text { color: #d4d4d8; } 
         
-        .ja-text { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: #666; font-weight: 500; margin-top: 0.3rem; margin-bottom: 1.2rem; transition: opacity 0.3s, color 0.3s; }
+        .ja-text { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: #666; font-weight: 500; margin-top: 0.15rem; margin-bottom: 0.8rem; transition: opacity 0.3s, color 0.3s; }
         .dark .ja-text { color: #a1a1aa; } 
-        .lyric-line { transition: all 0.3s ease; word-break: keep-all; overflow-wrap: break-word; }
+        .lyric-line { transition: all 0.3s ease; word-break: keep-all; overflow-wrap: break-word; margin-bottom: 0.8rem; }
         
+        /* PC向けのゆったりとした表示 */
         @media (min-width: 768px) {
-            .eng-text { font-size: 1.45rem; }
-            .ja-text { font-size: 0.9rem; margin-bottom: 1.5rem; }
+            .eng-text { font-size: 1.35rem; line-height: 1.6; letter-spacing: -0.01em; }
+            .ja-text { font-size: 0.85rem; margin-bottom: 1.2rem; }
+            .lyric-line { margin-bottom: 1.25rem; }
         }
         
+        /* 辞書ホバー機能 */
         .word-marker { transition: all 0.2s; border-bottom: 1px dotted transparent; }
         .word-marker:hover { background-color: #fef08a; cursor: help; border-bottom: 1px dotted #eab308; }
         .dark .word-marker:hover { background-color: rgba(253, 224, 71, 0.2); border-bottom-color: #fde047; }
         
-        .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; color: #0f172a; }
+        /* イディオムのスタイル（フォントサイズを英語テキストと同期） */
+        .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; cursor: pointer; padding: 0 2px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem; letter-spacing: -0.02em; transition: all 0.2s; color: #0f172a; }
         .idiom-blue:hover { background-color: #bae6fd; }
         .dark .idiom-blue { background-color: rgba(56, 189, 248, 0.08); border-bottom-color: #0284c7; color: #7dd3fc; }
         .dark .idiom-blue:hover { background-color: rgba(56, 189, 248, 0.15); }
         
-        .idiom-orange { background-color: #fff7ed; border-bottom: 2px solid #fb923c; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; color: #0f172a; }
+        .idiom-orange { background-color: #fff7ed; border-bottom: 2px solid #fb923c; cursor: pointer; padding: 0 2px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem; letter-spacing: -0.02em; transition: all 0.2s; color: #0f172a; }
         .idiom-orange:hover { background-color: #fed7aa; }
         .dark .idiom-orange { background-color: rgba(251, 146, 60, 0.08); border-bottom-color: #ea580c; color: #fdba74; }
         .dark .idiom-orange:hover { background-color: rgba(251, 146, 60, 0.15); }
 
         @media (min-width: 768px) {
-            .idiom-blue, .idiom-orange { font-size: 1.45rem; }
+            .idiom-blue, .idiom-orange { font-size: 1.35rem; padding: 0 4px; letter-spacing: -0.01em; }
         }
         
+        /* ツールチップ */
         #tooltip { pointer-events: none; transition: opacity 0.1s; z-index: 100; }
         
+        /* カスタム言語トグルスイッチ */
         .lang-toggle { position: relative; width: 4.5rem; height: 1.75rem; background-color: #e2e8f0; border-radius: 9999px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 0.5rem; font-size: 0.75rem; font-weight: 700; color: #64748b; transition: all 0.3s ease; }
         .dark .lang-toggle { background-color: #27272a; color: #a1a1aa; }
         .lang-toggle-slider { position: absolute; top: 0.125rem; left: 0.125rem; width: 2.125rem; height: 1.5rem; background-color: white; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
@@ -65,6 +73,7 @@
         #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #0f172a; }
         .dark #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #f4f4f5; }
 
+        /* スタイリッシュなカスタムセレクトボックス */
         .custom-select-wrapper { position: relative; display: inline-block; }
         .custom-select { 
             appearance: none; -webkit-appearance: none; -moz-appearance: none; 
@@ -82,6 +91,7 @@
 </head>
 <body class="transition-colors duration-300 dark:bg-zinc-950">
 
+    <!-- ヘッダー（上部固定・すりガラス効果）-->
     <header class="sticky top-0 z-40 backdrop-blur-lg bg-[#f4f4f0]/90 dark:bg-zinc-950/90 border-b border-gray-300 dark:border-zinc-800 transition-colors duration-300">
         <div class="max-w-4xl mx-auto px-4 md:px-10 py-2 md:py-4 flex flex-row justify-between items-center gap-2 md:gap-6">
             <!-- スマホではタイトルを非表示にしてヘッダー領域をコンパクト化 -->
@@ -123,9 +133,10 @@
         </div>
     </header>
 
-    <div class="px-4 md:px-10 pb-10 mt-4 md:mt-10 max-w-4xl mx-auto flex justify-center">
-        <main class="w-full bg-white dark:bg-zinc-900 p-6 md:p-16 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
-            <div class="flex flex-col items-center mb-8 md:mb-12">
+    <!-- メインコンテンツ（スマホでは左右のパディングを極力削り文字領域を確保） -->
+    <div class="px-2 md:px-10 pb-10 mt-4 md:mt-10 max-w-4xl mx-auto flex justify-center">
+        <main class="w-full bg-white dark:bg-zinc-900 p-4 md:p-16 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
+            <div class="flex flex-col items-center mb-6 md:mb-12">
                 <h2 id="songTitle" class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-zinc-100 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
             </div>
             <!-- flex-grow と min-w-0 で横スクロールはみ出しを防止 -->
@@ -133,6 +144,7 @@
         </main>
     </div>
 
+    <!-- 詳細解説ポップアウト -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-900/40 dark:bg-black/90 hidden items-center justify-center p-4 z-50 transition-opacity">
         <div class="bg-white dark:bg-zinc-900 p-6 md:p-10 max-w-lg w-full shadow-2xl rounded-xl relative transition-colors duration-300 border border-transparent dark:border-zinc-800">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 text-3xl leading-none transition">&times;</button>
@@ -164,11 +176,12 @@
         </div>
     </div>
 
+    <!-- YouTubeプレーヤー (ループ廃止・Now Playing) -->
     <div id="yt-player-widget" class="fixed bottom-4 right-4 z-50 bg-white dark:bg-zinc-900 p-3 rounded-xl shadow-2xl border border-slate-200 dark:border-zinc-700 transition-all duration-300 transform translate-y-[150%] flex flex-col gap-2 w-[220px]">
         <div class="flex justify-between items-center mb-1 px-1">
             <span class="text-xs font-bold text-slate-600 dark:text-zinc-300 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                Phrase Loop
+                Now Playing
             </span>
             <button onclick="closeYtPlayer()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors outline-none">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -185,18 +198,21 @@
                  </a>
             </div>
         </div>
-        <p id="loop-status-text" class="text-[10px] text-slate-500 dark:text-zinc-500 text-center font-medium mt-1">待機中...</p>
+        <p id="play-status-text" class="text-[10px] text-slate-500 dark:text-zinc-500 text-center font-medium mt-1">待機中...</p>
     </div>
 
     <!-- 辞書ツールチップ -->
     <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-1.5 rounded shadow-lg pointer-events-none transition-colors border border-transparent dark:border-zinc-700"></div>
 
-    <!-- バージョン表記（ページ最下部へ移動し固定を解除） -->
+    <!-- バージョン表記 -->
     <div class="text-center pb-8 pt-2">
-        <span class="text-[10px] font-mono font-bold text-slate-400/80 dark:text-zinc-600/80">v1.2.3 (Compact UI)</span>
+        <span class="text-[10px] font-mono font-bold text-slate-400/80 dark:text-zinc-600/80">v1.2.2 (Compact & Play)</span>
     </div>
 
     <script>
+        // ==========================================
+        // 楽曲＆イディオム・頻出表現データベース
+        // ==========================================
         const songs = {
             dayInLife: {
                 title: "A Day in the Life",
@@ -467,6 +483,7 @@
             }
         };
 
+        // 辞書データベース
         const dict = { 
             "read": "読む、読んだ", "news": "ニュース", "today": "今日", "boy": "少年、おや", "lucky": "幸運な", "man": "男", "made": "作った", "grade": "等級、成績", "though": "〜だけれども", "rather": "どちらかと言えば", "sad": "悲しい", "well": "ええと、さて", "just": "ただ、ちょうど", "laugh": "笑う", "saw": "見た", "photograph": "写真", "blew": "吹いた", "mind": "心、精神", "car": "車", "notice": "気付く", "lights": "信号", "changed": "変わった", "crowd": "群衆", "people": "人々", "stood": "立った", "stared": "じっと見た", "seen": "見た", "face": "顔", "before": "以前に", "nobody": "誰も〜ない", "really": "本当に", "sure": "確信して", "film": "映画", "english": "イギリスの", "army": "軍隊", "won": "勝った", "war": "戦争", "turned": "向いた", "away": "離れて", "look": "見る", "having": "〜したこと", "book": "本", "turn": "回す、向ける", "woke": "目が覚めた", "fell": "落ちた", "bed": "ベッド", "dragged": "引きずった", "comb": "クシ", "across": "〜を横切って", "head": "頭", "found": "見つけた", "way": "道", "downstairs": "階下へ", "drank": "飲んだ", "cup": "カップ", "looking": "見ること", "up": "上へ", "late": "遅れた", "coat": "コート", "grabbed": "掴んだ", "hat": "帽子", "bus": "バス", "seconds": "秒", "flat": "平らな、きっかり", "upstairs": "階上へ", "smoke": "煙草を吸う", "somebody": "誰か", "spoke": "話した", "went": "行った", "dream": "夢", "thousand": "千", "holes": "穴", "small": "小さい", "count": "数える", "know": "知っている", "many": "多くの", "takes": "必要とする", "fill": "満たす", 
             "places": "場所", "remember": "覚えている", "all": "すべての", "life": "人生", "some": "いくつか", "forever": "永遠に", "better": "より良い", "gone": "去った", "remain": "残る", "moments": "瞬間", "lovers": "恋人", "friends": "友人", "still": "まだ", "recall": "思い出す", "dead": "死んだ、真っただ中", "living": "生きている", "loved": "愛した", "compares": "匹敵する", "memries": "思い出", "memories": "思い出", "lose": "失う", "meaning": "意味", "think": "考える", "something": "何か", "new": "新しい", "never": "決して〜ない", "affection": "愛情", "things": "物事", "often": "しばしば", "stop": "止まる", "more": "もっと", 
@@ -479,17 +496,16 @@
         const pronDict = {
             "read": "ríːd", "news": "njúːz", "today": "tədéɪ", "boy": "bɔɪ", "lucky": "lʌ́ki", "man": "mǽn", "made": "méɪd", "grade": "gréɪd", "though": "ðóʊ", "rather": "rǽðɚ", "sad": "sǽd", "well": "wél", "just": "dʒʌ́st", "laugh": "lǽf", "saw": "sɔ́ː", "photograph": "fóʊtəgræ̀f", "blew": "blúː", "mind": "máɪnd", "car": "kɑ́ɚ", "notice": "nóʊtɪs", "lights": "láɪts", "changed": "tʃéɪndʒd", "crowd": "kráʊd", "people": "píːpl", "stood": "stʊ́d", "stared": "stéɚd", "seen": "síːn", "face": "féɪs", "before": "bɪfɔ́ɚ", "nobody": "nóʊbədi", "really": "ríːəli", "sure": "ʃʊ́ɚ", "film": "fílm", "english": "íŋglɪʃ", "army": "ɑ́ɚmi", "won": "wʌ́n", "war": "wɔ́ɚ", "turned": "tɚ́nd", "away": "əwéɪ", "look": "lʊ́k", "book": "bʊ́k", "turn": "tɚ́n", "woke": "wóʊk", "fell": "fél", "bed": "béd", "dragged": "drǽgd", "comb": "kóʊm", "across": "əkrɔ́s", "head": "héd", "found": "fáʊnd", "way": "wéɪ", "downstairs": "dáʊnstéɚz", "drank": "drǽŋk", "cup": "kʌ́p", "looking": "lʊ́kɪŋ", "up": "ʌ́p", "late": "léɪt", "coat": "kóʊt", "grabbed": "grǽbd", "hat": "hǽt", "bus": "bʌ́s", "seconds": "sékəndz", "flat": "flǽt", "upstairs": "ʌ́pstéɚz", "smoke": "smóʊk", "somebody": "sʌ́mbədi", "spoke": "spóʊk", "went": "wént", "dream": "dríːm", "thousand": "θáʊzənd", "holes": "hóʊlz", "small": "smɔ́ːl", "count": "káʊnt", "know": "nóʊ", "many": "méni", "takes": "téɪks", "fill": "fíl"
         };
-        
         const ignoreSet = new Set(['i', 'a', 'an', 'the', 'is', 'of', 'and', 'in', 'to', 'that', 'but', 'you', 'he', 'she', 'it', 'my', 'his', 'her', 'their', 'with', 'for', 'was', 'if', 'from', 'had', 'as', 'are', 'we', 'they', 'how', 'like', 'on', 'at', 'be']);
 
+        // ==========================================
+        // YouTube Player Logic (ループ削除・単なる再生)
+        // ==========================================
         let player;
         let isPlayerReady = false;
-        let loopInterval;
-        let currentLoopIndex = -1;
-        let currentLoopStartTime = 0;
-        let currentEndTime = 0;
+        let currentPlayIndex = -1;
+        let currentPlayStartTime = 0;
         let currentVideoId = '';
-        let isSeeking = false;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('ytplayer', {
@@ -505,18 +521,17 @@
         }
 
         function onPlayerError(event) {
-            clearInterval(loopInterval);
             const errorOverlay = document.getElementById('yt-error-overlay');
             const externalLink = document.getElementById('yt-external-link');
             
             if (errorOverlay && externalLink) {
-                externalLink.href = `https://www.youtube.com/watch?v=${currentVideoId}&t=${currentLoopStartTime}s`;
+                externalLink.href = `https://www.youtube.com/watch?v=${currentVideoId}&t=${currentPlayStartTime}s`;
                 errorOverlay.classList.remove('hidden');
-                document.getElementById('loop-status-text').innerText = "⚠️ 著作権保護によりブロックされました";
+                document.getElementById('play-status-text').innerText = "⚠️ 著作権保護によりブロックされました";
             }
         }
 
-        function togglePhraseLoop(lineIdx, startTime) {
+        function playFromTime(lineIdx, startTime) {
             if (!isPlayerReady || !player) {
                 alert("YouTubeプレーヤーの準備中です。数秒待ってから再度お試しください。");
                 return;
@@ -528,83 +543,54 @@
             const errorOverlay = document.getElementById('yt-error-overlay');
             if (errorOverlay) errorOverlay.classList.add('hidden');
             
-            if (currentLoopIndex === lineIdx) {
+            // 同じボタンを押したら停止
+            if (currentPlayIndex === lineIdx) {
                 closeYtPlayer();
                 return;
             }
 
-            let endTime = startTime + 4;
-            for (let i = lineIdx + 1; i < data.lyrics.length; i++) {
-                if (data.lyrics[i].time !== undefined) {
-                    endTime = data.lyrics[i].time;
-                    break;
-                }
-            }
-            if (endTime - startTime < 2) endTime = startTime + 3;
-            if (endTime - startTime > 10) endTime = startTime + 6;
-
-            currentLoopIndex = lineIdx;
-            currentLoopStartTime = startTime;
-            currentEndTime = endTime;
+            currentPlayIndex = lineIdx;
+            currentPlayStartTime = startTime;
             currentVideoId = data.youtubeId;
             
             widget.classList.remove('translate-y-[150%]');
             widget.classList.add('translate-y-0');
-            document.getElementById('loop-status-text').innerText = `🔁 ${startTime}s - ${endTime}s ループ再生中`;
+            document.getElementById('play-status-text').innerText = `▶ ${startTime}s〜 再生中`;
 
-            clearInterval(loopInterval);
-            isSeeking = false;
-
-            // 安定版ロジック: 常時新規読み込み
+            // ループ処理を廃止し、指定時間から新規読み込みで再生を開始し続けるだけにする
             player.loadVideoById(currentVideoId, startTime);
-            
-            loopInterval = setInterval(() => {
-                if (!player || typeof player.getPlayerState !== 'function') return;
-                
-                if (player.getPlayerState() === YT.PlayerState.PLAYING && !isSeeking) {
-                    const currentTime = player.getCurrentTime();
-                    
-                    if (currentTime >= currentEndTime - 0.1) {
-                        isSeeking = true;
-                        player.seekTo(currentLoopStartTime, true);
-                        
-                        setTimeout(() => {
-                            isSeeking = false;
-                        }, 500); 
-                    }
-                }
-            }, 50);
 
-            updateLoopButtonsUI();
+            updatePlayButtonsUI();
         }
 
         function closeYtPlayer() {
-            clearInterval(loopInterval);
-            isSeeking = false;
             if (player && isPlayerReady && typeof player.pauseVideo === 'function') player.pauseVideo();
-            currentLoopIndex = -1;
+            currentPlayIndex = -1;
             document.getElementById('yt-player-widget').classList.remove('translate-y-0');
             document.getElementById('yt-player-widget').classList.add('translate-y-[150%]');
-            updateLoopButtonsUI();
+            updatePlayButtonsUI();
         }
 
-        function updateLoopButtonsUI() {
-            document.querySelectorAll('.loop-btn').forEach(btn => {
+        function updatePlayButtonsUI() {
+            document.querySelectorAll('.play-btn').forEach(btn => {
                 const idx = parseInt(btn.dataset.index);
-                if (idx === currentLoopIndex) {
+                if (idx === currentPlayIndex) {
                     btn.innerText = '⏹';
                     btn.classList.add('text-red-500', 'animate-pulse');
                     btn.classList.remove('text-slate-400', 'dark:text-zinc-500', 'hover:text-blue-500', 'dark:hover:text-sky-400');
-                    btn.title = "ループを停止する";
+                    btn.title = "停止する";
                 } else {
-                    btn.innerText = '🔁';
+                    btn.innerText = '▶';
                     btn.classList.remove('text-red-500', 'animate-pulse');
                     btn.classList.add('text-slate-400', 'dark:text-zinc-500', 'hover:text-blue-500', 'dark:hover:text-sky-400');
-                    btn.title = "このフレーズをループ再生";
+                    btn.title = "ここから再生";
                 }
             });
         }
 
+        // ==========================================
+        // UI & 描画ロジック
+        // ==========================================
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
@@ -687,17 +673,17 @@
                 
                 if (!line.en.trim()) return `<div class="h-6"></div>`;
 
-                const loopBtn = line.time !== undefined 
-                    ? `<button class="loop-btn ml-4 text-slate-400 dark:text-zinc-500 hover:text-blue-500 dark:hover:text-sky-400 transition-all focus:outline-none flex-shrink-0 text-lg" data-index="${lineIdx}" onclick="togglePhraseLoop(${lineIdx}, ${line.time})" title="このフレーズをループ再生">🔁</button>` 
-                    : `<div class="ml-4 w-6 flex-shrink-0"></div>`; 
+                const playBtn = line.time !== undefined 
+                    ? `<button class="play-btn ml-3 text-slate-400 dark:text-zinc-500 hover:text-blue-500 dark:hover:text-sky-400 transition-all focus:outline-none flex-shrink-0 text-lg" data-index="${lineIdx}" onclick="playFromTime(${lineIdx}, ${line.time})" title="ここから再生">▶</button>` 
+                    : `<div class="ml-3 w-5 flex-shrink-0"></div>`; 
 
-                return `<div class="mb-5 lyric-line group flex items-start justify-between">
+                return `<div class="lyric-line group flex items-start justify-between">
                           <div class="flex-grow min-w-0">
                             <div class="leading-relaxed">${enHtml}</div>
                             <div class="ja-text hidden">${line.ja}</div>
                           </div>
                           <div class="pt-1 opacity-30 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center">
-                            ${loopBtn}
+                            ${playBtn}
                           </div>
                         </div>`;
             }).join('');
@@ -705,6 +691,9 @@
             toggleTranslation(); 
         }
 
+        // ==========================================
+        // タッチイベント & ツールチップ管理
+        // ==========================================
         let isTouchDevice = false;
         window.addEventListener('touchstart', () => { isTouchDevice = true; }, { passive: true });
         let lastTappedWord = null;
