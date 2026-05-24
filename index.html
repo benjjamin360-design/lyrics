@@ -225,28 +225,36 @@
         <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] bg-blue-500 dark:bg-sky-400 w-0 transition-[width] duration-75 z-50"></div>
     </header>
 
-    <!-- メインコンテンツ (ボトムナビの分だけ下部に余白 pb-24 を追加) -->
-    <div class="px-3 md:px-10 mt-6 md:mt-10 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-24 md:pb-0">
+    <!-- メインコンテンツ -->
+    <div class="px-3 md:px-10 mt-6 md:mt-10 max-w-4xl mx-auto w-full flex-grow flex flex-col">
         <!-- 歌詞領域 -->
-        <main class="w-full bg-white dark:bg-zinc-900 p-5 md:p-14 rounded-t-xl md:rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
+        <main class="w-full bg-white dark:bg-zinc-900 p-5 md:p-14 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative z-10">
             <div class="flex flex-col items-center mb-6 md:mb-10">
                 <h2 id="songTitle" class="text-3xl md:text-5xl font-black text-slate-900 dark:text-zinc-50 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
             </div>
             <!-- 歌詞コンテナ -->
             <div id="lyrics-container" class="lyrics-text w-full relative z-10"></div>
         </main>
-        
-        <!-- About this song -->
-        <section class="w-full bg-slate-50 dark:bg-black p-6 md:p-14 rounded-b-xl md:rounded-xl shadow-inner md:shadow-sm border-x border-b md:border-t md:mt-6 border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative z-10">
-            <h3 class="text-[11px] md:text-xs font-bold text-slate-500 dark:text-zinc-500 uppercase tracking-[0.2em] mb-4">About the track</h3>
-            <p id="linerNotesText" class="text-sm md:text-base font-medium text-slate-800 dark:text-zinc-300 leading-relaxed md:leading-loose whitespace-pre-wrap"></p>
-        </section>
     </div>
 
-    <!-- フッター（バージョン表記） -->
-    <footer class="py-6 mt-4 md:mt-8 text-center relative z-10 hidden md:block">
-        <span class="text-xs font-mono font-bold text-slate-400 dark:text-zinc-500 bg-slate-200 dark:bg-zinc-800 px-3 py-1 rounded-full transition-colors duration-300">v1.4.0 (Mobile UX)</span>
-    </footer>
+    <!-- About this song (微細なグラデーションと白テキストによるモダンレイアウト) -->
+    <section class="w-full bg-gradient-to-b from-[#363f4e] to-[#404b5e] dark:from-black dark:to-zinc-900 mt-16 pt-16 pb-32 md:pb-24 transition-colors duration-300">
+        <div class="max-w-3xl mx-auto px-6 md:px-10">
+            <h3 class="text-5xl md:text-6xl font-bold text-white text-center tracking-tight mb-12">About</h3>
+            
+            <div class="border-b border-white/20 dark:border-zinc-800 pb-3 mb-6 flex justify-between items-end">
+                <span class="text-[11px] md:text-xs font-bold text-white">Song Bio</span>
+                <span id="aboutSongTitle" class="text-[11px] md:text-xs font-bold text-white"></span>
+            </div>
+            
+            <p id="linerNotesText" class="text-sm md:text-base font-medium text-slate-200 dark:text-zinc-400 leading-relaxed md:leading-loose whitespace-pre-wrap"></p>
+        </div>
+        
+        <!-- フッター（バージョン表記） -->
+        <footer class="mt-20 text-center pb-safe hidden md:block">
+            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.5.2 (Refined About)</span>
+        </footer>
+    </section>
 
     <!-- =========================================
          スマホ用 ボトムナビゲーションバー
@@ -658,6 +666,10 @@
             // スマホヘッダー用の曲名設定
             const mobileHeaderTitle = document.getElementById('mobileHeaderSongTitle');
             if (mobileHeaderTitle) mobileHeaderTitle.innerText = data.title;
+
+            // Aboutセクション用の曲名設定
+            const aboutSongTitle = document.getElementById('aboutSongTitle');
+            if (aboutSongTitle) aboutSongTitle.innerText = data.title;
             
             // Genius風 ライナーノーツの設定
             document.getElementById('linerNotesText').innerHTML = data.about.replace(/\n/g, '<br>');
