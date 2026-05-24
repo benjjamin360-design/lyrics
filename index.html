@@ -169,12 +169,18 @@
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
 
     <!-- ヘッダー（PCでは表示、スマホではタイトルのみ表示してコントロールを隠す）-->
-    <header class="sticky top-0 z-30 backdrop-blur-lg bg-[#f4f4f0]/90 dark:bg-[#121212]/90 border-b border-gray-200 dark:border-zinc-800 transition-colors duration-300">
+    <header class="sticky top-0 z-30 backdrop-blur-lg bg-[#f4f4f0]/90 dark:bg-[#121212]/90 border-b border-gray-200 dark:border-zinc-800 transition-colors duration-300 relative">
         <div class="max-w-4xl mx-auto px-4 md:px-10 py-3 md:py-4 flex justify-between items-center">
             
             <!-- タイトル (常に表示) -->
             <div class="flex items-baseline gap-3">
-                <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-black dark:text-zinc-100 uppercase">Beatles Lyrics</h1>
+                <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-black dark:text-zinc-100">The Beatles Lyrics</h1>
+            </div>
+
+            <!-- スマホ用：現在選択中の曲名表示（Now Reading） -->
+            <div class="md:hidden flex items-center gap-1.5 text-slate-500 dark:text-zinc-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                <span id="mobileHeaderSongTitle" class="text-[11px] font-bold truncate max-w-[110px] sm:max-w-[160px] tracking-wide"></span>
             </div>
             
             <!-- PC用コントロールパネル（スマホサイズでは完全に消える） -->
@@ -214,6 +220,9 @@
                 </div>
             </div>
         </div>
+        
+        <!-- 読書プログレスバー (Reading Indicator) -->
+        <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] bg-blue-500 dark:bg-sky-400 w-0 transition-[width] duration-75 z-50"></div>
     </header>
 
     <!-- メインコンテンツ (ボトムナビの分だけ下部に余白 pb-24 を追加) -->
@@ -646,6 +655,10 @@
             // ヘッダー・タイトルの設定
             document.getElementById('songTitle').innerText = data.title;
             
+            // スマホヘッダー用の曲名設定
+            const mobileHeaderTitle = document.getElementById('mobileHeaderSongTitle');
+            if (mobileHeaderTitle) mobileHeaderTitle.innerText = data.title;
+            
             // Genius風 ライナーノーツの設定
             document.getElementById('linerNotesText').innerHTML = data.about.replace(/\n/g, '<br>');
 
@@ -731,6 +744,22 @@
             
             toggleTranslation(); 
         }
+
+        // ==========================================
+        // 読書プログレスバー (Reading Indicator)
+        // ==========================================
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            const progressBar = document.getElementById('reading-progress');
+            if (progressBar) {
+                progressBar.style.width = scrolled + '%';
+            }
+        }
+
+        window.addEventListener('scroll', updateProgressBar, { passive: true });
+        window.addEventListener('resize', updateProgressBar, { passive: true });
 
         // ==========================================
         // イベント管理 & 初期化
@@ -1013,6 +1042,9 @@
             loadSong('dayInLife');
             // 初期化時にトグルの状態を反映
             toggleTranslation();
+            
+            // 初回のプログレスバー更新 (読み込み後に少し遅らせて高さを計算させる)
+            setTimeout(updateProgressBar, 100);
         };
     </script>
 </body>
