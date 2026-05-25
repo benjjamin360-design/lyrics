@@ -2,9 +2,9 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <!-- ステータスバーの色を制御するメタタグ（JSで動的に色を変えます） -->
-    <meta name="theme-color" content="#f8fafc">
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta">
     <title>Beatles Lyrics Reader</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -170,8 +170,8 @@
     <!-- 共有の状態管理（非表示） -->
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
 
-    <!-- ヘッダー（爽やかで透明感のあるフロストガラス風）-->
-    <header class="sticky top-0 z-30 backdrop-blur-xl bg-slate-50/90 dark:bg-zinc-950/90 border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
+    <!-- ヘッダー（ステータスバーと完全に同化させるソリッドカラー）-->
+    <header class="sticky top-0 z-30 bg-white dark:bg-[#0a0a0a] border-b border-slate-100 dark:border-zinc-800 transition-colors duration-300 relative">
         <div class="max-w-4xl mx-auto px-4 md:px-10 py-3 md:py-4 flex justify-between items-center">
             
             <!-- タイトル (常に表示) -->
@@ -254,14 +254,14 @@
         
         <!-- フッター（バージョン表記） -->
         <footer class="mt-20 text-center pb-safe hidden md:block">
-            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.6.1 (Fresh & Clear UI)</span>
+            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.6.2 (Solid Immersive UI)</span>
         </footer>
     </section>
 
     <!-- =========================================
-         スマホ用 ボトムナビゲーションバー（爽やかなフロストガラス）
+         スマホ用 ボトムナビゲーションバー（ソリッドカラー）
     ========================================== -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-slate-50/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-slate-200 dark:border-zinc-800 z-30 md:hidden pb-safe transition-colors duration-300 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.3)]">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0a0a0a] border-t border-slate-100 dark:border-zinc-800 z-30 md:hidden pb-safe transition-colors duration-300">
         <div class="flex justify-around items-center h-16 px-2">
             
             <!-- 曲選択 (非表示のSelectを被せてタップ可能にする) -->
@@ -898,10 +898,10 @@
         // 各種コントロール機能 (翻訳, テーマ, フォント)
         // ==========================================
         function updateThemeColor(isDark) {
-            let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+            let metaThemeColor = document.getElementById('theme-color-meta');
             if (metaThemeColor) {
-                // ライト時は slate-50(#f8fafc)、ダーク時は zinc-950(#09090b) の色をステータスバーに適用
-                metaThemeColor.content = isDark ? '#09090b' : '#f8fafc';
+                // ライト時は white(#ffffff)、ダーク時は #0a0a0a の色をステータスバーに適用
+                metaThemeColor.content = isDark ? '#0a0a0a' : '#ffffff';
             }
         }
 
