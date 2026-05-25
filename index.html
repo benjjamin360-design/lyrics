@@ -3,23 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <!-- ステータスバーの色を制御するメタタグ（JSで動的に色を変えます） -->
     <meta name="theme-color" content="#f8fafc" id="theme-color-meta">
     <title>Beatles Lyrics Reader</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
+        tailwind.config = { darkMode: 'class' }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
     <style>
-        /* -------------------------------------------
-           ベーススタイルとタイポグラフィ
-        ------------------------------------------- */
-        :root {
-            --font-scale: 1; /* フォントサイズの倍率を管理する変数 */
-        }
+        :root { --font-scale: 1; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -28,19 +20,11 @@
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
-        html.dark body {
-            background-color: #0a0a0a;
-        }
-
-        /* セーフエリア（iPhoneのホームバー等）の余白確保 */
+        html.dark body { background-color: #0a0a0a; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-lora { font-family: 'Lora', serif; }
 
-        /* -------------------------------------------
-           歌詞のスタイル (Genius風 ＆ 可変サイズ対応)
-        ------------------------------------------- */
         .eng-text {
             font-family: 'Lora', serif;
             font-size: calc(1.05rem * var(--font-scale));
@@ -72,9 +56,6 @@
             .ja-text { font-size: calc(0.95rem * var(--font-scale)); margin-bottom: 1.25rem; }
         }
 
-        /* -------------------------------------------
-           辞書ホバー・タップ機能
-        ------------------------------------------- */
         .word-marker { transition: all 0.2s; border-bottom: 1px dotted transparent; }
         @media (hover: hover) {
             .word-marker:hover { background-color: #fef08a; cursor: help; border-bottom: 1px dotted #eab308; }
@@ -83,12 +64,19 @@
         .word-marker.active-tap { background-color: #fef08a; border-bottom: 1px dotted #eab308; }
         .dark .word-marker.active-tap { background-color: rgba(253, 224, 71, 0.2); border-bottom-color: #fde047; }
 
-        /* -------------------------------------------
-           イディオムのスタイル
-        ------------------------------------------- */
-        .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: calc(1.05rem * var(--font-scale)); transition: all 0.2s; color: #0f172a; }
-        .idiom-orange { background-color: #fff7ed; border-bottom: 2px solid #fb923c; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: calc(1.05rem * var(--font-scale)); transition: all 0.2s; color: #0f172a; }
-
+        .idiom-blue,
+        .idiom-orange {
+            cursor: pointer;
+            padding: 0 4px;
+            border-radius: 2px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: calc(1.05rem * var(--font-scale));
+            transition: all 0.2s;
+            color: #0f172a;
+        }
+        .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; }
+        .idiom-orange { background-color: #fff7ed; border-bottom: 2px solid #fb923c; }
         .dark .idiom-blue { background-color: rgba(56, 189, 248, 0.08); border-bottom-color: #0284c7; color: #7dd3fc; }
         .dark .idiom-orange { background-color: rgba(251, 146, 60, 0.08); border-bottom-color: #ea580c; color: #fdba74; }
 
@@ -103,34 +91,61 @@
             .idiom-blue, .idiom-orange { font-size: calc(1.5rem * var(--font-scale)); }
         }
 
-        /* -------------------------------------------
-           ツールチップ
-        ------------------------------------------- */
         #tooltip { pointer-events: none; transition: opacity 0.15s; z-index: 100; }
 
-        /* -------------------------------------------
-           カスタム言語トグルスイッチ (EN/JP) - PC用
-        ------------------------------------------- */
-        .lang-toggle { position: relative; width: 4.5rem; height: 1.75rem; background-color: #334155; border-radius: 9999px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 0.5rem; font-size: 0.75rem; font-weight: 700; color: #94a3b8; transition: all 0.3s ease; }
+        .lang-toggle {
+            position: relative;
+            width: 4.5rem;
+            height: 1.75rem;
+            background-color: #334155;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
         .dark .lang-toggle { background-color: #27272a; color: #a1a1aa; }
-        .lang-toggle-slider { position: absolute; top: 0.125rem; left: 0.125rem; width: 2.125rem; height: 1.5rem; background-color: #1e293b; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
+        .lang-toggle-slider {
+            position: absolute;
+            top: 0.125rem;
+            left: 0.125rem;
+            width: 2.125rem;
+            height: 1.5rem;
+            background-color: #1e293b;
+            border-radius: 9999px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 1;
+        }
         .dark .lang-toggle-slider { background-color: #3f3f46; }
         .lang-toggle-text { position: relative; z-index: 2; transition: color 0.3s ease; user-select: none; }
         #langCheckbox:checked + .lang-toggle .lang-toggle-slider { transform: translateX(2.125rem); }
-        #langCheckbox:checked + .lang-toggle .text-jp { color: #f8fafc; }
-        .dark #langCheckbox:checked + .lang-toggle .text-jp { color: #f4f4f5; }
+        #langCheckbox:checked + .lang-toggle .text-jp,
         #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #f8fafc; }
+        .dark #langCheckbox:checked + .lang-toggle .text-jp,
         .dark #langCheckbox:not(:checked) + .lang-toggle .text-en { color: #f4f4f5; }
 
-        /* -------------------------------------------
-           スタイリッシュなカスタムセレクトボックス - PC用
-        ------------------------------------------- */
         .custom-select-wrapper { position: relative; display: inline-block; }
         .custom-select {
-            appearance: none; -webkit-appearance: none; -moz-appearance: none;
-            background-color: #1e293b; border: 1px solid #334155; border-radius: 9999px;
-            padding: 0.4rem 2.25rem 0.4rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
-            color: #f8fafc; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 9999px;
+            padding: 0.4rem 2.25rem 0.4rem 1.25rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
         .dark .custom-select { background-color: #18181b; border-color: #27272a; color: #e4e4e7; }
         .custom-select:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
@@ -142,7 +157,6 @@
             .custom-select-icon { right: 1rem; }
         }
 
-        /* レンジスライダーのカスタマイズ */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -163,45 +177,44 @@
             border: 2px solid white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
+
+        .spotify-player {
+            bottom: calc(env(safe-area-inset-bottom) + 3.75rem);
+        }
+
+        @media (min-width: 768px) {
+            .spotify-player {
+                bottom: 1.25rem;
+            }
+        }
     </style>
 </head>
 <body class="transition-colors duration-300 flex flex-col min-h-screen">
-
-    <!-- 共有の状態管理（非表示） -->
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
 
-    <!-- ヘッダー（ステータスバーと完全に同化させるソリッドカラー）-->
     <header class="sticky top-0 z-30 bg-slate-50 dark:bg-zinc-950 border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
         <div class="max-w-4xl mx-auto px-4 md:px-10 py-3 md:py-4 flex justify-between items-center">
-
-            <!-- タイトル (常に表示) -->
             <div class="flex items-baseline gap-3">
                 <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-slate-900 dark:text-slate-50">The Beatles Lyrics</h1>
             </div>
 
-            <!-- スマホ用：現在選択中の曲名表示（Now Reading） -->
             <div class="md:hidden flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                 <span id="mobileHeaderSongTitle" class="text-[11px] font-bold truncate max-w-[110px] sm:max-w-[160px] tracking-wide text-slate-600 dark:text-slate-300"></span>
             </div>
 
-            <!-- PC用コントロールパネル -->
             <div class="hidden md:flex items-center gap-6">
-                <!-- 文字サイズ変更ボタン -->
                 <button onclick="toggleFontSettings()" class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none" title="文字サイズ変更" id="btn-font-size">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                     <span class="text-sm font-bold font-mono">Aa</span>
                 </button>
 
-                <!-- ダークモード切替 -->
                 <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors focus:outline-none" title="ダークモード切替">
                     <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </button>
 
-                <!-- EN/JP スライドスイッチ -->
                 <label class="relative inline-flex items-center cursor-pointer" title="日本語訳の表示/非表示">
-                    <!-- JSで連動させるためダミーのイベント発火用 -->
                     <div class="lang-toggle group-hover:ring-2 group-hover:ring-sky-200 transition-all" onclick="document.getElementById('langCheckbox').click();">
                         <div class="lang-toggle-slider"></div>
                         <span class="lang-toggle-text text-en">EN</span>
@@ -209,7 +222,6 @@
                     </div>
                 </label>
 
-                <!-- 曲選択 -->
                 <div class="custom-select-wrapper flex-shrink-0">
                     <select id="songSelector" onchange="loadSong(this.value)" class="custom-select transition-colors duration-300">
                         <option value="dayInLife">A Day in the Life</option>
@@ -218,53 +230,52 @@
                         <option value="imSoTired">I'm So Tired</option>
                         <option value="blackbird">Blackbird</option>
                     </select>
-                    <svg class="custom-select-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg class="custom-select-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
             </div>
         </div>
-
-        <!-- 読書プログレスバー (Reading Indicator) -->
         <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] bg-sky-400 dark:bg-sky-500 w-0 transition-[width] duration-75 z-50"></div>
     </header>
 
-    <!-- メインコンテンツ (ボトムナビが被らないよう下部余白 pb-32 を設定) -->
     <div class="px-3 md:px-10 mt-6 md:mt-10 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-6 md:pb-0">
-        <!-- 歌詞領域 (フラットレイアウト) -->
         <main class="w-full transition-colors duration-300 relative z-10 pt-2 md:pt-10 pb-4 md:pb-6">
             <div class="flex flex-col items-center mb-10 md:mb-16">
                 <h2 id="songTitle" class="text-4xl md:text-6xl font-black text-slate-900 dark:text-zinc-50 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
             </div>
-            <!-- 歌詞コンテナ -->
             <div id="lyrics-container" class="lyrics-text w-full relative z-10 px-2 md:px-8"></div>
         </main>
     </div>
 
-    <!-- About this song (微細なグラデーションと白テキストによるモダンレイアウト) -->
     <section class="w-full bg-gradient-to-b from-[#363f4e] to-[#404b5e] dark:from-black dark:to-zinc-900 mt-6 md:mt-8 pt-10 md:pt-12 pb-20 md:pb-16 transition-colors duration-300">
         <div class="max-w-3xl mx-auto px-6 md:px-10">
             <h3 class="text-5xl md:text-6xl font-bold text-white text-center tracking-tight mb-7 md:mb-8">About</h3>
-
             <div class="border-b border-white/20 dark:border-zinc-800 pb-3 mb-6 flex justify-between items-end">
                 <span class="text-[11px] md:text-xs font-bold text-white">Song Bio</span>
                 <span id="aboutSongTitle" class="text-[11px] md:text-xs font-bold text-white"></span>
             </div>
-
             <p id="linerNotesText" class="text-sm md:text-base font-medium text-slate-200 dark:text-zinc-400 leading-relaxed md:leading-loose whitespace-pre-wrap"></p>
         </div>
 
-        <!-- フッター（バージョン表記） -->
         <footer class="mt-10 text-center pb-safe hidden md:block">
             <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.8.4 (Polished Nav & Smooth Bounce)</span>
         </footer>
     </section>
 
-    <!-- =========================================
-         スマホ用 ボトムナビゲーションバー（視認性向上＆少し下へ配置）
-    ========================================== -->
+    <button id="spotifyPlayer" onclick="openCurrentSpotify()" class="spotify-player fixed z-30 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[420px] max-w-[420px] mx-auto md:mx-0 bg-[#1DB954] text-white rounded-full shadow-[0_10px_30px_rgba(29,185,84,0.28)] hover:bg-[#1ed760] active:scale-[0.98] transition-all duration-200 px-3 py-2.5 flex items-center gap-3 focus:outline-none focus:ring-4 focus:ring-[#1DB954]/25" type="button" aria-label="Spotifyで現在の曲を開く">
+        <span class="grid place-items-center w-9 h-9 rounded-full bg-black/20 flex-shrink-0">
+            <svg class="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5v14l11-7z"></path>
+            </svg>
+        </span>
+        <span class="min-w-0 text-left flex-1">
+            <span id="spotifySongTitle" class="block text-sm font-extrabold truncate">A Day in the Life</span>
+            <span id="spotifyArtistName" class="block text-[11px] font-bold text-white/80 truncate">The Beatles</span>
+        </span>
+        <span class="text-[10px] font-black tracking-wider bg-black/15 px-2.5 py-1 rounded-full flex-shrink-0">Spotify</span>
+    </button>
+
     <nav id="bottomNav" class="fixed z-30 md:hidden transition-transform duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.6)] bg-white/85 dark:bg-zinc-800/85 backdrop-blur-2xl border border-white dark:border-zinc-600 rounded-full" style="bottom: calc(env(safe-area-inset-bottom) - 1rem); left: 1.5rem; right: 1.5rem; max-width: 400px; margin: 0 auto;">
         <div class="flex justify-around items-center h-12 px-2">
-
-            <!-- 曲選択 (非表示のSelectを被せてタップ可能にする) -->
             <div class="relative flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                 <span class="text-[9px] font-bold">Songs</span>
@@ -277,31 +288,24 @@
                 </select>
             </div>
 
-            <!-- 文字サイズ -->
             <button onclick="toggleFontSettings()" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none" id="mobileFontBtn">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                 <span class="text-[9px] font-bold">Size</span>
             </button>
 
-            <!-- EN/JP トグル -->
             <button onclick="document.getElementById('langCheckbox').click();" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 transition-colors focus:outline-none hover:text-sky-500 dark:hover:text-sky-400" id="mobileLangBtn">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
                 <span class="text-[9px] font-bold" id="mobileLangLabel">EN/JP</span>
             </button>
 
-            <!-- ダークモード -->
             <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none">
                 <svg class="w-4 h-4 mb-0.5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 <svg class="w-4 h-4 mb-0.5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="text-[9px] font-bold">Theme</span>
             </button>
-
         </div>
     </nav>
 
-    <!-- =========================================
-         フォントサイズ設定パネル (スライダー)
-    ========================================== -->
     <div id="fontSettingsOverlay" class="fixed inset-0 z-40 hidden" onclick="toggleFontSettings()"></div>
     <div id="fontSettingsPanel" class="fixed z-50 bottom-[72px] left-4 right-4 md:bottom-auto md:top-20 md:left-auto md:right-10 bg-white dark:bg-zinc-800 p-5 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-700 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-4 md:translate-y-0 md:w-72">
         <div class="flex justify-between items-center mb-4">
@@ -314,15 +318,13 @@
             <span class="text-xl font-bold text-slate-400">A</span>
         </div>
         <div class="mt-4 flex justify-center">
-             <button onclick="resetFontSize()" class="text-[10px] uppercase tracking-wider font-bold text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors">Reset to Default</button>
+            <button onclick="resetFontSize()" class="text-[10px] uppercase tracking-wider font-bold text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors">Reset to Default</button>
         </div>
     </div>
 
-    <!-- 詳細解説ポップアウト (Genius風 サイドパネル/ボトムシート) -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 hidden z-50 transition-opacity">
         <div class="absolute inset-0" onclick="closeModal()"></div>
         <div class="absolute bottom-0 md:bottom-auto md:top-0 right-0 w-full md:w-[480px] h-[80vh] md:h-full bg-white dark:bg-zinc-900 shadow-2xl transition-transform duration-300 transform translate-y-full md:translate-y-0 md:translate-x-full border-t md:border-l border-slate-200 dark:border-zinc-800 flex flex-col" id="modalContent">
-
             <div class="flex justify-between items-center p-4 md:p-6 border-b border-slate-100 dark:border-zinc-800">
                 <h2 id="modalTitle" class="text-2xl font-bold text-slate-800 dark:text-zinc-100 font-playfair"></h2>
                 <div class="flex items-center gap-3">
@@ -333,7 +335,6 @@
 
             <div class="p-5 md:p-8 overflow-y-auto flex-grow">
                 <div id="modalMeaning" class="text-lg md:text-xl font-bold text-blue-600 dark:text-sky-400 mb-6"></div>
-
                 <div class="mb-8">
                     <p class="text-[11px] text-slate-400 dark:text-zinc-500 font-bold uppercase mb-2 tracking-wider">Context & Deep Dive</p>
                     <p id="modalDesc" class="text-slate-700 dark:text-zinc-300 leading-relaxed text-sm md:text-base"></p>
@@ -351,16 +352,14 @@
         </div>
     </div>
 
-    <!-- 辞書ツールチップ -->
     <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-2 rounded shadow-lg pointer-events-none transition-opacity border border-transparent dark:border-zinc-700 max-w-[200px] z-50"></div>
 
     <script>
-        // ==========================================
-        // 楽曲＆イディオム・頻出表現データベース
-        // ==========================================
         const songs = {
             dayInLife: {
                 title: "A Day in the Life",
+                artist: "The Beatles",
+                spotifyUrl: "https://open.spotify.com/track/0hKRSZhUGEhKU6aNSPBACZ",
                 about: "ジョン・レノンとポール・マッカートニーの全く異なる2つの未完成曲を繋ぎ合わせて作られた、ビートルズの最高傑作の一つ。\n\n新聞記事から着想を得たジョンの退廃的なパートと、慌ただしい日常を歌うポールのパートが、40人編成のオーケストラによる狂気的なクレッシェンドで結ばれています。\n最後の一斉に鳴らされるEコードの余韻は、4台のピアノで同時に弾かれ、約40秒間もスタジオに響き続けました。",
                 lyrics: [
                     {en: "I read the news today, oh boy.", ja: "今日、新聞を読んだよ。まったく。"},
@@ -417,6 +416,8 @@
             },
             inMyLife: {
                 title: "In My Life",
+                artist: "The Beatles",
+                spotifyUrl: "https://open.spotify.com/track/3KfbEIOC7YIv90FIfNSZpo",
                 about: "ジョン・レノンが自身の幼少期から青年期にかけての故郷リバプールの思い出を振り返り、書かれた自伝的な名曲です。\n\n当初は具体的なバス停や通りの名前が入った長い詩でしたが、最終的にそれらを削ぎ落とし、誰の人生にも当てはまる普遍的な愛と記憶の歌に昇華されました。\n間奏で聴こえるバロック調のハープシコードのような音は、実はプロデューサーのジョージ・マーティンがピアノを半分のテンポで弾き、テープの回転速度を倍にして録音したという有名な逸話があります。",
                 lyrics: [
                     {en: "There are places I'll remember", ja: "僕の人生において、ずっと忘れられない場所がある。"},
@@ -460,6 +461,8 @@
             },
             walrus: {
                 title: "I Am The Walrus",
+                artist: "The Beatles",
+                spotifyUrl: "https://open.spotify.com/track/4qmvOVUt7U8szKXspAoLVy",
                 about: "ジョン・レノンがドラッグの影響下で書いたとされる、究極のサイケデリック・ナンセンス・ソング。\n\n「学校の先生がビートルズの歌詞を真面目に分析している」という手紙を受け取ったジョンが、「それなら絶対に意味のわからない歌詞を書いてやる」と悪ふざけで作ったと言われています。\nルイス・キャロルの『不思議の国のアリス』に登場するセイウチ（Walrus）や、警察官のサイレンの音（Ooh Ooh...）など、様々な混沌としたイメージがコラージュされています。",
                 lyrics: [
                     {en: "I am he", ja: "僕は彼だ"},
@@ -545,6 +548,8 @@
             },
             imSoTired: {
                 title: "I'm So Tired",
+                artist: "The Beatles",
+                spotifyUrl: "https://open.spotify.com/track/2X9H5BokS1u5O46YpNYNsZ",
                 about: "ビートルズがインドのリシケシュに赴き、マハリシ・マヘーシュ・ヨーギーのもとで超越瞑想の合宿に参加していた際に書かれた曲です。\n\nジョン・レノンは瞑想キャンプ中のストイックな生活や、当時の妻とは別に心を奪われていたオノ・ヨーコへの思慕から、深刻な不眠症に悩まされていました。\nその疲労困憊した精神状態と、タバコへの渇望、やり場のない苛立ちが、気怠くもパワフルなサウンドに乗せて生々しく歌われています。",
                 lyrics: [
                     {en: "I'm so tired, I haven't slept a wink,", ja: "ひどく疲れている、一睡もしていない。"},
@@ -591,6 +596,8 @@
             },
             blackbird: {
                 title: "Blackbird",
+                artist: "The Beatles",
+                spotifyUrl: "https://open.spotify.com/track/5jgFfDIR6FR0gvlA56Nakr",
                 about: "ポール・マッカートニーのアコースティックギターと歌、そして足でのタップ音のみで作られた、シンプルで美しい名曲。\n\n一見すると自然の中の鳥について歌っているように聞こえますが、実際は1960年代のアメリカにおける公民権運動（黒人差別の撤廃運動）にインスピレーションを受けて書かれました。\n「Blackbird（黒い鳥）」は抑圧された黒人女性を暗喩しており、「折れた翼で飛ぶことを学べ」という励ましのメッセージが込められています。",
                 lyrics: [
                     {en: "Blackbird singing in the dead of night,", ja: "真夜中の静寂の中で歌うブラックバード、"},
@@ -628,9 +635,6 @@
             }
         };
 
-        // ==========================================
-        // 辞書データベース
-        // ==========================================
         const dict = {
             "read": "読む、読んだ", "news": "ニュース", "today": "今日", "boy": "少年、おや", "lucky": "幸運な", "man": "男", "made": "作った", "grade": "等級、成績", "though": "〜だけれども", "rather": "どちらかと言えば", "sad": "悲しい", "well": "ええと、さて", "just": "ただ、ちょうど", "laugh": "笑う", "saw": "見た", "photograph": "写真", "blew": "吹いた", "mind": "心、精神", "car": "車", "notice": "気付く", "lights": "信号", "changed": "変わった", "crowd": "群衆", "people": "人々", "stood": "立った", "stared": "じっと見た", "seen": "見た", "face": "顔", "before": "以前に", "nobody": "誰も〜ない", "really": "本当に", "sure": "確信して", "film": "映画", "english": "イギリスの", "army": "軍隊", "won": "勝った", "war": "戦争", "turned": "向いた", "away": "離れて", "look": "見る", "having": "〜したこと", "book": "本", "turn": "回す、向ける", "woke": "目が覚めた", "fell": "落ちた", "bed": "ベッド", "dragged": "引きずった", "comb": "クシ", "across": "〜を横切って", "head": "頭", "found": "見つけた", "way": "道", "downstairs": "階下へ", "drank": "飲んだ", "cup": "カップ", "looking": "見ること", "up": "上へ", "late": "遅れた", "coat": "コート", "grabbed": "掴んだ", "hat": "帽子", "bus": "バス", "seconds": "秒", "flat": "平らな、きっかり", "upstairs": "階上へ", "smoke": "煙草を吸う", "somebody": "誰か", "spoke": "話した", "went": "行った", "dream": "夢", "thousand": "千", "holes": "穴", "small": "小さい", "count": "数える", "know": "知っている", "many": "多くの", "takes": "必要とする", "fill": "満たす",
             "places": "場所", "remember": "覚えている", "all": "すべての", "life": "人生", "some": "いくつか", "forever": "永遠に", "better": "より良い", "gone": "去った", "remain": "残る", "moments": "瞬間", "lovers": "恋人", "friends": "友人", "still": "まだ", "recall": "思い出す", "dead": "死んだ、真っただ中", "living": "生きている", "loved": "愛した", "compares": "匹敵する", "memries": "思い出", "memories": "思い出", "lose": "失う", "meaning": "意味", "think": "考える", "something": "何か", "new": "新しい", "never": "決して〜ない", "affection": "愛情", "things": "物事", "often": "しばしば", "stop": "止まる", "more": "もっと",
@@ -639,15 +643,11 @@
             "blackbird": "クロウタドリ", "take": "取る、持って行く", "these": "これらの", "broken": "壊れた、折れた", "wings": "翼", "learn": "学ぶ", "your": "君の", "only": "ただ〜だけ", "moment": "瞬間", "arise": "起こる、飛び立つ", "sunken": "くぼんだ、沈んだ", "eyes": "目", "free": "自由な", "light": "光", "dark": "暗い", "black": "黒い", "night": "夜", "this": "この", "bird": "鳥"
         };
 
-        // 発音記号データベース
         const pronDict = {
             "read": "ríːd", "news": "njúːz", "today": "tədéɪ", "boy": "bɔɪ", "lucky": "lʌ́ki", "man": "mǽn", "made": "méɪd", "grade": "gréɪd", "though": "ðóʊ", "rather": "rǽðɚ", "sad": "sǽd", "well": "wél", "just": "dʒʌ́st", "laugh": "lǽf", "saw": "sɔ́ː", "photograph": "fóʊtəgræ̀f", "blew": "blúː", "mind": "máɪnd", "car": "kɑ́ɚ", "notice": "nóʊtɪs", "lights": "láɪts", "changed": "tʃéɪndʒd", "crowd": "kráʊd", "people": "píːpl", "stood": "stʊ́d", "stared": "stéɚd", "seen": "síːn", "face": "féɪs", "before": "bɪfɔ́ɚ", "nobody": "nóʊbədi", "really": "ríːəli", "sure": "ʃʊ́ɚ", "film": "fílm", "english": "íŋglɪʃ", "army": "ɑ́ɚmi", "won": "wʌ́n", "war": "wɔ́ɚ", "turned": "tɚ́nd", "away": "əwéɪ", "look": "lʊ́k", "book": "bʊ́k", "turn": "tɚ́n", "woke": "wóʊk", "fell": "fél", "bed": "béd", "dragged": "drǽgd", "comb": "kóʊm", "across": "əkrɔ́s", "head": "héd", "found": "fáʊnd", "way": "wéɪ", "downstairs": "dáʊnstéɚz", "drank": "drǽŋk", "cup": "kʌ́p", "looking": "lʊ́kɪŋ", "up": "ʌ́p", "late": "léɪt", "coat": "kóʊt", "grabbed": "grǽbd", "hat": "hǽt", "bus": "bʌ́s", "seconds": "sékəndz", "flat": "flǽt", "upstairs": "ʌ́pstéɚz", "smoke": "smóʊk", "somebody": "sʌ́mbədi", "spoke": "spóʊk", "went": "wént", "dream": "dríːm", "thousand": "θáʊzənd", "holes": "hóʊlz", "small": "smɔ́ːl", "count": "káʊnt", "know": "nóʊ", "many": "méni", "takes": "téɪks", "fill": "fíl"
         };
         const ignoreSet = new Set(['i', 'a', 'an', 'the', 'is', 'of', 'and', 'in', 'to', 'that', 'but', 'you', 'he', 'she', 'it', 'my', 'his', 'her', 'their', 'with', 'for', 'was', 'if', 'from', 'had', 'as', 'are', 'we', 'they', 'how', 'like', 'on', 'at', 'be']);
 
-        // ==========================================
-        // UI & 描画ロジック
-        // ==========================================
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
@@ -661,6 +661,13 @@
 
             const data = songs[id];
             document.getElementById('songTitle').innerText = data.title;
+
+            const spotifySongTitle = document.getElementById('spotifySongTitle');
+            const spotifyArtistName = document.getElementById('spotifyArtistName');
+            const spotifyPlayer = document.getElementById('spotifyPlayer');
+            if (spotifySongTitle) spotifySongTitle.innerText = data.title;
+            if (spotifyArtistName) spotifyArtistName.innerText = data.artist || "The Beatles";
+            if (spotifyPlayer) spotifyPlayer.dataset.spotifyUrl = data.spotifyUrl || "";
 
             const mobileHeaderTitle = document.getElementById('mobileHeaderSongTitle');
             if (mobileHeaderTitle) mobileHeaderTitle.innerText = data.title;
@@ -677,13 +684,11 @@
                 if (line.en.trim()) {
                     const idiomPlaceholders = {};
                     let phIndex = 0;
-
                     const sortedIdioms = Object.keys(data.idioms).sort((a, b) => b.length - a.length);
 
                     sortedIdioms.forEach((idiom, index) => {
                         const escapedIdiom = idiom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                         const regex = new RegExp(`(^|[^a-zA-Z0-9'])(${escapedIdiom})(?=[^a-zA-Z0-9']|$)`, 'gi');
-
                         const color = index % 2 === 0 ? 'idiom-blue' : 'idiom-orange';
                         const idmObj = data.idioms[idiom];
 
@@ -700,15 +705,12 @@
                                 if (cleanW.length > 0 && !ignoreSet.has(cw)) {
                                     const m = dict[cw];
                                     const pron = pronDict[cw] ? ` data-pron="${escapeHtml(pronDict[cw])}"` : '';
-                                    if (m) {
-                                        return `<span class="word-marker" data-meaning="${escapeHtml(m)}"${pron}>${w}</span>`;
-                                    }
+                                    if (m) return `<span class="word-marker" data-meaning="${escapeHtml(m)}"${pron}>${w}</span>`;
                                 }
                                 return w;
                             }).join('');
 
                             idiomPlaceholders[ph] = `<span class="${color} idiom-marker" onclick="void(0)" data-title="${escapeHtml(idiom)}" data-meaning="${meaning}" data-explanation="${explanation}" data-example="${example}" data-example-ja="${exampleJa}">${tokenizedInner}</span>`;
-
                             phIndex++;
                             return p1 + ph;
                         });
@@ -725,13 +727,9 @@
                             if (cleanW.length > 0 && !ignoreSet.has(cw)) {
                                 const meaning = dict[cw];
                                 const pron = pronDict[cw] ? ` data-pron="${escapeHtml(pronDict[cw])}"` : '';
-                                if (meaning) {
-                                    return `<span class="eng-text word-hover word-marker" onclick="void(0)" data-meaning="${escapeHtml(meaning)}"${pron}>${w}</span>`;
-                                }
+                                if (meaning) return `<span class="eng-text word-hover word-marker" onclick="void(0)" data-meaning="${escapeHtml(meaning)}"${pron}>${w}</span>`;
                             }
-                            if (w.length > 0 && /[a-zA-Z']/.test(w)) {
-                                return `<span class="eng-text">${w}</span>`;
-                            }
+                            if (w.length > 0 && /[a-zA-Z']/.test(w)) return `<span class="eng-text">${w}</span>`;
                             return w;
                         }).join('');
                     }).join('');
@@ -752,6 +750,11 @@
             toggleTranslation();
         }
 
+        function openCurrentSpotify() {
+            const currentUrl = document.getElementById('spotifyPlayer')?.dataset.spotifyUrl;
+            if (currentUrl) window.location.href = currentUrl;
+        }
+
         let isTouchDevice = false;
         window.addEventListener('touchstart', () => { isTouchDevice = true; }, { passive: true });
 
@@ -764,13 +767,7 @@
 
             if (isTouchDevice && wordEl) {
                 if (lastTappedWord === wordEl && idiomEl) {
-                    showModal(
-                        idiomEl.dataset.title,
-                        idiomEl.dataset.meaning,
-                        idiomEl.dataset.explanation,
-                        idiomEl.dataset.example,
-                        idiomEl.dataset.exampleJa
-                    );
+                    showModal(idiomEl.dataset.title, idiomEl.dataset.meaning, idiomEl.dataset.explanation, idiomEl.dataset.example, idiomEl.dataset.exampleJa);
                     tooltip.classList.add('opacity-0');
                     setTimeout(() => tooltip.classList.add('hidden'), 150);
                     wordEl.classList.remove('active-tap');
@@ -798,18 +795,11 @@
                 tooltip.style.top = (e.clientY - 60) + 'px';
                 tooltip.classList.remove('hidden');
                 setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
-
                 return;
             }
 
             if (idiomEl) {
-                showModal(
-                    idiomEl.dataset.title,
-                    idiomEl.dataset.meaning,
-                    idiomEl.dataset.explanation,
-                    idiomEl.dataset.example,
-                    idiomEl.dataset.exampleJa
-                );
+                showModal(idiomEl.dataset.title, idiomEl.dataset.meaning, idiomEl.dataset.explanation, idiomEl.dataset.example, idiomEl.dataset.exampleJa);
                 lastTappedWord = null;
             }
         });
@@ -861,10 +851,8 @@
         });
 
         function updateThemeColor(isDark) {
-            let metaThemeColor = document.getElementById('theme-color-meta');
-            if (metaThemeColor) {
-                metaThemeColor.content = isDark ? '#09090b' : '#f8fafc';
-            }
+            const metaThemeColor = document.getElementById('theme-color-meta');
+            if (metaThemeColor) metaThemeColor.content = isDark ? '#09090b' : '#f8fafc';
         }
 
         function toggleTranslation() {
@@ -968,9 +956,7 @@
                     const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
 
                     const progressBar = document.getElementById('reading-progress');
-                    if (progressBar) {
-                        progressBar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
-                    }
+                    if (progressBar) progressBar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
 
                     const bottomNav = document.getElementById('bottomNav');
                     if (bottomNav) {
@@ -1002,10 +988,7 @@
 
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
-
-            if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-            }
+            if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
 
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
