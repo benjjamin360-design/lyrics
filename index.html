@@ -254,19 +254,19 @@
         
         <!-- フッター（バージョン表記） -->
         <footer class="mt-20 text-center pb-safe hidden md:block">
-            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.8.2 (Smart Floating Nav & Fixes)</span>
+            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.8.3 (Clear Floating Nav & Smooth Scroll)</span>
         </footer>
     </section>
 
     <!-- =========================================
-         スマホ用 ボトムナビゲーションバー（小型化＆高透過・スクロール連動）
+         スマホ用 ボトムナビゲーションバー（クリアな白枠線＆縮小）
     ========================================== -->
-    <nav id="bottomNav" class="fixed z-30 md:hidden transition-transform duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] bg-slate-50/70 dark:bg-zinc-900/70 backdrop-blur-2xl border border-slate-200/50 dark:border-zinc-700/50 rounded-full" style="bottom: calc(env(safe-area-inset-bottom) + 1rem); left: 1.5rem; right: 1.5rem; max-width: 400px; margin: 0 auto;">
-        <div class="flex justify-around items-center h-14 px-2">
+    <nav id="bottomNav" class="fixed z-30 md:hidden transition-transform duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] bg-white/40 dark:bg-black/40 backdrop-blur-md border border-white/60 dark:border-zinc-500/60 rounded-full" style="bottom: calc(env(safe-area-inset-bottom) + 1rem); left: 1.5rem; right: 1.5rem; max-width: 400px; margin: 0 auto;">
+        <div class="flex justify-around items-center h-12 px-2">
             
             <!-- 曲選択 (非表示のSelectを被せてタップ可能にする) -->
-            <div class="relative flex flex-col items-center justify-center w-14 h-full text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+            <div class="relative flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                 <span class="text-[9px] font-bold">Songs</span>
                 <select id="mobileSongSelector" onchange="loadSong(this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <option value="dayInLife">A Day in the Life</option>
@@ -278,21 +278,21 @@
             </div>
 
             <!-- 文字サイズ -->
-            <button onclick="toggleFontSettings()" class="flex flex-col items-center justify-center w-14 h-full text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none" id="mobileFontBtn">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+            <button onclick="toggleFontSettings()" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none" id="mobileFontBtn">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                 <span class="text-[9px] font-bold">Size</span>
             </button>
 
             <!-- EN/JP トグル -->
-            <button onclick="document.getElementById('langCheckbox').click();" class="flex flex-col items-center justify-center w-14 h-full text-slate-500 dark:text-slate-400 transition-colors focus:outline-none hover:text-sky-500 dark:hover:text-sky-400" id="mobileLangBtn">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+            <button onclick="document.getElementById('langCheckbox').click();" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 transition-colors focus:outline-none hover:text-sky-500 dark:hover:text-sky-400" id="mobileLangBtn">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
                 <span class="text-[9px] font-bold" id="mobileLangLabel">EN/JP</span>
             </button>
 
             <!-- ダークモード -->
-            <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center w-14 h-full text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none">
-                <svg class="w-5 h-5 mb-0.5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                <svg class="w-5 h-5 mb-0.5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none">
+                <svg class="w-4 h-4 mb-0.5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg class="w-4 h-4 mb-0.5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="text-[9px] font-bold">Theme</span>
             </button>
 
@@ -901,10 +901,10 @@
                 mobileLabel.innerText = isTranslationVisible ? "JP" : "EN";
                 if (isTranslationVisible) {
                     mobileBtn.classList.add('text-sky-500', 'dark:text-sky-400');
-                    mobileBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
+                    mobileBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
                 } else {
                     mobileBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
-                    mobileBtn.classList.add('text-slate-500', 'dark:text-slate-400');
+                    mobileBtn.classList.add('text-slate-600', 'dark:text-slate-300');
                 }
             }
 
@@ -999,26 +999,23 @@
                     // ボトムナビゲーションの表示・非表示 (下スクロールで隠し、上スクロールで表示)
                     const bottomNav = document.getElementById('bottomNav');
                     if (bottomNav) {
-                        // iOS特有の最上部・最下部のバウンス（ゴムバンド）時はメニューを表示したままにする
-                        if (winScroll < 0 || winScroll > height) {
+                        // iOS特有の最上部・最下部のバウンス（ゴムバンド）時のガクガクを防ぐ
+                        if (winScroll <= 0 || winScroll >= height - 10) {
                             bottomNav.style.transform = 'translateY(0)';
-                        } else {
-                            if (winScroll > 50) {
-                                if (winScroll > lastScrollTop + 5) {
-                                    // 下にスクロールしている時
-                                    bottomNav.style.transform = 'translateY(200%)';
-                                } else if (winScroll < lastScrollTop - 5) {
-                                    // 上にスクロールしている時
-                                    bottomNav.style.transform = 'translateY(0)';
-                                }
+                        } else if (Math.abs(winScroll - lastScrollTop) > 10) { 
+                            // 10px以上のスクロールのみ反応させる（URLバー変動時のガタつき防止）
+                            if (winScroll > lastScrollTop && winScroll > 50) {
+                                // 下にスクロールしている時
+                                bottomNav.style.transform = 'translateY(200%)';
                             } else {
-                                // ページ上部にいる時は常に表示
+                                // 上にスクロールしている時
                                 bottomNav.style.transform = 'translateY(0)';
                             }
                         }
                     }
                     
-                    lastScrollTop = winScroll <= 0 ? 0 : winScroll;
+                    // マイナス値やheight超えをlastScrollTopに記録しないようにしてバウンス時の誤作動を防ぐ
+                    lastScrollTop = Math.max(0, Math.min(winScroll, height));
                     isTicking = false;
                 });
                 isTicking = true;
