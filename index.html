@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ステータスバーの色を制御するメタタグ（JSで動的に色を変えます） -->
+    <meta name="theme-color" content="#f8fafc">
     <title>Beatles Lyrics Reader</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -168,31 +170,31 @@
     <!-- 共有の状態管理（非表示） -->
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
 
-    <!-- ヘッダー（ダークスレート/没入感のあるカラー）-->
-    <header class="sticky top-0 z-30 backdrop-blur-xl bg-slate-900/95 dark:bg-black/95 border-b border-slate-800 dark:border-zinc-800 transition-colors duration-300 relative">
+    <!-- ヘッダー（爽やかで透明感のあるフロストガラス風）-->
+    <header class="sticky top-0 z-30 backdrop-blur-xl bg-slate-50/90 dark:bg-zinc-950/90 border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
         <div class="max-w-4xl mx-auto px-4 md:px-10 py-3 md:py-4 flex justify-between items-center">
             
             <!-- タイトル (常に表示) -->
             <div class="flex items-baseline gap-3">
-                <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-white">The Beatles Lyrics</h1>
+                <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-slate-900 dark:text-white">The Beatles Lyrics</h1>
             </div>
 
             <!-- スマホ用：現在選択中の曲名表示（Now Reading） -->
-            <div class="md:hidden flex items-center gap-1.5 text-slate-400">
+            <div class="md:hidden flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
-                <span id="mobileHeaderSongTitle" class="text-[11px] font-bold truncate max-w-[110px] sm:max-w-[160px] tracking-wide text-slate-300"></span>
+                <span id="mobileHeaderSongTitle" class="text-[11px] font-bold truncate max-w-[110px] sm:max-w-[160px] tracking-wide text-slate-600 dark:text-slate-300"></span>
             </div>
             
             <!-- PC用コントロールパネル -->
             <div class="hidden md:flex items-center gap-6">
                 <!-- 文字サイズ変更ボタン -->
-                <button onclick="toggleFontSettings()" class="text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none" title="文字サイズ変更" id="btn-font-size">
+                <button onclick="toggleFontSettings()" class="text-slate-500 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none" title="文字サイズ変更" id="btn-font-size">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                     <span class="text-sm font-bold font-mono">Aa</span>
                 </button>
 
                 <!-- ダークモード切替 -->
-                <button onclick="toggleDarkMode()" class="text-slate-300 hover:text-white transition-colors focus:outline-none" title="ダークモード切替">
+                <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors focus:outline-none" title="ダークモード切替">
                     <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </button>
@@ -200,7 +202,7 @@
                 <!-- EN/JP スライドスイッチ -->
                 <label class="relative inline-flex items-center cursor-pointer" title="日本語訳の表示/非表示">
                     <!-- JSで連動させるためダミーのイベント発火用 -->
-                    <div class="lang-toggle group-hover:ring-2 group-hover:ring-slate-500 transition-all" onclick="document.getElementById('langCheckbox').click();">
+                    <div class="lang-toggle group-hover:ring-2 group-hover:ring-sky-200 transition-all" onclick="document.getElementById('langCheckbox').click();">
                         <div class="lang-toggle-slider"></div>
                         <span class="lang-toggle-text text-en">EN</span>
                         <span class="lang-toggle-text text-jp">JP</span>
@@ -252,18 +254,18 @@
         
         <!-- フッター（バージョン表記） -->
         <footer class="mt-20 text-center pb-safe hidden md:block">
-            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.6.0 (Immersive UI)</span>
+            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.6.1 (Fresh & Clear UI)</span>
         </footer>
     </section>
 
     <!-- =========================================
-         スマホ用 ボトムナビゲーションバー（ダークスレート統一）
+         スマホ用 ボトムナビゲーションバー（爽やかなフロストガラス）
     ========================================== -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-slate-900/95 dark:bg-black/95 backdrop-blur-xl border-t border-slate-800 dark:border-zinc-800 z-30 md:hidden pb-safe transition-colors duration-300 shadow-[0_-4px_12px_rgba(0,0,0,0.3)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.5)]">
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-50/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-slate-200 dark:border-zinc-800 z-30 md:hidden pb-safe transition-colors duration-300 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.3)]">
         <div class="flex justify-around items-center h-16 px-2">
             
             <!-- 曲選択 (非表示のSelectを被せてタップ可能にする) -->
-            <div class="relative flex flex-col items-center justify-center w-16 h-full text-slate-400 hover:text-white transition-colors">
+            <div class="relative flex flex-col items-center justify-center w-16 h-full text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors">
                 <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                 <span class="text-[10px] font-bold">Songs</span>
                 <select id="mobileSongSelector" onchange="loadSong(this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
@@ -276,19 +278,19 @@
             </div>
 
             <!-- 文字サイズ -->
-            <button onclick="toggleFontSettings()" class="flex flex-col items-center justify-center w-16 h-full text-slate-400 hover:text-white transition-colors focus:outline-none" id="mobileFontBtn">
+            <button onclick="toggleFontSettings()" class="flex flex-col items-center justify-center w-16 h-full text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none" id="mobileFontBtn">
                 <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                 <span class="text-[10px] font-bold">Size</span>
             </button>
 
             <!-- EN/JP トグル -->
-            <button onclick="document.getElementById('langCheckbox').click();" class="flex flex-col items-center justify-center w-16 h-full text-slate-400 transition-colors focus:outline-none hover:text-white" id="mobileLangBtn">
+            <button onclick="document.getElementById('langCheckbox').click();" class="flex flex-col items-center justify-center w-16 h-full text-slate-500 dark:text-slate-400 transition-colors focus:outline-none hover:text-sky-500 dark:hover:text-sky-400" id="mobileLangBtn">
                 <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
                 <span class="text-[10px] font-bold" id="mobileLangLabel">EN/JP</span>
             </button>
 
             <!-- ダークモード -->
-            <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center w-16 h-full text-slate-400 hover:text-white transition-colors focus:outline-none">
+            <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center w-16 h-full text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none">
                 <svg class="w-6 h-6 mb-1 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 <svg class="w-6 h-6 mb-1 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="text-[10px] font-bold">Theme</span>
@@ -895,6 +897,14 @@
         // ==========================================
         // 各種コントロール機能 (翻訳, テーマ, フォント)
         // ==========================================
+        function updateThemeColor(isDark) {
+            let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+            if (metaThemeColor) {
+                // ライト時は slate-50(#f8fafc)、ダーク時は zinc-950(#09090b) の色をステータスバーに適用
+                metaThemeColor.content = isDark ? '#09090b' : '#f8fafc';
+            }
+        }
+
         function toggleTranslation() {
             const checkbox = document.getElementById('langCheckbox');
             if (!checkbox) return;
@@ -906,11 +916,11 @@
             if (mobileLabel && mobileBtn) {
                 mobileLabel.innerText = isTranslationVisible ? "JP" : "EN";
                 if (isTranslationVisible) {
-                    mobileBtn.classList.add('text-sky-400');
-                    mobileBtn.classList.remove('text-slate-400');
+                    mobileBtn.classList.add('text-sky-500', 'dark:text-sky-400');
+                    mobileBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
                 } else {
-                    mobileBtn.classList.remove('text-sky-400');
-                    mobileBtn.classList.add('text-slate-400');
+                    mobileBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
+                    mobileBtn.classList.add('text-slate-500', 'dark:text-slate-400');
                 }
             }
 
@@ -930,6 +940,9 @@
             const isDark = html.classList.toggle('dark');
             document.getElementById('icon-moon').classList.toggle('hidden', isDark);
             document.getElementById('icon-sun').classList.toggle('hidden', !isDark);
+            
+            // ステータスバーの色も切り替える
+            updateThemeColor(isDark);
         }
 
         // フォントサイズ設定パネルの開閉
@@ -944,23 +957,23 @@
                 panel.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
                 overlay.classList.remove('hidden');
                 if (fontBtn) {
-                    fontBtn.classList.add('text-sky-400');
-                    fontBtn.classList.remove('text-slate-300');
+                    fontBtn.classList.add('text-sky-500', 'dark:text-sky-400');
+                    fontBtn.classList.remove('text-slate-500', 'dark:text-slate-300');
                 }
                 if (mobileFontBtn) {
-                    mobileFontBtn.classList.add('text-sky-400');
-                    mobileFontBtn.classList.remove('text-slate-400');
+                    mobileFontBtn.classList.add('text-sky-500', 'dark:text-sky-400');
+                    mobileFontBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
                 }
             } else {
                 panel.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
                 overlay.classList.add('hidden');
                 if (fontBtn) {
-                    fontBtn.classList.remove('text-sky-400');
-                    fontBtn.classList.add('text-slate-300');
+                    fontBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
+                    fontBtn.classList.add('text-slate-500', 'dark:text-slate-300');
                 }
                 if (mobileFontBtn) {
-                    mobileFontBtn.classList.remove('text-sky-400');
-                    mobileFontBtn.classList.add('text-slate-400');
+                    mobileFontBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
+                    mobileFontBtn.classList.add('text-slate-500', 'dark:text-slate-400');
                 }
             }
         }
@@ -1063,6 +1076,9 @@
             loadSong('dayInLife');
             // 初期化時にトグルの状態を反映
             toggleTranslation();
+            
+            // ステータスバーの初期色を設定（システムのダークモード等に対応）
+            updateThemeColor(document.documentElement.classList.contains('dark'));
             
             // 初回のプログレスバー更新 (読み込み後に少し遅らせて高さを計算させる)
             setTimeout(updateProgressBar, 100);
