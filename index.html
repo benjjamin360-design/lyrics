@@ -21,16 +21,11 @@
             --font-scale: 1; /* フォントサイズの倍率を管理する変数 */
         }
 
-        html {
-            overscroll-behavior-y: none;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: #ffffff;
             color: #111;
             overflow-x: hidden;
-            overscroll-behavior-y: none;
             -webkit-tap-highlight-color: transparent;
         }
         html.dark body {
@@ -266,7 +261,7 @@
     <!-- =========================================
          スマホ用 ボトムナビゲーションバー（視認性向上＆少し下へ配置）
     ========================================== -->
-    <nav id="bottomNav" class="fixed z-30 md:hidden transition-transform duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.6)] bg-white/85 dark:bg-zinc-800/85 backdrop-blur-2xl border border-white dark:border-zinc-600 rounded-full" style="bottom: calc(env(safe-area-inset-bottom) + 0.5rem); left: 1.5rem; right: 1.5rem; max-width: 400px; margin: 0 auto;">
+    <nav id="bottomNav" class="fixed z-30 md:hidden transition-transform duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.6)] bg-white/85 dark:bg-zinc-800/85 backdrop-blur-2xl border border-white dark:border-zinc-600 rounded-full" style="bottom: calc(env(safe-area-inset-bottom) - 1rem); left: 1.5rem; right: 1.5rem; max-width: 400px; margin: 0 auto;">
         <div class="flex justify-around items-center h-12 px-2">
 
             <!-- 曲選択 (非表示のSelectを被せてタップ可能にする) -->
