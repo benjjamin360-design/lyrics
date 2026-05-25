@@ -21,11 +21,16 @@
             --font-scale: 1; /* フォントサイズの倍率を管理する変数 */
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #ffffff; 
+        html {
+            overscroll-behavior-y: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
             color: #111;
-            overflow-x: hidden; 
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
             -webkit-tap-highlight-color: transparent;
         }
         html.dark body {
@@ -37,41 +42,41 @@
 
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-lora { font-family: 'Lora', serif; }
-        
+
         /* -------------------------------------------
            歌詞のスタイル (Genius風 ＆ 可変サイズ対応)
         ------------------------------------------- */
-        .eng-text { 
-            font-family: 'Lora', serif; 
-            font-size: calc(1.05rem * var(--font-scale)); 
-            line-height: 1.5; 
-            color: #1a1a1a; 
-            letter-spacing: -0.02em; 
-            transition: color 0.3s; 
+        .eng-text {
+            font-family: 'Lora', serif;
+            font-size: calc(1.05rem * var(--font-scale));
+            line-height: 1.5;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+            transition: color 0.3s;
         }
-        .dark .eng-text { color: #e4e4e7; } 
-        
-        .ja-text { 
-            font-family: 'Inter', sans-serif; 
-            font-size: calc(0.75rem * var(--font-scale)); 
-            color: #71717a; 
-            font-weight: 500; 
-            margin-top: 0.15rem; 
-            margin-bottom: 0.75rem; 
-            transition: opacity 0.3s, color 0.3s; 
+        .dark .eng-text { color: #e4e4e7; }
+
+        .ja-text {
+            font-family: 'Inter', sans-serif;
+            font-size: calc(0.75rem * var(--font-scale));
+            color: #71717a;
+            font-weight: 500;
+            margin-top: 0.15rem;
+            margin-bottom: 0.75rem;
+            transition: opacity 0.3s, color 0.3s;
         }
-        .dark .ja-text { color: #a1a1aa; } 
-        .lyric-line { 
-            transition: all 0.3s ease; 
-            word-break: keep-all; 
-            overflow-wrap: break-word; 
+        .dark .ja-text { color: #a1a1aa; }
+        .lyric-line {
+            transition: all 0.3s ease;
+            word-break: keep-all;
+            overflow-wrap: break-word;
         }
-        
+
         @media (min-width: 768px) {
             .eng-text { font-size: calc(1.5rem * var(--font-scale)); line-height: 1.6; }
             .ja-text { font-size: calc(0.95rem * var(--font-scale)); margin-bottom: 1.25rem; }
         }
-        
+
         /* -------------------------------------------
            辞書ホバー・タップ機能
         ------------------------------------------- */
@@ -82,13 +87,13 @@
         }
         .word-marker.active-tap { background-color: #fef08a; border-bottom: 1px dotted #eab308; }
         .dark .word-marker.active-tap { background-color: rgba(253, 224, 71, 0.2); border-bottom-color: #fde047; }
-        
+
         /* -------------------------------------------
            イディオムのスタイル
         ------------------------------------------- */
         .idiom-blue { background-color: #f0f9ff; border-bottom: 2px solid #38bdf8; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: calc(1.05rem * var(--font-scale)); transition: all 0.2s; color: #0f172a; }
         .idiom-orange { background-color: #fff7ed; border-bottom: 2px solid #fb923c; cursor: pointer; padding: 0 4px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: calc(1.05rem * var(--font-scale)); transition: all 0.2s; color: #0f172a; }
-        
+
         .dark .idiom-blue { background-color: rgba(56, 189, 248, 0.08); border-bottom-color: #0284c7; color: #7dd3fc; }
         .dark .idiom-orange { background-color: rgba(251, 146, 60, 0.08); border-bottom-color: #ea580c; color: #fdba74; }
 
@@ -102,12 +107,12 @@
         @media (min-width: 768px) {
             .idiom-blue, .idiom-orange { font-size: calc(1.5rem * var(--font-scale)); }
         }
-        
+
         /* -------------------------------------------
            ツールチップ
         ------------------------------------------- */
         #tooltip { pointer-events: none; transition: opacity 0.15s; z-index: 100; }
-        
+
         /* -------------------------------------------
            カスタム言語トグルスイッチ (EN/JP) - PC用
         ------------------------------------------- */
@@ -126,22 +131,22 @@
            スタイリッシュなカスタムセレクトボックス - PC用
         ------------------------------------------- */
         .custom-select-wrapper { position: relative; display: inline-block; }
-        .custom-select { 
-            appearance: none; -webkit-appearance: none; -moz-appearance: none; 
-            background-color: #1e293b; border: 1px solid #334155; border-radius: 9999px; 
-            padding: 0.4rem 2.25rem 0.4rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; 
-            color: #f8fafc; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); 
+        .custom-select {
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background-color: #1e293b; border: 1px solid #334155; border-radius: 9999px;
+            padding: 0.4rem 2.25rem 0.4rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
+            color: #f8fafc; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
         .dark .custom-select { background-color: #18181b; border-color: #27272a; color: #e4e4e7; }
         .custom-select:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         .dark .custom-select:focus { border-color: #52525b; box-shadow: 0 0 0 3px rgba(82, 82, 91, 0.2); }
         .custom-select-icon { position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94a3b8; }
-        
+
         @media (min-width: 768px) {
             .custom-select { padding: 0.5rem 2.5rem 0.5rem 1.25rem; font-size: 0.875rem; }
             .custom-select-icon { right: 1rem; }
         }
-        
+
         /* レンジスライダーのカスタマイズ */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -173,7 +178,7 @@
     <!-- ヘッダー（ステータスバーと完全に同化させるソリッドカラー）-->
     <header class="sticky top-0 z-30 bg-slate-50 dark:bg-zinc-950 border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
         <div class="max-w-4xl mx-auto px-4 md:px-10 py-3 md:py-4 flex justify-between items-center">
-            
+
             <!-- タイトル (常に表示) -->
             <div class="flex items-baseline gap-3">
                 <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-slate-900 dark:text-slate-50">The Beatles Lyrics</h1>
@@ -184,7 +189,7 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                 <span id="mobileHeaderSongTitle" class="text-[11px] font-bold truncate max-w-[110px] sm:max-w-[160px] tracking-wide text-slate-600 dark:text-slate-300"></span>
             </div>
-            
+
             <!-- PC用コントロールパネル -->
             <div class="hidden md:flex items-center gap-6">
                 <!-- 文字サイズ変更ボタン -->
@@ -192,928 +197,3 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                     <span class="text-sm font-bold font-mono">Aa</span>
                 </button>
-
-                <!-- ダークモード切替 -->
-                <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors focus:outline-none" title="ダークモード切替">
-                    <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </button>
-
-                <!-- EN/JP スライドスイッチ -->
-                <label class="relative inline-flex items-center cursor-pointer" title="日本語訳の表示/非表示">
-                    <!-- JSで連動させるためダミーのイベント発火用 -->
-                    <div class="lang-toggle group-hover:ring-2 group-hover:ring-sky-200 transition-all" onclick="document.getElementById('langCheckbox').click();">
-                        <div class="lang-toggle-slider"></div>
-                        <span class="lang-toggle-text text-en">EN</span>
-                        <span class="lang-toggle-text text-jp">JP</span>
-                    </div>
-                </label>
-                
-                <!-- 曲選択 -->
-                <div class="custom-select-wrapper flex-shrink-0">
-                    <select id="songSelector" onchange="loadSong(this.value)" class="custom-select transition-colors duration-300">
-                        <option value="dayInLife">A Day in the Life</option>
-                        <option value="inMyLife">In My Life</option>
-                        <option value="walrus">I Am The Walrus</option>
-                        <option value="imSoTired">I'm So Tired</option>
-                        <option value="blackbird">Blackbird</option>
-                    </select>
-                    <svg class="custom-select-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 読書プログレスバー (Reading Indicator) -->
-        <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] bg-sky-400 dark:bg-sky-500 w-0 transition-[width] duration-75 z-50"></div>
-    </header>
-
-    <!-- メインコンテンツ (ボトムナビが被らないよう下部余白 pb-32 を設定) -->
-    <div class="px-3 md:px-10 mt-6 md:mt-10 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-32 md:pb-0">
-        <!-- 歌詞領域 (フラットレイアウト) -->
-        <main class="w-full transition-colors duration-300 relative z-10 pt-2 md:pt-10 pb-10">
-            <div class="flex flex-col items-center mb-10 md:mb-16">
-                <h2 id="songTitle" class="text-4xl md:text-6xl font-black text-slate-900 dark:text-zinc-50 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
-            </div>
-            <!-- 歌詞コンテナ -->
-            <div id="lyrics-container" class="lyrics-text w-full relative z-10 px-2 md:px-8"></div>
-        </main>
-    </div>
-
-    <!-- About this song (微細なグラデーションと白テキストによるモダンレイアウト) -->
-    <section class="w-full bg-gradient-to-b from-[#363f4e] to-[#404b5e] dark:from-black dark:to-zinc-900 mt-16 pt-16 pb-32 md:pb-24 transition-colors duration-300">
-        <div class="max-w-3xl mx-auto px-6 md:px-10">
-            <h3 class="text-5xl md:text-6xl font-bold text-white text-center tracking-tight mb-12">About</h3>
-            
-            <div class="border-b border-white/20 dark:border-zinc-800 pb-3 mb-6 flex justify-between items-end">
-                <span class="text-[11px] md:text-xs font-bold text-white">Song Bio</span>
-                <span id="aboutSongTitle" class="text-[11px] md:text-xs font-bold text-white"></span>
-            </div>
-            
-            <p id="linerNotesText" class="text-sm md:text-base font-medium text-slate-200 dark:text-zinc-400 leading-relaxed md:leading-loose whitespace-pre-wrap"></p>
-        </div>
-        
-        <!-- フッター（バージョン表記） -->
-        <footer class="mt-20 text-center pb-safe hidden md:block">
-            <span class="text-[10px] md:text-xs font-mono font-bold text-white/30 dark:text-zinc-600">v1.8.4 (Polished Nav & Smooth Bounce)</span>
-        </footer>
-    </section>
-
-    <!-- =========================================
-         スマホ用 ボトムナビゲーションバー（視認性向上＆少し下へ配置）
-    ========================================== -->
-    <nav id="bottomNav" class="fixed z-30 md:hidden transition-transform duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.6)] bg-white/85 dark:bg-zinc-800/85 backdrop-blur-2xl border border-white dark:border-zinc-600 rounded-full" style="bottom: calc(env(safe-area-inset-bottom) + 0.5rem); left: 1.5rem; right: 1.5rem; max-width: 400px; margin: 0 auto;">
-        <div class="flex justify-around items-center h-12 px-2">
-            
-            <!-- 曲選択 (非表示のSelectを被せてタップ可能にする) -->
-            <div class="relative flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors">
-                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
-                <span class="text-[9px] font-bold">Songs</span>
-                <select id="mobileSongSelector" onchange="loadSong(this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <option value="dayInLife">A Day in the Life</option>
-                    <option value="inMyLife">In My Life</option>
-                    <option value="walrus">I Am The Walrus</option>
-                    <option value="imSoTired">I'm So Tired</option>
-                    <option value="blackbird">Blackbird</option>
-                </select>
-            </div>
-
-            <!-- 文字サイズ -->
-            <button onclick="toggleFontSettings()" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none" id="mobileFontBtn">
-                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                <span class="text-[9px] font-bold">Size</span>
-            </button>
-
-            <!-- EN/JP トグル -->
-            <button onclick="document.getElementById('langCheckbox').click();" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 transition-colors focus:outline-none hover:text-sky-500 dark:hover:text-sky-400" id="mobileLangBtn">
-                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-                <span class="text-[9px] font-bold" id="mobileLangLabel">EN/JP</span>
-            </button>
-
-            <!-- ダークモード -->
-            <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center w-14 h-full text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 transition-colors focus:outline-none">
-                <svg class="w-4 h-4 mb-0.5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                <svg class="w-4 h-4 mb-0.5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <span class="text-[9px] font-bold">Theme</span>
-            </button>
-
-        </div>
-    </nav>
-
-    <!-- =========================================
-         フォントサイズ設定パネル (スライダー)
-    ========================================== -->
-    <div id="fontSettingsOverlay" class="fixed inset-0 z-40 hidden" onclick="toggleFontSettings()"></div>
-    <div id="fontSettingsPanel" class="fixed z-50 bottom-[72px] left-4 right-4 md:bottom-auto md:top-20 md:left-auto md:right-10 bg-white dark:bg-zinc-800 p-5 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-700 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-4 md:translate-y-0 md:w-72">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-sm font-bold text-slate-800 dark:text-zinc-200">Text Size</h3>
-            <span id="fontSizeDisplay" class="text-xs font-mono font-bold text-blue-500">100%</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <span class="text-sm font-bold text-slate-400">A</span>
-            <input type="range" id="fontSizeSlider" min="0.7" max="1.6" step="0.05" value="1" class="w-full h-1.5 bg-slate-200 dark:bg-zinc-700 rounded-lg appearance-none outline-none">
-            <span class="text-xl font-bold text-slate-400">A</span>
-        </div>
-        <div class="mt-4 flex justify-center">
-             <button onclick="resetFontSize()" class="text-[10px] uppercase tracking-wider font-bold text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors">Reset to Default</button>
-        </div>
-    </div>
-
-    <!-- 詳細解説ポップアウト (Genius風 サイドパネル/ボトムシート) -->
-    <div id="detailsModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 hidden z-50 transition-opacity">
-        <div class="absolute inset-0" onclick="closeModal()"></div>
-        <div class="absolute bottom-0 md:bottom-auto md:top-0 right-0 w-full md:w-[480px] h-[80vh] md:h-full bg-white dark:bg-zinc-900 shadow-2xl transition-transform duration-300 transform translate-y-full md:translate-y-0 md:translate-x-full border-t md:border-l border-slate-200 dark:border-zinc-800 flex flex-col" id="modalContent">
-            
-            <div class="flex justify-between items-center p-4 md:p-6 border-b border-slate-100 dark:border-zinc-800">
-                <h2 id="modalTitle" class="text-2xl font-bold text-slate-800 dark:text-zinc-100 font-playfair"></h2>
-                <div class="flex items-center gap-3">
-                    <button onclick="speakTitle()" class="p-2 bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-zinc-300 rounded-full hover:bg-blue-100 dark:hover:bg-zinc-700 transition" title="発音を聞く">🔊</button>
-                    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 text-2xl leading-none transition px-2">&times;</button>
-                </div>
-            </div>
-            
-            <div class="p-5 md:p-8 overflow-y-auto flex-grow">
-                <div id="modalMeaning" class="text-lg md:text-xl font-bold text-blue-600 dark:text-sky-400 mb-6"></div>
-                
-                <div class="mb-8">
-                    <p class="text-[11px] text-slate-400 dark:text-zinc-500 font-bold uppercase mb-2 tracking-wider">Context & Deep Dive</p>
-                    <p id="modalDesc" class="text-slate-700 dark:text-zinc-300 leading-relaxed text-sm md:text-base"></p>
-                </div>
-                
-                <div id="modalExampleContainer" class="bg-slate-50 dark:bg-zinc-800/40 p-5 rounded-lg border-l-4 border-slate-300 dark:border-zinc-700 hidden">
-                    <div class="flex justify-between items-start mb-2">
-                        <p class="text-[11px] text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-wider">Example</p>
-                        <button onclick="speakExample()" class="text-slate-400 dark:text-zinc-500 hover:text-blue-500 transition" title="例文の発音を聞く">🔊</button>
-                    </div>
-                    <p id="modalExample" class="text-slate-800 dark:text-zinc-200 italic text-sm md:text-base mb-2"></p>
-                    <p id="modalExampleJa" class="text-slate-500 dark:text-zinc-400 text-xs md:text-sm font-medium"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 辞書ツールチップ -->
-    <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-2 rounded shadow-lg pointer-events-none transition-opacity border border-transparent dark:border-zinc-700 max-w-[200px] z-50"></div>
-
-    <script>
-        // ==========================================
-        // 楽曲＆イディオム・頻出表現データベース
-        // ==========================================
-        const songs = {
-            dayInLife: {
-                title: "A Day in the Life",
-                about: "ジョン・レノンとポール・マッカートニーの全く異なる2つの未完成曲を繋ぎ合わせて作られた、ビートルズの最高傑作の一つ。\n\n新聞記事から着想を得たジョンの退廃的なパートと、慌ただしい日常を歌うポールのパートが、40人編成のオーケストラによる狂気的なクレッシェンドで結ばれています。\n最後の一斉に鳴らされるEコードの余韻は、4台のピアノで同時に弾かれ、約40秒間もスタジオに響き続けました。",
-                lyrics: [
-                    {en: "I read the news today, oh boy.", ja: "今日、新聞を読んだよ。まったく。"},
-                    {en: "About a lucky man who made the grade.", ja: "ある幸運な男が成功を手にしたという記事を。"},
-                    {en: "And though the news was rather sad,", ja: "そのニュースはどちらかと言えば悲しいものだったけれど、"},
-                    {en: "Well, I just had to laugh", ja: "僕は思わず笑ってしまった。"},
-                    {en: "I saw the photograph", ja: "その写真を見たから。"},
-                    {en: "He blew his mind out in a car;", ja: "彼は車の中で頭を吹き飛ばしてしまったんだ。"},
-                    {en: "He didn't notice that the lights had changed.", ja: "信号が変わったことに気づかなかったんだね。"},
-                    {en: "A crowd of people stood and stared,", ja: "群衆が立ち止まり、じっと見ていた、"},
-                    {en: "They'd seen his face before,", ja: "彼らは以前にもその顔を見たことがあった、"},
-                    {en: "Nobody was really sure if he was from the House of Lords.", ja: "彼が貴族院の出身かどうか、誰にも確信は持てなかったけれど。"},
-                    {en: "", ja: ""}, 
-                    {en: "I saw a film today, oh boy;", ja: "今日、映画を見たよ。まったく。"},
-                    {en: "The English army had just won the war.", ja: "イギリス軍が戦争に勝利したところだった。"},
-                    {en: "A crowd of people turned away,", ja: "群衆は目を背けたけれど、"},
-                    {en: "But I just had to look,", ja: "僕はどうしても見ずにはいられなかった、"},
-                    {en: "Having read the book", ja: "その本を読んだことがあったから。"},
-                    {en: "I'd love to turn you on.", ja: "君を（あちら側へ）目覚めさせたいな。"},
-                    {en: "", ja: ""},
-                    {en: "Woke up, fell out of bed,", ja: "目が覚めて、ベッドから転げ落ち、"},
-                    {en: "dragged a comb across my head.", ja: "頭にクシを通した。"},
-                    {en: "Found my way downstairs and drank a cup,", ja: "階下へ降りて、お茶を一杯飲み、"},
-                    {en: "and looking up, I noticed I was late.", ja: "ふと見上げると、遅刻していることに気づいた。"},
-                    {en: "Found my coat and grabbed my hat", ja: "コートを見つけ、帽子をひっ掴み、"},
-                    {en: "Made the bus in seconds flat.", ja: "あっという間にバスに乗り込んだ。"},
-                    {en: "Found my way upstairs and had a smoke.", ja: "2階へ上がり、タバコを一服した。"},
-                    {en: "And somebody spoke and I went into a dream.", ja: "誰かが話しかけてきて、僕は夢の中へと入っていった。"},
-                    {en: "", ja: ""},
-                    {en: "Ah I read the news today, oh boy,", ja: "ああ、今日新聞を読んだよ。まったく。"},
-                    {en: "Four thousand holes in Blackburn, Lancashire", ja: "ランカシャー州ブラックバーンにある、4千個の穴。"},
-                    {en: "And though the holes were rather small,", ja: "その穴はかなり小さかったけれど、"},
-                    {en: "They had to count them all", ja: "彼らはそれをすべて数えなければならなかった。"},
-                    {en: "Now they know how many holes it takes to fill the Albert Hall.", ja: "今や彼らは知っている、アルバート・ホールを満たすにはいくつの穴が必要かを。"},
-                    {en: "I'd love to turn you on.", ja: "君を（あちら側へ）目覚めさせたいな。"}
-                ],
-                idioms: {
-                    "I read the news": { meaning: "ニュース（新聞）を読んだ", explanation: "[文法: SVO] 日常のルーティンを表すシンプルな表現ですが、この曲の象徴的な出だしです。", example: "I read the news about the election this morning.", exampleJa: "今朝、選挙についてのニュースを読んだ。" },
-                    "made the grade": { meaning: "合格する、成功する", explanation: "[文法: make + O] grade（水準）をmake（達成する）という構造から、要求される基準に達して出世するという意味のイディオムです。", example: "He worked hard for years and finally made the grade as a professional musician.", exampleJa: "彼は長年懸命に働き、ついにプロのミュージシャンとして成功を収めた。" },
-                    "had to": { meaning: "〜せずにはいられなかった", explanation: "[文法: 助動詞] have to の過去形ですが、ここでは「やむを得ない衝動」を表しています。", example: "The movie was so touching that I just had to cry.", exampleJa: "その映画はとても感動的で、思わず泣いてしまった。" },
-                    "blew his mind out": { meaning: "正気を失った、頭を撃ち抜いた", explanation: "[文法: blow out + O] blow out（吹き飛ぶ）に his mind が挟まれた形。物理的な事故の描写として使われています。", example: "The sudden accident completely blew his mind out.", exampleJa: "突然の事故に、彼は完全に正気を失ってしまった。" },
-                    "notice that": { meaning: "〜ということに気づく", explanation: "[文法: notice + that節] 視覚や感覚で何かの変化にハッと気づくこと。", example: "He didn't notice that it had started raining.", exampleJa: "彼は雨が降り始めたことに気づかなかった。" },
-                    "House of Lords": { meaning: "貴族院（イギリスの上院）", explanation: "[背景知識] イギリス議会は上院（House of Lords）と下院で構成されます。ここでは男性が上流階級であったことを暗示しています。", example: "Members of the House of Lords debated the new bill.", exampleJa: "貴族院のメンバーは新しい法案について議論した。" },
-                    "turned away": { meaning: "目を背けた、立ち去った", explanation: "[文法: 句動詞] turn awayで顔や視線を逸らすこと。群衆が直視できなかった様子を描写しています。", example: "She turned away to hide her tears.", exampleJa: "彼女は涙を隠すために目を背けた。" },
-                    "fell out of bed": { meaning: "ベッドから慌てて飛び起きた", explanation: "[文法: fall out of ~] 単に起きるのではなく、寝坊して転がり落ちるように急いで起きる様子を表現しています。", example: "I heard the alarm and literally fell out of bed this morning.", exampleJa: "今朝はアラームを聞いて、文字通りベッドから転げ落ちるように起きた。" },
-                    "dragged a comb": { meaning: "急いで髪にクシを通した", explanation: "[文法: drag A across B] 寝癖のついた髪を無理やりクシで引っ張って整える、慌ただしい朝を描写しています。", example: "He dragged a comb through his messy hair and ran to the station.", exampleJa: "彼はボサボサの髪に急いでクシを通し、駅へと走った。" },
-                    "found my way": { meaning: "なんとかたどり着いた", explanation: "[文法: find one's way] 苦労して進む道を見つける、目的地に向かうという意味。", example: "I finally found my way back to the hotel.", exampleJa: "ついにホテルへの帰り道を見つけた。" },
-                    "looking up": { meaning: "見上げると", explanation: "[文法: 分詞構文] and looking up (and as I looked up) と繋がっています。", example: "Looking up at the sky, I saw a shooting star.", exampleJa: "空を見上げると、流れ星が見えた。" },
-                    "Made the bus": { meaning: "バスに間に合った", explanation: "[文法: make + 乗り物] 「〜に間に合う」という意味の他動詞用法です。catch the bus と同じように頻繁に使われます。", example: "I ran as fast as I could and barely made the train.", exampleJa: "全力で走って、かろうじて電車に間に合った。" },
-                    "in seconds flat": { meaning: "きっかり数秒で、あっという間に", explanation: "[文法: in + 時間 + flat] flat は「きっかり、ちょうど」を意味する副詞で、驚くほど短い時間で成し遂げたことを強調します。", example: "She solved the math problem in ten seconds flat.", exampleJa: "彼女はその数学の問題をきっかり10秒で解いた。" },
-                    "went into a dream": { meaning: "夢の中へと入っていった", explanation: "[文法: go into ~] 「〜の状態に入る」。日常の慌ただしさから、再び幻想的な（あるいは薬物による）変性意識の世界へと移行する様子を表しています。", example: "As the soft music played, she closed her eyes and went into a dream.", exampleJa: "柔らかい音楽が流れる中、彼女は目を閉じて夢の中へ入っていった。" },
-                    "turn you on": { meaning: "君を（あちら側へ）目覚めさせたい", explanation: "[文法: turn + O + on] 直訳は「〜のスイッチを入れる」ですが、当時のカウンターカルチャーにおいて「意識を拡張させる、ドラッグによる覚醒をもたらす」という強いメタファーとして使用されました。", example: "This new book will completely turn you on to modern art.", exampleJa: "この新しい本は、あなたを現代アートの虜にするだろう。" }
-                }
-            },
-            inMyLife: {
-                title: "In My Life",
-                about: "ジョン・レノンが自身の幼少期から青年期にかけての故郷リバプールの思い出を振り返り、書かれた自伝的な名曲です。\n\n当初は具体的なバス停や通りの名前が入った長い詩でしたが、最終的にそれらを削ぎ落とし、誰の人生にも当てはまる普遍的な愛と記憶の歌に昇華されました。\n間奏で聴こえるバロック調のハープシコードのような音は、実はプロデューサーのジョージ・マーティンがピアノを半分のテンポで弾き、テープの回転速度を倍にして録音したという有名な逸話があります。",
-                lyrics: [
-                    {en: "There are places I'll remember", ja: "僕の人生において、ずっと忘れられない場所がある。"},
-                    {en: "All my life, though some have changed.", ja: "いくつかは姿を変えてしまったけれど。"},
-                    {en: "Some forever, not for better;", ja: "永遠に変わったものもあれば、良い方向へとは限らないものもある。"},
-                    {en: "Some have gone and some remain.", ja: "なくなってしまったものもあれば、今も残っているものもある。"},
-                    {en: "", ja: ""},
-                    {en: "All these places had their moments", ja: "そうしたすべての場所には、それぞれの素晴らしい瞬間があった。"},
-                    {en: "With lovers and friends I still can recall.", ja: "僕が今でも思い出せる、恋人たちや友人たちと共に。"},
-                    {en: "Some are dead and some are living,", ja: "亡くなった人もいれば、生きている人もいるけれど、"},
-                    {en: "In my life I've loved them all.", ja: "僕の人生において、僕は彼らすべてを愛してきた。"},
-                    {en: "", ja: ""},
-                    {en: "But of all these friends and lovers", ja: "でも、これらすべての友人や恋人たちの中でも、"},
-                    {en: "There is no one compares with you.", ja: "君に匹敵する人は誰もいない。"},
-                    {en: "And these mem'ries lose their meaning", ja: "そしてこうした思い出も、意味を失ってしまうんだ。"},
-                    {en: "When I think of love as something new.", ja: "君との愛を、何かまったく新しいものとして考えるときには。"},
-                    {en: "", ja: ""},
-                    {en: "Tho' I know I'll never lose affection", ja: "以前からそこにあった人々や物事への愛情を、"},
-                    {en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
-                    {en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって、彼らのことを思い出すだろう、"},
-                    {en: "In my life I love you more.", ja: "それでも僕の人生において、君をそれ以上に愛している。"},
-                    {en: "", ja: ""},
-                    {en: "Tho' I know I'll never lose affection", ja: "以前からそこにあった人々や物事への愛情を、"},
-                    {en: "For people and things that went before,", ja: "僕が決して失うことはないと分かっているけれど。"},
-                    {en: "I know I'll often stop and think about them,", ja: "僕はしばしば立ち止まって、彼らのことを思い出すだろう、"},
-                    {en: "In my life I love you more.", ja: "それでも僕の人生において、君をそれ以上に愛している。"},
-                    {en: "In my life I love you more.", ja: "僕の人生において、君をそれ以上に愛している。"}
-                ],
-                idioms: {
-                    "all my life": { meaning: "私のこれまでの人生ずっと", explanation: "[文法: 副詞句] 期間を表す強調表現です。", example: "I have lived in this town all my life.", exampleJa: "私はこれまでの人生ずっとこの町に住んでいます。" },
-                    "some have changed": { meaning: "いくつかは変わってしまった", explanation: "[文法: 現在完了形] 過去から現在にかけての変化を表しています。", example: "My old friends are great, though some have changed.", exampleJa: "昔の友人は素晴らしいが、いくつかは変わってしまった。" },
-                    "places I'll remember": { meaning: "記憶に刻まれる場所", explanation: "[文法: 接触節] placesを先行詞とし、関係代名詞thatが省略されています。「ずっと忘れない」という強い意志が込められています。", example: "There are certain places I'll remember forever.", exampleJa: "永遠に記憶に残り続けるであろう場所がある。" },
-                    "not for better": { meaning: "必ずしも良い方向への変化ではなく", explanation: "[文法: 前置詞句] 通常は for the better（好転する）ですが、ここでは「悪い方向へ変わってしまった」という寂しさを表しています。", example: "The town has changed over the years, and unfortunately, not for better.", exampleJa: "その町は年月を経て変わってしまったが、残念ながら良い方向へではなかった。" },
-                    "had their moments": { meaning: "それぞれに良い瞬間（思い出）があった", explanation: "[文法: SVO] 素晴らしい時期や輝かしい瞬間があったことを意味します。", example: "Even the hardest times had their moments.", exampleJa: "どんなに辛い時期にも、良い瞬間はあった。" },
-                    "compares with you": { meaning: "君に匹敵する、君と比べられる", explanation: "[文法: 自動詞のcompare] compare with A で「Aに匹敵する」。誰も君にはかなわないという究極の愛を表現しています。", example: "I've visited many cities, but nothing compares with Kyoto in autumn.", exampleJa: "多くの都市を訪れたが、秋の京都に匹敵するものはない。" },
-                    "lose their meaning": { meaning: "意味を失う、色褪せる", explanation: "[文法: SVO文型] 過去の美しい思い出でさえも、現在の新しい愛の前では価値を失ってしまうという比喩です。", example: "All my previous worries seemed to lose their meaning when I saw her smile.", exampleJa: "彼女の笑顔を見たとき、これまでの心配事がすべて意味を失ったように思えた。" },
-                    "think of": { meaning: "〜について考える、〜を思い浮かべる", explanation: "[文法: 句動詞] 特定の物事や人に思いを馳せること。", example: "I always think of my family when I eat this dish.", exampleJa: "この料理を食べるといつも家族のことを思い出す。" },
-                    "went before": { meaning: "以前にあった、過ぎ去った", explanation: "[文法: 関係代名詞節] that went beforeで「過去の」という意味を表します。", example: "We should respect the traditions that went before.", exampleJa: "以前からある伝統を尊重すべきだ。" },
-                    "stop and think": { meaning: "立ち止まって考える", explanation: "[文法: 等位接続詞] stop と think という2つの動詞が and で繋がれた形。日常の中でふと足を止める様子を表します。", example: "Sometimes you need to stop and think about what is really important.", exampleJa: "時には立ち止まって、本当に大切なことは何かを考える必要がある。" }
-                }
-            },
-            walrus: {
-                title: "I Am The Walrus",
-                about: "ジョン・レノンがドラッグの影響下で書いたとされる、究極のサイケデリック・ナンセンス・ソング。\n\n「学校の先生がビートルズの歌詞を真面目に分析している」という手紙を受け取ったジョンが、「それなら絶対に意味のわからない歌詞を書いてやる」と悪ふざけで作ったと言われています。\nルイス・キャロルの『不思議の国のアリス』に登場するセイウチ（Walrus）や、警察官のサイレンの音（Ooh Ooh...）など、様々な混沌としたイメージがコラージュされています。",
-                lyrics: [
-                    {en: "I am he", ja: "僕は彼だ"},
-                    {en: "As you are he", ja: "君が彼であるように"},
-                    {en: "As you are me", ja: "君が僕であるように"},
-                    {en: "And we are all together", ja: "そして僕らは皆、ひとつに溶け合っている"},
-                    {en: "", ja: ""},
-                    {en: "See how they run,", ja: "彼らがどう逃げ惑うか見てごらん、"},
-                    {en: "Like pigs from a gun,", ja: "銃声から逃げる豚のように、"},
-                    {en: "See how they fly.", ja: "どう飛ぶか見てごらん。"},
-                    {en: "I'm crying.", ja: "僕は泣いている。"},
-                    {en: "", ja: ""},
-                    {en: "Sitting on a cornflake,", ja: "コーンフレークの上に座って、"},
-                    {en: "Waiting for the van to come.", ja: "バンが来るのを待っている。"},
-                    {en: "Corporation tee shirt,", ja: "会社のTシャツ、"},
-                    {en: "Stupid bloody Tuesday", ja: "馬鹿げた忌まわしい火曜日"},
-                    {en: "Man, you been a naughty boy,", ja: "なあ、君は悪い子だったね、"},
-                    {en: "You let your face grow long.", ja: "そんな浮かない顔をして。"},
-                    {en: "", ja: ""},
-                    {en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
-                    {en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
-                    {en: "I am the walrus,", ja: "僕はセイウチ、"},
-                    {en: "Goo goo g' joob.", ja: "グー・グー・ガ・ジューブ。"},
-                    {en: "", ja: ""},
-                    {en: "Mister city p'liceman sitting pretty", ja: "気取って座る街のお巡りさん"},
-                    {en: "Little p'licemen in a row", ja: "小さなお巡りさんが一列に並ぶ"},
-                    {en: "See how they fly,", ja: "どう飛ぶか見てごらん、"},
-                    {en: "Like Lucy in the sky", ja: "空のルーシーのように"},
-                    {en: "See how they run", ja: "どう走るか見てごらん"},
-                    {en: "I'm crying.", ja: "僕は泣いている。"},
-                    {en: "I'm crying, I'm crying, I'm crying.", ja: "泣いている、泣いている、泣いている。"},
-                    {en: "", ja: ""},
-                    {en: "Yellow matter custard,", ja: "黄色いカスタードみたいな物質が、"},
-                    {en: "Dripping from a dead dog's eye.", ja: "死んだ犬の目から滴り落ちる。"},
-                    {en: "Crabalocker fishwife pornographic priestess,", ja: "クラバロッカーの魚売りの女、ポルノの女祭司、"},
-                    {en: "Boy you been a naughty girl,", ja: "おや、君は悪い女の子だったね、"},
-                    {en: "You let your knickers down.", ja: "下着を下ろすなんて。"},
-                    {en: "", ja: ""},
-                    {en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
-                    {en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
-                    {en: "I am the walrus,", ja: "僕はセイウチ、"},
-                    {en: "Goo goo g' joob.", ja: "グー・グー・ガ・ジューブ。"},
-                    {en: "", ja: ""},
-                    {en: "Sitting in an English", ja: "イギリスの庭に"},
-                    {en: "Garden waiting for the sun.", ja: "座って太陽を待っている。"},
-                    {en: "If the sun don't come,", ja: "もし太陽が来なくても、"},
-                    {en: "You get a tan from standing in the English rain.", ja: "イギリスの雨の中に立っていれば日焼けするさ。"},
-                    {en: "", ja: ""},
-                    {en: "I am the eggman.", ja: "僕はエッグマン。"},
-                    {en: "They are the eggmen.", ja: "彼らはエッグマンたち。"},
-                    {en: "I am the walrus.", ja: "僕はセイウチ。"},
-                    {en: "Goo goo g' joob g' goo goo g' joob.", ja: "グー・グー・ガ・ジューブ..."},
-                    {en: "", ja: ""},
-                    {en: "Expert texpert choking smokers,", ja: "専門家ぶった連中が煙にむせぶ、"},
-                    {en: "Don't you think the joker laughs at you?", ja: "ジョーカーが君を笑っていると思わないか？"},
-                    {en: "See how they smile,", ja: "彼らがどう笑うか見てごらん、"},
-                    {en: "Like pigs in a sty, see how they snied.", ja: "豚小屋の豚のように、どう鼻で笑うかを。"},
-                    {en: "I'm crying.", ja: "僕は泣いている。"},
-                    {en: "", ja: ""},
-                    {en: "Semolina pilchards", ja: "セモリナのイワシが"},
-                    {en: "Climbing up the Eiffel Tower.", ja: "エッフェル塔を登っていく。"},
-                    {en: "Element'ry penguin singing Hare Krishna,", ja: "初歩的なペンギンがハレ・クリシュナを歌う、"},
-                    {en: "Man, you should have seen them kicking Edgar Allan Poe.", ja: "彼らがエドガー・アラン・ポーを蹴り飛ばすのを見るべきだったよ。"},
-                    {en: "", ja: ""},
-                    {en: "I am the eggman, (Ooh)", ja: "僕はエッグマン、（オー）"},
-                    {en: "They are the eggmen, (Ooh)", ja: "彼らはエッグマンたち、（オー）"},
-                    {en: "I am the walrus,", ja: "僕はセイウチ、"},
-                    {en: "Goo goo g' joob..", ja: "グー・グー・ガ・ジューブ..."},
-                    {en: "Goo goo g' joob,", ja: "グー・グー・ガ・ジューブ、"},
-                    {en: "G' goo goo g' joob,", ja: "グ・グー・グー・ガ・ジューブ、"},
-                    {en: "Goo goo g' joob, goo goo g' goo g' goo goo g' joob joob", ja: "グー・グー・ガ・ジューブ... "}
-                ],
-                idioms: {
-                    "we are all together": { meaning: "僕らは皆、ひとつに溶け合っている", explanation: "[文法: SVC] 境界線のない一体感を表す、哲学的でサイケデリックな表現です。", example: "In the end, we are all together in this world.", exampleJa: "結局のところ、僕らは皆この世界で一緒なんだ。" },
-                    "waiting for": { meaning: "〜を待つ", explanation: "[文法: wait + for + 名詞] 特定の事柄がやってくるのを待つ。", example: "I'm waiting for the bus to come.", exampleJa: "バスが来るのを待っている。" },
-                    "let your face grow long": { meaning: "浮かない顔をする、落ち込む", explanation: "[文法: 使役動詞 let + O + C] let + O + 原形不定詞。「表情を長いままにさせる」＝「悲しそうにしている」様子を表します。", example: "Don't let your face grow long over such a small mistake.", exampleJa: "そんな小さなミスで浮かない顔をしないで。" },
-                    "sitting pretty": { meaning: "優雅に構えている、有利な状況にある", explanation: "[文法: 擬似補語] sit + C（形容詞）で「〜の状態で座っている」。苦労せずに快適な状況にいる様子を皮肉を込めて表現するイディオムです。", example: "With his new promotion and a big raise, he is really sitting pretty.", exampleJa: "新しい昇進と大幅な昇給で、彼は本当に優雅に構えている。" },
-                    "laughs at you": { meaning: "君を笑いものにする", explanation: "[文法: laugh at + O] 人を馬鹿にして笑う、嘲笑うという意味。", example: "Don't let them laugh at your dreams.", exampleJa: "彼らに君の夢を笑わせてはいけない。" },
-                    "let your knickers down": { meaning: "無防備になる、恥ずかしい振る舞いをする", explanation: "[文法: 句動詞 let down] let down に目的語が挟まれた形。公の場で無防備な状態を見せるというナンセンスなメタファーです。", example: "You shouldn't let your knickers down in front of your rivals.", exampleJa: "ライバルの前で無防備な姿を見せるべきではない。" },
-                    "climbing up": { meaning: "登っていく", explanation: "[文法: 句動詞] 上へ上へと登る動作を表します。", example: "The monkey is climbing up the tall tree.", exampleJa: "猿が高い木を登っている。" },
-                    "should have seen": { meaning: "〜を見るべきだったのに（見逃して残念だ）", explanation: "[文法: 助動詞 + 完了形] should have + 過去分詞で「〜すべきだった（のにしなかった）」。後悔や強い推奨を表します。", example: "You really should have seen the movie; it was absolutely fantastic!", exampleJa: "本当にあの映画を見るべきだったのに。最高だったよ！" }
-                }
-            },
-            imSoTired: {
-                title: "I'm So Tired",
-                about: "ビートルズがインドのリシケシュに赴き、マハリシ・マヘーシュ・ヨーギーのもとで超越瞑想の合宿に参加していた際に書かれた曲です。\n\nジョン・レノンは瞑想キャンプ中のストイックな生活や、当時の妻とは別に心を奪われていたオノ・ヨーコへの思慕から、深刻な不眠症に悩まされていました。\nその疲労困憊した精神状態と、タバコへの渇望、やり場のない苛立ちが、気怠くもパワフルなサウンドに乗せて生々しく歌われています。",
-                lyrics: [
-                    {en: "I'm so tired, I haven't slept a wink,", ja: "ひどく疲れている、一睡もしていない。"},
-                    {en: "I'm so tired, my mind is on the blink.", ja: "ひどく疲れている、頭がまともに働かない。"},
-                    {en: "I wonder should I get up and fix myself a drink.", ja: "起き上がって、酒でも作ろうか。"},
-                    {en: "No, no, no.", ja: "いや、いや、いや。"},
-                    {en: "", ja: ""},
-                    {en: "I'm so tired I don't know what to do.", ja: "ひどく疲れている、どうすればいいか分からない。"},
-                    {en: "I'm so tired my mind is set on you.", ja: "ひどく疲れている、心は君に囚われたままだ。"},
-                    {en: "I wonder should I call you but I know what you'd do.", ja: "電話しようかと思うけれど、君がどうするかは分かってる。"},
-                    {en: "", ja: ""},
-                    {en: "You'd say I'm putting you on.", ja: "君は、僕がからかっているだけだと言うだろう。"},
-                    {en: "But it's no joke, it's doing me harm.", ja: "でも冗談じゃない、僕の体は蝕まれているんだ。"},
-                    {en: "You know I can't sleep, I can't stop my brain", ja: "眠れないんだ、脳を止めることができない。"},
-                    {en: "You know it's three weeks, I'm going insane.", ja: "もう3週間だ、気が狂いそうだよ。"},
-                    {en: "You know I'd give you everything I've got", ja: "持っているものすべてを君に差し出してもいい、"},
-                    {en: "For a little peace of mind.", ja: "少しでも心の平穏が得られるのなら。"},
-                    {en: "", ja: ""},
-                    {en: "I'm so tired, I'm feeling so upset", ja: "ひどく疲れている、とても動揺している。"},
-                    {en: "Although I'm so tired, I'll have another cigarette", ja: "ひどく疲れているけれど、もう一本タバコを吸おう。"},
-                    {en: "And curse Sir Walter Raleigh.", ja: "そして（タバコを広めた）ウォルター・ローリー卿を呪うんだ。"},
-                    {en: "He was such a stupid get", ja: "あいつはなんて馬鹿な野郎だったんだ。"},
-                    {en: "", ja: ""},
-                    {en: "You'd say I'm putting you on.", ja: "君は、僕がからかっているだけだと言うだろう。"},
-                    {en: "But it's no joke, it's doing me harm.", ja: "でも冗談じゃない、僕の体は蝕まれているんだ。"},
-                    {en: "You know I can't sleep, I can't stop my brain", ja: "眠れないんだ、脳を止めることができない。"},
-                    {en: "You know it's three weeks, I'm going insane.", ja: "もう3週間だ、気が狂いそうだよ。"},
-                    {en: "You know I'd give you everything I've got", ja: "持っているものすべてを君に差し出してもいい、"},
-                    {en: "For a little peace of mind.", ja: "少しでも心の平穏が得られるのなら。"}
-                ],
-                idioms: {
-                    "I wonder": { meaning: "〜かなと思う", explanation: "[文法: SVO] wonder の後に節を続け、自問自答や疑問を表す頻出の表現です。", example: "I wonder what he is doing right now.", exampleJa: "彼は今何をしているのかな。" },
-                    "slept a wink": { meaning: "一睡もする（通常は否定形で一睡もしていない）", explanation: "[文法: not sleep a wink] winkはまばたき。まばたきする間も眠れない＝一睡もできない、という強調表現です。", example: "I was so worried about the exam that I haven't slept a wink.", exampleJa: "試験のことがとても心配で、一睡もしていない。" },
-                    "on the blink": { meaning: "頭がまともに働かない、点滅している", explanation: "[文法: 前置詞句] 機械などがチカチカ点滅して壊れかけている様子から。ここでは自分の頭（mind）が正常に働かないことを表しています。", example: "My computer is on the blink again.", exampleJa: "私のパソコンがまた調子が悪い。" },
-                    "fix myself a drink": { meaning: "自分にお酒（飲み物）を作る", explanation: "[文法: fix + O1 + O2] fixには「（食事や飲み物を）用意する」という意味があります。眠れない夜に一杯やる情景です。", example: "Let me fix you a drink while you wait.", exampleJa: "待っている間に飲み物を作らせて。" },
-                    "don't know what to do": { meaning: "どうすればいいか分からない", explanation: "[文法: 疑問詞 + to不定詞] what to do（何をすべきか）を知らない、という頻出フレーズ。", example: "I'm so lost, I don't know what to do.", exampleJa: "とても迷っていて、どうすればいいか分からない。" },
-                    "set on you": { meaning: "君に夢中だ、心が君に囚われている", explanation: "[文法: set on + 名詞] 心や意識が特定の対象に集中している状態。", example: "Since they met, her mind is set on him.", exampleJa: "出会ってから、彼女の心は彼に夢中だ。" },
-                    "putting you on": { meaning: "君をからかっている、騙している", explanation: "[文法: put + O + on] 句動詞で「（人を）からかう、かつぐ」。真剣な悩みを相手に信じてもらえないもどかしさを表します。", example: "You won the lottery? You must be putting me on!", exampleJa: "宝くじに当たったって？からかってるんでしょう！" },
-                    "doing me harm": { meaning: "僕に害を与えている、痛めつけている", explanation: "[文法: do + O1 + O2] do harm（害をなす）の形。不眠や悩みが実際の肉体的・精神的なダメージになっていること。", example: "Lack of sleep is really doing me harm.", exampleJa: "睡眠不足は本当に私に悪影響を与えている。" },
-                    "going insane": { meaning: "気が狂いそうになる", explanation: "[文法: go + C（形容詞）] goは「（悪い状態へ）変化する」。insane（正気でない）状態に向かっているという強いストレス表現。", example: "The constant noise from the construction site is driving me to go insane.", exampleJa: "建設現場からの絶え間ない騒音で、気が狂いそうになっている。" },
-                    "peace of mind": { meaning: "心の平穏、安心", explanation: "[文法: 名詞句] 悩みや心配事がない穏やかな心理状態のこと。", example: "Having health insurance gives me peace of mind.", exampleJa: "健康保険があることで、安心感が得られる。" },
-                    "Sir Walter Raleigh": { meaning: "サー・ウォルター・ローリー", explanation: "[背景知識] 16世紀のイギリスの探検家で、イギリスにタバコを持ち込んだとされる人物。タバコをやめられない苛立ちを彼にぶつけています。", example: "Sir Walter Raleigh popularized tobacco smoking in England.", exampleJa: "サー・ウォルター・ローリーはイングランドにタバコを普及させた。" }
-                }
-            },
-            blackbird: {
-                title: "Blackbird",
-                about: "ポール・マッカートニーのアコースティックギターと歌、そして足でのタップ音のみで作られた、シンプルで美しい名曲。\n\n一見すると自然の中の鳥について歌っているように聞こえますが、実際は1960年代のアメリカにおける公民権運動（黒人差別の撤廃運動）にインスピレーションを受けて書かれました。\n「Blackbird（黒い鳥）」は抑圧された黒人女性を暗喩しており、「折れた翼で飛ぶことを学べ」という励ましのメッセージが込められています。",
-                lyrics: [
-                    {en: "Blackbird singing in the dead of night,", ja: "真夜中の静寂の中で歌うブラックバード、"},
-                    {en: "Take these broken wings and learn to fly.", ja: "その傷ついた翼で、空の飛び方を学びなさい。"},
-                    {en: "All your life,", ja: "君の生涯を通じて、"},
-                    {en: "You were only waiting for the moment to arise.", ja: "君はずっと、飛び立つこの瞬間だけを待っていたんだ。"},
-                    {en: "", ja: ""},
-                    {en: "Blackbird singing in the dead of night,", ja: "真夜中の静寂の中で歌うブラックバード、"},
-                    {en: "Take these sunken eyes and learn to see.", ja: "そのくぼんだ瞳で、物事を見ることを学びなさい。"},
-                    {en: "All your life,", ja: "君の生涯を通じて、"},
-                    {en: "You were only waiting for the moment to be free.", ja: "君はずっと、自由になるこの瞬間だけを待っていたんだ。"},
-                    {en: "", ja: ""},
-                    {en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
-                    {en: "Into the light of the dark black night.", ja: "この暗く漆黒の夜の光の中へ。"},
-                    {en: "", ja: ""},
-                    {en: "Black bird fly, black bird fly", ja: "飛べ、ブラックバード、飛ぶんだ"},
-                    {en: "Into the light of the dark black night.", ja: "この暗く漆黒の夜の光の中へ。"},
-                    {en: "", ja: ""},
-                    {en: "Blackbird singing in the dead of night", ja: "真夜中の静寂の中で歌うブラックバード、"},
-                    {en: "Take these broken wings and learn to fly.", ja: "その傷ついた翼で、空の飛び方を学びなさい。"},
-                    {en: "All your life", ja: "君の生涯を通じて、"},
-                    {en: "You were only waiting for this moment to arise", ja: "君はずっと、飛び立つこの瞬間だけを待っていたんだ。"},
-                    {en: "You were only waiting for this moment to arise", ja: "君はずっと、飛び立つこの瞬間だけを待っていたんだ。"},
-                    {en: "You were only waiting for this moment to arise", ja: "君はずっと、飛び立つこの瞬間だけを待っていたんだ。"}
-                ],
-                idioms: {
-                    "dead of night": { meaning: "真夜中の静寂、丑三つ時", explanation: "[文法: 名詞句] in the dead of night で、完全に静まり返った真夜中を表します。", example: "The alarm rang in the dead of night.", exampleJa: "真夜中にアラームが鳴った。" },
-                    "broken wings": { meaning: "傷ついた翼", explanation: "[文法: 過去分詞 + 名詞] 傷ついた状態や挫折のメタファー（隠喩）として使われます。", example: "He is trying to heal his broken wings.", exampleJa: "彼は折れた翼（傷ついた心）を癒やそうとしている。" },
-                    "learn to": { meaning: "〜できるようになる、〜する方法を学ぶ", explanation: "[文法: learn + to不定詞] 努力や経験を通じて技術や能力を身につけること。", example: "It took her years to learn to play the piano.", exampleJa: "彼女がピアノを弾けるようになるまで何年もかかった。" },
-                    "moment to arise": { meaning: "飛び立つ瞬間、立ち上がる時", explanation: "[文法: 不定詞の形容詞的用法] moment（瞬間）を to arise（立ち上がるための）が修飾しています。", example: "She has been waiting for the moment to arise.", exampleJa: "彼女は立ち上がる瞬間を待っていた。" },
-                    "sunken eyes": { meaning: "くぼんだ目、疲れ果てた目", explanation: "[文法: 過去分詞 + 名詞] 苦労や悲しみを経験したことを示唆する表現。", example: "The old man looked at me with sunken eyes.", exampleJa: "その老人はくぼんだ目で私を見た。" },
-                    "waiting for": { meaning: "〜を待つ", explanation: "[文法: wait + for + 名詞] 特定の時や人、事柄がやってくるのを待つ。", example: "I've been waiting for this moment all my life.", exampleJa: "私はこの瞬間をずっと待っていた。" },
-                    "to be free": { meaning: "自由になること", explanation: "[文法: to不定詞] 束縛から解放され、自由を得る状態。", example: "Everyone is looking for a way to be free.", exampleJa: "誰もが自由になる方法を探している。" }
-                }
-            }
-        };
-
-        // ==========================================
-        // 辞書データベース
-        // ==========================================
-        const dict = { 
-            "read": "読む、読んだ", "news": "ニュース", "today": "今日", "boy": "少年、おや", "lucky": "幸運な", "man": "男", "made": "作った", "grade": "等級、成績", "though": "〜だけれども", "rather": "どちらかと言えば", "sad": "悲しい", "well": "ええと、さて", "just": "ただ、ちょうど", "laugh": "笑う", "saw": "見た", "photograph": "写真", "blew": "吹いた", "mind": "心、精神", "car": "車", "notice": "気付く", "lights": "信号", "changed": "変わった", "crowd": "群衆", "people": "人々", "stood": "立った", "stared": "じっと見た", "seen": "見た", "face": "顔", "before": "以前に", "nobody": "誰も〜ない", "really": "本当に", "sure": "確信して", "film": "映画", "english": "イギリスの", "army": "軍隊", "won": "勝った", "war": "戦争", "turned": "向いた", "away": "離れて", "look": "見る", "having": "〜したこと", "book": "本", "turn": "回す、向ける", "woke": "目が覚めた", "fell": "落ちた", "bed": "ベッド", "dragged": "引きずった", "comb": "クシ", "across": "〜を横切って", "head": "頭", "found": "見つけた", "way": "道", "downstairs": "階下へ", "drank": "飲んだ", "cup": "カップ", "looking": "見ること", "up": "上へ", "late": "遅れた", "coat": "コート", "grabbed": "掴んだ", "hat": "帽子", "bus": "バス", "seconds": "秒", "flat": "平らな、きっかり", "upstairs": "階上へ", "smoke": "煙草を吸う", "somebody": "誰か", "spoke": "話した", "went": "行った", "dream": "夢", "thousand": "千", "holes": "穴", "small": "小さい", "count": "数える", "know": "知っている", "many": "多くの", "takes": "必要とする", "fill": "満たす", 
-            "places": "場所", "remember": "覚えている", "all": "すべての", "life": "人生", "some": "いくつか", "forever": "永遠に", "better": "より良い", "gone": "去った", "remain": "残る", "moments": "瞬間", "lovers": "恋人", "friends": "友人", "still": "まだ", "recall": "思い出す", "dead": "死んだ、真っただ中", "living": "生きている", "loved": "愛した", "compares": "匹敵する", "memries": "思い出", "memories": "思い出", "lose": "失う", "meaning": "意味", "think": "考える", "something": "何か", "new": "新しい", "never": "決して〜ない", "affection": "愛情", "things": "物事", "often": "しばしば", "stop": "止まる", "more": "もっと", 
-            "together": "一緒に", "see": "見る", "run": "走る", "pigs": "豚", "gun": "銃", "fly": "飛ぶ", "crying": "泣いている", "sitting": "座っている", "cornflake": "コーンフレーク", "waiting": "待っている", "van": "バン（車）", "come": "来る", "corporation": "会社", "tee": "TシャツのT", "shirt": "シャツ", "stupid": "馬鹿な", "bloody": "ひどい", "tuesday": "火曜日", "naughty": "いたずらな", "let": "させる", "grow": "なる、育つ", "long": "長い", "eggman": "卵男", "eggmen": "卵男たち", "walrus": "セイウチ", "mister": "〜氏", "city": "都市", "pliceman": "警官", "plicemen": "警官たち", "pretty": "かわいらしい", "little": "小さい", "row": "列", "sky": "空", "yellow": "黄色い", "matter": "物質", "custard": "カスタード", "dripping": "滴り落ちる", "dogs": "犬の", "eye": "目", "fishwife": "口やかましい女", "pornographic": "ポルノの", "priestess": "女祭司", "girl": "女の子", "knickers": "下着", "down": "下へ", "garden": "庭", "sun": "太陽", "dont": "〜しない", "get": "得る、（英俗）嫌な奴", "tan": "日焼け", "standing": "立っている", "rain": "雨", "expert": "専門家", "texpert": "（造語）", "choking": "むせている", "smokers": "喫煙者", "joker": "ジョーカー", "laughs": "笑う", "smile": "微笑む", "sty": "豚小屋", "snied": "（造語）", "semolina": "セモリナ", "pilchards": "イワシ", "climbing": "登る", "eiffel": "エッフェル", "tower": "塔", "elementry": "初歩の", "penguin": "ペンギン", "singing": "歌っている", "hare": "ハレ", "krishna": "クリシュナ", "should": "すべきである", "kicking": "蹴っている", "four": "4", "albert": "アルバート", "hall": "ホール", "lucy": "ルーシー", "crabalocker": "（造語）", "edgar": "エドガー", "allan": "アラン", "poe": "ポー",
-            "tired": "疲れた", "slept": "眠った", "wink": "まばたき、一睡", "wonder": "〜かしらと思う", "fix": "用意する、直す", "drink": "飲み物", "call": "電話する", "putting": "置く（putの進行形）、からかう", "joke": "冗談", "harm": "害", "sleep": "眠る", "brain": "脳", "three": "3", "weeks": "週間", "insane": "狂気の", "give": "与える", "everything": "すべて", "ive": "I have の短縮形", "got": "得た、持っている", "peace": "平穏", "feeling": "感じている", "upset": "動揺した", "although": "〜だけれども", "ill": "I will の短縮形", "another": "もう一つの", "cigarette": "タバコ", "curse": "呪う", "sir": "サー（敬称）", "walter": "ウォルター", "raleigh": "ローリー",
-            "blackbird": "クロウタドリ", "take": "取る、持って行く", "these": "これらの", "broken": "壊れた、折れた", "wings": "翼", "learn": "学ぶ", "your": "君の", "only": "ただ〜だけ", "moment": "瞬間", "arise": "起こる、飛び立つ", "sunken": "くぼんだ、沈んだ", "eyes": "目", "free": "自由な", "light": "光", "dark": "暗い", "black": "黒い", "night": "夜", "this": "この", "bird": "鳥"
-        };
-        
-        // 発音記号データベース
-        const pronDict = {
-            "read": "ríːd", "news": "njúːz", "today": "tədéɪ", "boy": "bɔɪ", "lucky": "lʌ́ki", "man": "mǽn", "made": "méɪd", "grade": "gréɪd", "though": "ðóʊ", "rather": "rǽðɚ", "sad": "sǽd", "well": "wél", "just": "dʒʌ́st", "laugh": "lǽf", "saw": "sɔ́ː", "photograph": "fóʊtəgræ̀f", "blew": "blúː", "mind": "máɪnd", "car": "kɑ́ɚ", "notice": "nóʊtɪs", "lights": "láɪts", "changed": "tʃéɪndʒd", "crowd": "kráʊd", "people": "píːpl", "stood": "stʊ́d", "stared": "stéɚd", "seen": "síːn", "face": "féɪs", "before": "bɪfɔ́ɚ", "nobody": "nóʊbədi", "really": "ríːəli", "sure": "ʃʊ́ɚ", "film": "fílm", "english": "íŋglɪʃ", "army": "ɑ́ɚmi", "won": "wʌ́n", "war": "wɔ́ɚ", "turned": "tɚ́nd", "away": "əwéɪ", "look": "lʊ́k", "book": "bʊ́k", "turn": "tɚ́n", "woke": "wóʊk", "fell": "fél", "bed": "béd", "dragged": "drǽgd", "comb": "kóʊm", "across": "əkrɔ́s", "head": "héd", "found": "fáʊnd", "way": "wéɪ", "downstairs": "dáʊnstéɚz", "drank": "drǽŋk", "cup": "kʌ́p", "looking": "lʊ́kɪŋ", "up": "ʌ́p", "late": "léɪt", "coat": "kóʊt", "grabbed": "grǽbd", "hat": "hǽt", "bus": "bʌ́s", "seconds": "sékəndz", "flat": "flǽt", "upstairs": "ʌ́pstéɚz", "smoke": "smóʊk", "somebody": "sʌ́mbədi", "spoke": "spóʊk", "went": "wént", "dream": "dríːm", "thousand": "θáʊzənd", "holes": "hóʊlz", "small": "smɔ́ːl", "count": "káʊnt", "know": "nóʊ", "many": "méni", "takes": "téɪks", "fill": "fíl"
-        };
-        const ignoreSet = new Set(['i', 'a', 'an', 'the', 'is', 'of', 'and', 'in', 'to', 'that', 'but', 'you', 'he', 'she', 'it', 'my', 'his', 'her', 'their', 'with', 'for', 'was', 'if', 'from', 'had', 'as', 'are', 'we', 'they', 'how', 'like', 'on', 'at', 'be']);
-
-        // ==========================================
-        // UI & 描画ロジック
-        // ==========================================
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        function loadSong(id) {
-            // PCとスマホのセレクトボックスの選択状態を同期
-            document.getElementById('songSelector').value = id;
-            if (document.getElementById('mobileSongSelector')) {
-                document.getElementById('mobileSongSelector').value = id;
-            }
-
-            const data = songs[id];
-            
-            // ヘッダー・タイトルの設定
-            document.getElementById('songTitle').innerText = data.title;
-            
-            // スマホヘッダー用の曲名設定
-            const mobileHeaderTitle = document.getElementById('mobileHeaderSongTitle');
-            if (mobileHeaderTitle) mobileHeaderTitle.innerText = data.title;
-
-            // Aboutセクション用の曲名設定
-            const aboutSongTitle = document.getElementById('aboutSongTitle');
-            if (aboutSongTitle) aboutSongTitle.innerText = data.title;
-            
-            // Genius風 ライナーノーツの設定
-            document.getElementById('linerNotesText').innerHTML = data.about.replace(/\n/g, '<br>');
-
-            const container = document.getElementById('lyrics-container');
-            
-            container.innerHTML = data.lyrics.map((line) => {
-                let enHtml = line.en;
-                if (line.en.trim()) {
-                    const idiomPlaceholders = {};
-                    let phIndex = 0;
-                    
-                    const sortedIdioms = Object.keys(data.idioms).sort((a, b) => b.length - a.length);
-
-                    sortedIdioms.forEach((idiom, index) => {
-                        const escapedIdiom = idiom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                        const regex = new RegExp(`(^|[^a-zA-Z0-9'])(${escapedIdiom})(?=[^a-zA-Z0-9']|$)`, 'gi');
-                        
-                        const color = index % 2 === 0 ? 'idiom-blue' : 'idiom-orange';
-                        const idmObj = data.idioms[idiom];
-                        
-                        enHtml = enHtml.replace(regex, (match, p1, p2) => {
-                            const ph = `__IDIOM_${phIndex}__`;
-                            const meaning = escapeHtml(idmObj.meaning);
-                            const explanation = escapeHtml(idmObj.explanation);
-                            const example = escapeHtml(idmObj.example);
-                            const exampleJa = escapeHtml(idmObj.exampleJa);
-
-                            // 熟語の中の単語も辞書化する
-                            const tokenizedInner = p2.split(/([a-zA-Z']+)/).map(w => {
-                                const cleanW = w.replace(/^'|'$/g, ''); 
-                                const cw = cleanW.toLowerCase().replace(/'/g, ''); 
-                                if (cleanW.length > 0 && !ignoreSet.has(cw)) {
-                                    const m = dict[cw];
-                                    const pron = pronDict[cw] ? ` data-pron="${escapeHtml(pronDict[cw])}"` : '';
-                                    if (m) {
-                                        return `<span class="word-marker" data-meaning="${escapeHtml(m)}"${pron}>${w}</span>`;
-                                    }
-                                }
-                                return w;
-                            }).join('');
-
-                            idiomPlaceholders[ph] = `<span class="${color} idiom-marker" onclick="void(0)" data-title="${escapeHtml(idiom)}" data-meaning="${meaning}" data-explanation="${explanation}" data-example="${example}" data-example-ja="${exampleJa}">${tokenizedInner}</span>`;
-                            
-                            phIndex++;
-                            return p1 + ph;
-                        });
-                    });
-
-                    const subParts = enHtml.split(/(__IDIOM_\d+__)/);
-                    enHtml = subParts.map(part => {
-                        if (part.startsWith('__IDIOM_') && part.endsWith('__')) return part;
-                        
-                        const words = part.split(/([a-zA-Z']+)/);
-                        return words.map(w => {
-                            const cleanW = w.replace(/^'|'$/g, ''); 
-                            const cw = cleanW.toLowerCase().replace(/'/g, ''); 
-                            if (cleanW.length > 0 && !ignoreSet.has(cw)) {
-                                const meaning = dict[cw];
-                                const pron = pronDict[cw] ? ` data-pron="${escapeHtml(pronDict[cw])}"` : '';
-                                if (meaning) {
-                                    return `<span class="eng-text word-hover word-marker" onclick="void(0)" data-meaning="${escapeHtml(meaning)}"${pron}>${w}</span>`;
-                                }
-                            }
-                            if (w.length > 0 && /[a-zA-Z']/.test(w)) {
-                                return `<span class="eng-text">${w}</span>`;
-                            }
-                            return w; 
-                        }).join('');
-                    }).join('');
-
-                    Object.keys(idiomPlaceholders).forEach(ph => {
-                        enHtml = enHtml.replace(ph, idiomPlaceholders[ph]);
-                    });
-                }
-                
-                if (!line.en.trim()) return `<div class="h-6 md:h-8"></div>`;
-
-                return `<div class="lyric-line mb-1.5 md:mb-3">
-                            <div class="leading-relaxed">${enHtml}</div>
-                            <div class="ja-text hidden">${line.ja}</div>
-                        </div>`;
-            }).join('');
-            
-            toggleTranslation(); 
-        }
-
-        // ==========================================
-        // イベント管理 & 初期化
-        // ==========================================
-        let isTouchDevice = false;
-        window.addEventListener('touchstart', () => { isTouchDevice = true; }, { passive: true });
-        
-        let lastTappedWord = null;
-        const tooltip = document.getElementById('tooltip');
-
-        document.getElementById('lyrics-container').addEventListener('click', (e) => {
-            const wordEl = e.target.closest('.word-marker');
-            const idiomEl = e.target.closest('.idiom-marker');
-
-            // スマホ（タッチ操作時）のダブルタップ風ロジック
-            if (isTouchDevice && wordEl) {
-                // 同じ単語を2回タップ ＆ 熟語内ならモーダルを開く
-                if (lastTappedWord === wordEl && idiomEl) {
-                    showModal(
-                        idiomEl.dataset.title,
-                        idiomEl.dataset.meaning,
-                        idiomEl.dataset.explanation,
-                        idiomEl.dataset.example,
-                        idiomEl.dataset.exampleJa
-                    );
-                    tooltip.classList.add('opacity-0');
-                    setTimeout(() => tooltip.classList.add('hidden'), 150);
-                    wordEl.classList.remove('active-tap');
-                    lastTappedWord = null;
-                    return;
-                }
-                
-                // 1回目のタップ：単語ツールチップを表示
-                if (lastTappedWord) lastTappedWord.classList.remove('active-tap');
-                wordEl.classList.add('active-tap');
-                lastTappedWord = wordEl;
-                
-                const meaning = wordEl.dataset.meaning;
-                const pron = wordEl.dataset.pron;
-                
-                let tooltipHtml = '';
-                if (pron) tooltipHtml += `<span class="block text-sky-400 font-mono text-[10px] tracking-wider mb-0.5">${pron}</span>`;
-                tooltipHtml += `<span class="font-bold text-sm">${meaning}</span>`;
-                
-                // 熟語内の単語をタップした場合は案内を出す
-                if (idiomEl) {
-                    tooltipHtml += `<div class="mt-1.5 pt-1.5 border-t border-slate-600 dark:border-zinc-600 text-yellow-300 text-[9px] font-bold tracking-widest uppercase">💡 もう一度タップで詳細</div>`;
-                }
-                
-                tooltip.innerHTML = tooltipHtml;
-                tooltip.style.left = Math.max(10, e.clientX - 20) + 'px'; 
-                tooltip.style.top = (e.clientY - 60) + 'px'; 
-                tooltip.classList.remove('hidden');
-                // ブラウザの描画待ち後にopacityを変更してふわっと出す
-                setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
-                
-                return;
-            }
-
-            // PC（クリック時）または単語以外の熟語領域をタップした場合は即座にモーダルを開く
-            if (idiomEl) {
-                showModal(
-                    idiomEl.dataset.title,
-                    idiomEl.dataset.meaning,
-                    idiomEl.dataset.explanation,
-                    idiomEl.dataset.example,
-                    idiomEl.dataset.exampleJa
-                );
-                lastTappedWord = null;
-            }
-        });
-        
-        // PC向け：マウスホバーでツールチップ表示
-        document.getElementById('lyrics-container').addEventListener('mouseover', (e) => {
-            if (isTouchDevice) return; 
-            const wordEl = e.target.closest('.word-marker');
-            if (wordEl) {
-                const meaning = wordEl.dataset.meaning;
-                const pron = wordEl.dataset.pron;
-                
-                let tooltipHtml = '';
-                if (pron) tooltipHtml += `<span class="block text-sky-400 font-mono text-[10px] tracking-wider mb-0.5">${pron}</span>`;
-                tooltipHtml += `<span class="font-bold text-sm">${meaning}</span>`;
-                
-                tooltip.innerHTML = tooltipHtml;
-                tooltip.style.left = (e.clientX + 15) + 'px'; 
-                tooltip.style.top = (e.clientY - 35) + 'px';
-                tooltip.classList.remove('hidden');
-                setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
-            }
-        });
-
-        document.getElementById('lyrics-container').addEventListener('mousemove', (e) => {
-            if (isTouchDevice) return;
-            const wordEl = e.target.closest('.word-marker');
-            if (wordEl && !tooltip.classList.contains('hidden')) {
-                tooltip.style.left = (e.clientX + 15) + 'px';
-                tooltip.style.top = (e.clientY - 35) + 'px';
-            }
-        });
-
-        document.getElementById('lyrics-container').addEventListener('mouseout', (e) => {
-            if (e.target.closest('.word-marker')) {
-                tooltip.classList.add('opacity-0');
-                setTimeout(() => tooltip.classList.add('hidden'), 150);
-            }
-        });
-
-        // 画面のどこかをタップしたらツールチップ等を消す
-        document.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('.word-marker') && !tooltip.classList.contains('hidden') && !e.target.closest('#detailsModal')) {
-                tooltip.classList.add('opacity-0');
-                setTimeout(() => tooltip.classList.add('hidden'), 150);
-                if (lastTappedWord) {
-                    lastTappedWord.classList.remove('active-tap');
-                    lastTappedWord = null;
-                }
-            }
-        });
-
-        // ==========================================
-        // 各種コントロール機能 (翻訳, テーマ, フォント)
-        // ==========================================
-        function updateThemeColor(isDark) {
-            let metaThemeColor = document.getElementById('theme-color-meta');
-            if (metaThemeColor) {
-                // ライト時は slate-50(#f8fafc)、ダーク時は zinc-950(#09090b) の色をステータスバーに適用
-                metaThemeColor.content = isDark ? '#09090b' : '#f8fafc';
-            }
-        }
-
-        function toggleTranslation() {
-            const checkbox = document.getElementById('langCheckbox');
-            if (!checkbox) return;
-            const isTranslationVisible = checkbox.checked;
-            
-            // スマホ版ラベルの更新
-            const mobileLabel = document.getElementById('mobileLangLabel');
-            const mobileBtn = document.getElementById('mobileLangBtn');
-            if (mobileLabel && mobileBtn) {
-                mobileLabel.innerText = isTranslationVisible ? "JP" : "EN";
-                if (isTranslationVisible) {
-                    mobileBtn.classList.add('text-sky-500', 'dark:text-sky-400');
-                    mobileBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
-                } else {
-                    mobileBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
-                    mobileBtn.classList.add('text-slate-600', 'dark:text-slate-300');
-                }
-            }
-
-            document.querySelectorAll('.ja-text').forEach(el => {
-                if (isTranslationVisible) {
-                    el.classList.remove('hidden');
-                    el.style.opacity = 1;
-                } else {
-                    el.classList.add('hidden');
-                    el.style.opacity = 0;
-                }
-            });
-        }
-
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const isDark = html.classList.toggle('dark');
-            document.getElementById('icon-moon').classList.toggle('hidden', isDark);
-            document.getElementById('icon-sun').classList.toggle('hidden', !isDark);
-            
-            // ステータスバーの色も切り替える
-            updateThemeColor(isDark);
-        }
-
-        // フォントサイズ設定パネルの開閉
-        function toggleFontSettings() {
-            const panel = document.getElementById('fontSettingsPanel');
-            const overlay = document.getElementById('fontSettingsOverlay');
-            const isHidden = panel.classList.contains('opacity-0');
-            const fontBtn = document.getElementById('btn-font-size');
-            const mobileFontBtn = document.getElementById('mobileFontBtn');
-            
-            if (isHidden) {
-                panel.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
-                overlay.classList.remove('hidden');
-                if (fontBtn) {
-                    fontBtn.classList.add('text-sky-500', 'dark:text-sky-400');
-                    fontBtn.classList.remove('text-slate-500', 'dark:text-slate-300');
-                }
-                if (mobileFontBtn) {
-                    mobileFontBtn.classList.add('text-sky-500', 'dark:text-sky-400');
-                    mobileFontBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
-                }
-            } else {
-                panel.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
-                overlay.classList.add('hidden');
-                if (fontBtn) {
-                    fontBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
-                    fontBtn.classList.add('text-slate-500', 'dark:text-slate-300');
-                }
-                if (mobileFontBtn) {
-                    mobileFontBtn.classList.remove('text-sky-500', 'dark:text-sky-400');
-                    mobileFontBtn.classList.add('text-slate-500', 'dark:text-slate-400');
-                }
-            }
-        }
-
-        // スライダー操作によるフォントサイズ変更
-        document.getElementById('fontSizeSlider').addEventListener('input', function(e) {
-            const scale = e.target.value;
-            document.documentElement.style.setProperty('--font-scale', scale);
-            document.getElementById('fontSizeDisplay').innerText = Math.round(scale * 100) + '%';
-        });
-
-        // フォントサイズをリセット
-        function resetFontSize() {
-            const slider = document.getElementById('fontSizeSlider');
-            slider.value = 1;
-            document.documentElement.style.setProperty('--font-scale', 1);
-            document.getElementById('fontSizeDisplay').innerText = '100%';
-        }
-
-        // ==========================================
-        // 読書プログレスバー (Reading Indicator) & ナビゲーションスクロール検知
-        // ==========================================
-        let isTicking = false;
-        let lastScrollTop = 0;
-
-        function updateProgressBar() {
-            if (!isTicking) {
-                window.requestAnimationFrame(() => {
-                    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-                    
-                    // プログレスバーの更新
-                    const progressBar = document.getElementById('reading-progress');
-                    if (progressBar) {
-                        progressBar.style.width = scrolled + '%';
-                    }
-
-                    // ボトムナビゲーションの表示・非表示 (下スクロールで隠し、上スクロールで表示)
-                    const bottomNav = document.getElementById('bottomNav');
-                    if (bottomNav) {
-                        // iOS特有の最上部・最下部のバウンス（ゴムバンド）時は動きを無視して状態を固定する
-                        if (winScroll >= 0 && winScroll <= height) {
-                            if (Math.abs(winScroll - lastScrollTop) > 10) { 
-                                // 10px以上のスクロールのみ反応させる（URLバー変動時のガタつき防止）
-                                if (winScroll > lastScrollTop && winScroll > 50) {
-                                    // 下にスクロールしている時
-                                    bottomNav.style.transform = 'translateY(200%)';
-                                } else {
-                                    // 上にスクロールしている時
-                                    bottomNav.style.transform = 'translateY(0)';
-                                }
-                                lastScrollTop = winScroll;
-                            }
-                        }
-                    }
-                    
-                    isTicking = false;
-                });
-                isTicking = true;
-            }
-        }
-
-        window.addEventListener('scroll', updateProgressBar, { passive: true });
-        window.addEventListener('resize', updateProgressBar, { passive: true });
-
-        // ==========================================
-        // 音声読み上げ＆モーダル制御
-        // ==========================================
-        function getVoice() {
-            const voices = window.speechSynthesis.getVoices();
-            return voices.find(v => v.lang.startsWith('en-') && (v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Siri'))) || voices.find(v => v.lang.startsWith('en'));
-        }
-
-        function speakText(text) {
-            if (!('speechSynthesis' in window)) return;
-            
-            if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel(); 
-            }
-            
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = 1.0; 
-            const enVoice = getVoice();
-            if (enVoice) utterance.voice = enVoice;
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function speakTitle() {
-            speakText(document.getElementById('modalTitle').innerText);
-        }
-
-        function speakExample() {
-            speakText(document.getElementById('modalExample').innerText);
-        }
-
-        function showModal(title, meaning, desc, example, exampleJa) {
-            document.getElementById('modalTitle').innerText = title || '';
-            document.getElementById('modalMeaning').innerText = meaning || '';
-            document.getElementById('modalDesc').innerText = desc || '';
-            
-            const exContainer = document.getElementById('modalExampleContainer');
-            if (example && example !== "undefined") {
-                document.getElementById('modalExample').innerText = example;
-                document.getElementById('modalExampleJa').innerText = exampleJa && exampleJa !== "undefined" ? exampleJa : '';
-                exContainer.classList.remove('hidden');
-            } else {
-                exContainer.classList.add('hidden');
-            }
-            
-            const modal = document.getElementById('detailsModal');
-            const content = document.getElementById('modalContent');
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.add('opacity-100');
-                content.classList.remove('translate-y-full', 'md:translate-x-full');
-            }, 10);
-            
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('detailsModal');
-            const content = document.getElementById('modalContent');
-            
-            content.classList.add('translate-y-full', 'md:translate-x-full');
-            modal.classList.remove('opacity-100');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-            
-            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-            }
-            
-            document.body.style.overflow = ''; 
-        }
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-        }
-
-        window.onload = () => {
-            loadSong('dayInLife');
-            // 初期化時にトグルの状態を反映
-            toggleTranslation();
-            
-            // ステータスバーの初期色を設定（システムのダークモード等に対応）
-            updateThemeColor(document.documentElement.classList.contains('dark'));
-            
-            // 初回のプログレスバー更新 (読み込み後に少し遅らせて高さを計算させる)
-            setTimeout(updateProgressBar, 100);
-        };
-    </script>
-</body>
-</html>
