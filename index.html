@@ -18,12 +18,15 @@
             --hero-status-color: #f6bd24;
             --hero-mid-color: #d9bd67;
             --hero-bottom-color: #8ccfc2;
+            --hero-gradient: linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 48%, var(--hero-bottom-color) 100%);
         }
 
         body {
             font-family: 'Inter', sans-serif;
+            background: var(--hero-gradient);
             background-color: var(--hero-status-color);
             color: #111;
+            margin: 0;
             overflow-x: hidden;
             overflow-y: hidden;
             height: 100%;
@@ -34,7 +37,9 @@
             -webkit-tap-highlight-color: transparent;
         }
         html {
+            background: var(--hero-gradient);
             background-color: var(--hero-status-color);
+            margin: 0;
             height: 100%;
             min-height: 100%;
             overflow-x: hidden;
@@ -48,8 +53,9 @@
         .font-lora { font-family: 'Lora', serif; }
 
         .app-scroll {
+            background-color: var(--hero-status-color);
             background:
-                linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 6.5rem, var(--hero-bottom-color) 13.25rem, #ffffff 13.25rem);
+                linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 6.5rem, var(--hero-bottom-color) 13.25rem, rgba(255,255,255,0) 15.25rem, #ffffff 19rem);
             height: 100vh;
             height: 100dvh;
             overflow-x: hidden;
@@ -60,21 +66,22 @@
         }
 
         .content-surface {
-            background-color: #ffffff;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 4rem, #ffffff 8rem);
         }
 
         html.dark .content-surface {
-            background-color: #0a0a0a;
+            background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.95) 4rem, #0a0a0a 8rem);
         }
 
         .compact-song-header {
-            min-height: calc(env(safe-area-inset-top) + 3.5rem);
+            min-height: calc(env(safe-area-inset-top) + 1.75rem);
             padding-top: env(safe-area-inset-top);
-            background: linear-gradient(180deg, var(--hero-status-color) 0%, #e6b838 100%);
+            background: var(--hero-gradient);
             opacity: 0;
             pointer-events: none;
-            transform: translateY(-0.65rem);
-            transition: opacity 0.22s ease, transform 0.22s ease;
+            transform: translateY(-0.2rem);
+            transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform;
         }
 
         .compact-song-header.is-visible {
@@ -245,7 +252,7 @@
 
         .song-hero-panel {
             min-height: 13.25rem;
-            background: linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 48%, var(--hero-bottom-color) 100%);
+            background: var(--hero-gradient);
             overflow: hidden;
         }
 
@@ -267,7 +274,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 18%, rgba(17,17,17,0.045) 100%);
+            background: transparent;
         }
 
         .song-hero-art {
@@ -367,7 +374,7 @@
 <body class="transition-colors duration-300 flex flex-col min-h-screen">
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
     <div id="compactSongHeader" class="compact-song-header fixed inset-x-0 top-0 z-40 flex items-center justify-center px-12 text-black/88">
-        <span id="compactSongTitle" class="truncate text-xl font-normal leading-none"></span>
+        <span id="compactSongTitle" class="truncate text-xs font-light leading-none md:text-sm"></span>
     </div>
 
     <div id="appScroll" class="app-scroll">
