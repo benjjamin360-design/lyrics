@@ -217,7 +217,7 @@
 
         .dock-menu-item {
             min-width: 0;
-            color: rgba(255, 255, 255, 0.56);
+            color: rgba(255, 255, 255, 0.9);
             transition: color 0.2s ease, transform 0.2s ease;
         }
 
@@ -304,18 +304,18 @@
     </section>
 
     <nav id="bottomNav" class="fixed z-40 inset-x-0 bottom-0 text-white player-dock shadow-[0_-18px_48px_rgba(0,0,0,0.48)]">
-        <div class="max-w-4xl mx-auto px-5 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.7rem)]">
-            <div id="playerStage" class="px-1">
-                <div class="flex items-center justify-center gap-2 text-center">
+        <div class="max-w-4xl mx-auto px-3 pt-5 pb-[calc(env(safe-area-inset-bottom)+0.25rem)] md:px-5">
+            <div id="playerStage" class="px-0">
+                <div class="flex items-center justify-center gap-1.5 text-center">
                     <img src="./spotify-logo.png" alt="Spotify" class="h-5 w-5 flex-shrink-0 rounded-full object-cover">
                     <span class="text-[13px] font-extrabold tracking-wide text-white/88">Spotify</span>
-                    <span class="text-white/28">|</span>
-                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[14px] font-normal leading-none text-white/86 md:max-w-[260px]">A Day in the Life</span>
-                    <span class="text-white/45">-</span>
-                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[14px] font-light text-white/72 md:max-w-[180px]">The Beatles</span>
+                    <span class="mx-0.5 h-3 w-px bg-white/18" aria-hidden="true"></span>
+                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[13.5px] font-light leading-none text-white/82 md:max-w-[260px]">A Day in the Life</span>
+                    <span class="text-white/28">-</span>
+                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[13.5px] font-extralight text-white/68 md:max-w-[180px]">The Beatles</span>
                 </div>
 
-                <div class="mt-4 grid grid-cols-[2.25rem_3rem_minmax(0,1fr)_3rem_2.25rem] items-center gap-3">
+                <div class="mt-2 grid w-full grid-cols-[2rem_2.75rem_minmax(0,1fr)_2.55rem_2rem] items-center gap-2 md:grid-cols-[2.25rem_3rem_minmax(0,1fr)_3rem_2.25rem] md:gap-3">
                     <div class="relative grid h-9 w-9 place-items-center text-white/88">
                         <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 7h11M4 12h11M4 17h8M18 10v8M14 14h8"></path>
@@ -358,10 +358,10 @@
                 </div>
             </button>
 
-            <div class="mt-6 grid translate-y-1 grid-cols-4 items-end gap-1">
+            <div class="mt-3 grid w-full translate-y-2 grid-cols-4 items-end gap-1">
                 <div class="dock-menu-item relative flex flex-col items-center justify-end gap-1">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
-                    <span class="text-[10px] font-semibold">Songs</span>
+                    <span class="text-[10px] font-light">Songs</span>
                     <select onchange="loadSong(this.value)" class="absolute inset-0 h-full w-full cursor-pointer opacity-0">
                         <option value="dayInLife">A Day in the Life</option>
                         <option value="inMyLife">In My Life</option>
@@ -373,18 +373,18 @@
 
                 <button onclick="toggleFontSettings()" class="dock-menu-item flex flex-col items-center justify-end gap-1 focus:outline-none" id="mobileFontBtn">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                    <span class="text-[10px] font-semibold">Size</span>
+                    <span class="text-[10px] font-light">Size</span>
                 </button>
 
                 <button onclick="document.getElementById('langCheckbox').click();" class="dock-menu-item flex flex-col items-center justify-end gap-1 focus:outline-none" id="mobileLangBtn">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-                    <span class="text-[10px] font-semibold" id="mobileLangLabel">EN/JP</span>
+                    <span class="text-[10px] font-light" id="mobileLangLabel">EN/JP</span>
                 </button>
 
                 <button onclick="toggleDarkMode()" class="dock-menu-item flex flex-col items-center justify-end gap-1 focus:outline-none">
                     <svg class="h-5 w-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     <svg class="h-5 w-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <span class="text-[10px] font-semibold">Theme</span>
+                    <span class="text-[10px] font-light">Theme</span>
                 </button>
             </div>
         </div>
