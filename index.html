@@ -66,15 +66,15 @@
         }
 
         .content-surface {
-            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 4rem, #ffffff 8rem);
+            background: #ffffff;
         }
 
         html.dark .content-surface {
-            background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.95) 4rem, #0a0a0a 8rem);
+            background: #0a0a0a;
         }
 
         .compact-song-header {
-            min-height: calc(env(safe-area-inset-top) + 1.75rem);
+            min-height: calc(env(safe-area-inset-top) + 2rem);
             padding-top: env(safe-area-inset-top);
             background: var(--hero-gradient);
             opacity: 0;
@@ -374,7 +374,7 @@
 <body class="transition-colors duration-300 flex flex-col min-h-screen">
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
     <div id="compactSongHeader" class="compact-song-header fixed inset-x-0 top-0 z-40 flex items-center justify-center px-12 text-black/88">
-        <span id="compactSongTitle" class="truncate text-xs font-light leading-none md:text-sm"></span>
+        <span id="compactSongTitle" class="truncate text-[0.9rem] font-normal leading-none md:text-[1.05rem]"></span>
     </div>
 
     <div id="appScroll" class="app-scroll">
