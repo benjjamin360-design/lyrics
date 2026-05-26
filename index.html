@@ -44,7 +44,7 @@
         .font-lora { font-family: 'Lora', serif; }
 
         .app-scroll {
-            background-color: #ffffff;
+            background-color: var(--hero-status-color);
             height: 100vh;
             height: 100dvh;
             overflow-x: hidden;
@@ -52,6 +52,14 @@
             overscroll-behavior-y: contain;
             touch-action: pan-y;
             -webkit-overflow-scrolling: touch;
+        }
+
+        .content-surface {
+            background-color: #ffffff;
+        }
+
+        html.dark .content-surface {
+            background-color: #0a0a0a;
         }
 
         .eng-text {
@@ -352,10 +360,12 @@
         <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] w-0 bg-black/35 transition-[width] duration-75 z-20"></div>
     </section>
 
-    <div class="px-3 md:px-10 mt-0 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-0">
-        <main class="w-full transition-colors duration-300 relative z-10 pt-7 md:pt-9 pb-0">
-            <div id="lyrics-container" class="lyrics-text w-full relative z-10 px-2 md:px-8"></div>
-        </main>
+    <div class="content-surface">
+        <div class="px-3 md:px-10 mt-0 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-0">
+            <main class="w-full transition-colors duration-300 relative z-10 pt-7 md:pt-9 pb-0">
+                <div id="lyrics-container" class="lyrics-text w-full relative z-10 px-2 md:px-8"></div>
+            </main>
+        </div>
     </div>
 
     <section class="w-full bg-gradient-to-b from-[#363f4e] to-[#404b5e] dark:from-black dark:to-zinc-900 mt-2 md:mt-3 pt-8 md:pt-10 pb-56 md:pb-52 transition-colors duration-300">
