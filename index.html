@@ -18,8 +18,12 @@
             background-color: #ffffff;
             color: #111;
             overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100%;
+            touch-action: pan-y;
             -webkit-tap-highlight-color: transparent;
         }
+        html { overflow-y: auto; }
         html.dark body { background-color: #0a0a0a; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         .font-playfair { font-family: 'Playfair Display', serif; }
@@ -185,6 +189,53 @@
             overflow: hidden;
         }
 
+        .song-hero-panel {
+            min-height: 13.25rem;
+            background:
+                linear-gradient(180deg, rgba(246, 189, 36, 0.82) 0%, rgba(114, 214, 198, 0.72) 100%),
+                #d7a11f;
+            overflow: hidden;
+        }
+
+        .song-hero-panel::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background-image: var(--hero-cover, none);
+            background-position: center;
+            background-size: cover;
+            filter: blur(34px) saturate(1.35);
+            opacity: 0.22;
+            transform: scale(1.05);
+        }
+
+        .song-hero-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 48%, rgba(17,17,17,0.06));
+        }
+
+        .song-hero-art {
+            opacity: 0;
+            transform: translateY(4px) scale(0.98);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+
+        .song-hero-art.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .song-hero-glow {
+            opacity: 0;
+            transition: opacity 0.45s ease;
+        }
+
+        .song-hero-glow.is-visible {
+            opacity: 0.34;
+        }
+
         .player-album-glow {
             opacity: 0;
             transform: scale(1.08);
@@ -192,7 +243,24 @@
         }
 
         .player-album-glow.is-visible {
-            opacity: 0.22;
+            opacity: 0.3;
+        }
+
+        .player-album-thumb {
+            opacity: 0;
+            transform: scale(0.96);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .player-album-thumb.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @media (min-width: 768px) {
+            .song-hero-panel {
+                min-height: 16rem;
+            }
         }
 
         .seek-track {
@@ -245,56 +313,21 @@
 <body class="transition-colors duration-300 flex flex-col min-h-screen">
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
 
-    <header class="sticky top-0 z-30 bg-slate-50 dark:bg-zinc-950 border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300 relative">
-        <div class="max-w-4xl mx-auto px-4 md:px-10 py-3 md:py-4 flex justify-between items-center">
-            <div class="flex items-baseline gap-3">
-                <h1 class="font-playfair text-xl md:text-2xl font-black tracking-wider text-slate-900 dark:text-slate-50">The Beatles Lyrics</h1>
-            </div>
-
-            <div class="md:hidden flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
-                <span id="mobileHeaderSongTitle" class="text-[11px] font-bold truncate max-w-[110px] sm:max-w-[160px] tracking-wide text-slate-600 dark:text-slate-300"></span>
-            </div>
-
-            <div class="hidden md:flex items-center gap-6">
-                <button onclick="toggleFontSettings()" class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none" title="文字サイズ変更" id="btn-font-size">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                    <span class="text-sm font-bold font-mono">Aa</span>
-                </button>
-
-                <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors focus:outline-none" title="ダークモード切替">
-                    <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </button>
-
-                <label class="relative inline-flex items-center cursor-pointer" title="日本語訳の表示/非表示">
-                    <div class="lang-toggle group-hover:ring-2 group-hover:ring-sky-200 transition-all" onclick="document.getElementById('langCheckbox').click();">
-                        <div class="lang-toggle-slider"></div>
-                        <span class="lang-toggle-text text-en">EN</span>
-                        <span class="lang-toggle-text text-jp">JP</span>
-                    </div>
-                </label>
-
-                <div class="custom-select-wrapper flex-shrink-0">
-                    <select id="songSelector" onchange="loadSong(this.value)" class="custom-select transition-colors duration-300">
-                        <option value="dayInLife">A Day in the Life</option>
-                        <option value="inMyLife">In My Life</option>
-                        <option value="walrus">I Am The Walrus</option>
-                        <option value="imSoTired">I'm So Tired</option>
-                        <option value="blackbird">Blackbird</option>
-                    </select>
-                    <svg class="custom-select-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+    <section id="songHeroPanel" class="song-hero-panel relative w-full transition-colors duration-300">
+        <div class="relative z-10 mx-auto flex min-h-[13rem] max-w-4xl flex-col justify-end px-5 pb-5 pt-2 md:min-h-[15.75rem] md:px-10 md:pb-7 md:pt-4">
+            <div class="flex items-center gap-4 md:gap-6">
+                <img id="heroAlbumArt" src="" alt="" class="song-hero-art h-32 w-32 flex-shrink-0 rounded-[4px] object-cover shadow-[0_18px_40px_rgba(0,0,0,0.26)] ring-1 ring-black/10 md:h-44 md:w-44">
+                <div class="min-w-0 -translate-y-2 pb-0 md:-translate-y-3">
+                    <h2 id="songTitle" class="max-w-[20rem] text-[2.05rem] font-normal leading-none text-black/82 md:max-w-none md:text-5xl"></h2>
+                    <p id="heroArtistName" class="mt-1.5 truncate text-base font-light leading-none text-black/72 underline decoration-black/35 decoration-1 underline-offset-4 md:text-xl">The Beatles</p>
                 </div>
             </div>
         </div>
-        <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] bg-sky-400 dark:bg-sky-500 w-0 transition-[width] duration-75 z-50"></div>
-    </header>
+        <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] w-0 bg-black/35 transition-[width] duration-75 z-20"></div>
+    </section>
 
-    <div class="px-3 md:px-10 mt-5 md:mt-8 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-0">
-        <main class="w-full transition-colors duration-300 relative z-10 pt-2 md:pt-8 pb-0">
-            <div class="flex flex-col items-center mb-8 md:mb-12">
-                <h2 id="songTitle" class="text-4xl md:text-6xl font-black text-slate-900 dark:text-zinc-50 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
-            </div>
+    <div class="px-3 md:px-10 mt-0 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-0">
+        <main class="w-full transition-colors duration-300 relative z-10 pt-7 md:pt-9 pb-0">
             <div id="lyrics-container" class="lyrics-text w-full relative z-10 px-2 md:px-8"></div>
         </main>
     </div>
@@ -319,12 +352,13 @@
         <div class="relative z-10 max-w-4xl mx-auto px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.1rem)] md:px-5">
             <div id="playerStage" class="translate-y-1 px-0">
                 <div class="flex items-center justify-center gap-1.5 text-center">
+                    <img id="playerAlbumThumb" src="" alt="" class="player-album-thumb mr-0.5 h-5 w-5 flex-shrink-0 rounded-[4px] object-cover shadow-[0_4px_14px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
                     <img src="./spotify-logo.png" alt="Spotify" class="h-4 w-4 flex-shrink-0 rounded-full object-cover">
                     <span class="text-[12px] font-extrabold tracking-wide text-white/88">Spotify</span>
                     <span class="mx-0.5 inline-block h-2.5 w-px flex-shrink-0 bg-white/35" aria-hidden="true"></span>
-                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[12.5px] font-light leading-none text-white/82 md:max-w-[260px]">A Day in the Life</span>
+                    <span id="spotifySongTitle" class="max-w-[34vw] truncate text-[12.5px] font-light leading-none text-white/82 md:max-w-[260px]">A Day in the Life</span>
                     <span class="text-white/28">-</span>
-                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[12.5px] font-extralight text-white/68 md:max-w-[180px]">The Beatles</span>
+                    <span id="spotifyArtistName" class="max-w-[20vw] truncate text-[12.5px] font-extralight text-white/68 md:max-w-[180px]">The Beatles</span>
                 </div>
 
                 <div class="mt-0.5 grid w-full grid-cols-[1.85rem_2.45rem_minmax(0,1fr)_2.35rem_1.85rem] items-center gap-2 md:grid-cols-[2.1rem_2.75rem_minmax(0,1fr)_2.75rem_2.1rem] md:gap-3">
@@ -363,6 +397,7 @@
 
             <button id="collapsedPlayerBar" onclick="togglePlayerStage(true)" type="button" class="hidden w-full py-2 text-left text-white">
                 <div class="flex items-center justify-center gap-2">
+                    <img id="collapsedAlbumThumb" src="" alt="" class="player-album-thumb h-6 w-6 rounded-[5px] object-cover shadow-[0_4px_14px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
                     <img src="./spotify-logo.png" alt="Spotify" class="h-5 w-5 rounded-full object-cover">
                     <span class="text-[12px] font-extrabold text-white/72">Spotify</span>
                     <span class="text-white/24">|</span>
@@ -451,10 +486,103 @@
     <div id="tooltip" class="fixed hidden bg-slate-800 dark:bg-zinc-800 text-white dark:text-zinc-100 text-xs px-3 py-2 rounded shadow-lg pointer-events-none transition-opacity border border-transparent dark:border-zinc-700 max-w-[200px] z-50"></div>
 
     <script>
+        const albumCatalog = [
+            {
+                title: "Please Please Me",
+                slug: "please-please-me",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Please%20Please%20Me.jpg?itok=YuBhKmsP"
+            },
+            {
+                title: "With The Beatles",
+                slug: "with-the-beatles",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/With%20the%20Beatles.jpg?itok=FUU4IPFs"
+            },
+            {
+                title: "A Hard Day's Night",
+                slug: "a-hard-days-night",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/A%20Hard%20Days%20Night.jpg?itok=aEaHqz9T"
+            },
+            {
+                title: "Beatles For Sale",
+                slug: "beatles-for-sale",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/The%20Beatles%20for%20Sale.jpg?itok=2YB2GbyI",
+                aliases: ["The Beatles For Sale", "Beatles for Sale"]
+            },
+            {
+                title: "Help!",
+                slug: "help",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Help.jpg?itok=C7aiU-0d"
+            },
+            {
+                title: "Rubber Soul",
+                slug: "rubber-soul",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Rubber%20Soul.jpg?itok=6dXgnUlv"
+            },
+            {
+                title: "Revolver",
+                slug: "revolver",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Revolver.jpg?itok=oiI2MZ6Y"
+            },
+            {
+                title: "Sgt Pepper's Lonely Hearts Club Band",
+                slug: "sgt-peppers-lonely-hearts-club-band",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-05/Sgt%20Pepper.jpg?itok=pKaxSQQh",
+                aliases: ["Sgt. Pepper's Lonely Hearts Club Band", "Sgt Pepper", "Sgt. Pepper"]
+            },
+            {
+                title: "Magical Mystery Tour",
+                slug: "magical-mystery-tour",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Magical-Mystery-Tour.jpg?itok=gcBie0U7"
+            },
+            {
+                title: "The Beatles (White Album)",
+                slug: "the-beatles-white-album",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/WA_Press_26.jpg?itok=WoUuVNXu",
+                aliases: ["The Beatles", "The White Album", "White Album"]
+            },
+            {
+                title: "Yellow Submarine",
+                slug: "yellow-submarine",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Yellow%20Sub.jpg?itok=RB416xUK"
+            },
+            {
+                title: "Abbey Road",
+                slug: "abbey-road",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/Abbey%20Road.jpg?itok=mZKPu0oH"
+            },
+            {
+                title: "Let It Be",
+                slug: "let-it-be",
+                coverUrl: "https://www.thebeatles.com/sites/default/files/styles/max_325x325/public/2021-06/CoverLetItBe.jpg?itok=fr-6dq5E"
+            }
+        ];
+
+        const albumCatalogByKey = albumCatalog.reduce((acc, album) => {
+            const keys = [album.title].concat(album.aliases || []);
+            keys.forEach((key) => {
+                acc[normalizeAlbumName(key)] = album;
+            });
+            return acc;
+        }, {});
+
+        function normalizeAlbumName(value) {
+            return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+        }
+
+        function getAlbumMeta(albumName) {
+            return albumCatalogByKey[normalizeAlbumName(albumName)] || null;
+        }
+
+        function getAlbumSlug(albumName) {
+            const meta = getAlbumMeta(albumName);
+            return meta ? meta.slug : normalizeAlbumName(albumName) || 'misc';
+        }
+
         const songs = {
             dayInLife: {
                 title: "A Day in the Life",
                 artist: "The Beatles",
+                album: "Sgt Pepper's Lonely Hearts Club Band",
                 spotifyUrl: "https://open.spotify.com/track/0hKRSZhUGEhKU6aNSPBACZ",
                 durationSeconds: 337,
                 about: "ジョン・レノンとポール・マッカートニーの全く異なる2つの未完成曲を繋ぎ合わせて作られた、ビートルズの最高傑作の一つ。\n\n新聞記事から着想を得たジョンの退廃的なパートと、慌ただしい日常を歌うポールのパートが、40人編成のオーケストラによる狂気的なクレッシェンドで結ばれています。\n最後の一斉に鳴らされるEコードの余韻は、4台のピアノで同時に弾かれ、約40秒間もスタジオに響き続けました。",
@@ -514,6 +642,7 @@
             inMyLife: {
                 title: "In My Life",
                 artist: "The Beatles",
+                album: "Rubber Soul",
                 spotifyUrl: "https://open.spotify.com/track/3KfbEIOC7YIv90FIfNSZpo",
                 durationSeconds: 145,
                 about: "ジョン・レノンが自身の幼少期から青年期にかけての故郷リバプールの思い出を振り返り、書かれた自伝的な名曲です。\n\n当初は具体的なバス停や通りの名前が入った長い詩でしたが、最終的にそれらを削ぎ落とし、誰の人生にも当てはまる普遍的な愛と記憶の歌に昇華されました。\n間奏で聴こえるバロック調のハープシコードのような音は、実はプロデューサーのジョージ・マーティンがピアノを半分のテンポで弾き、テープの回転速度を倍にして録音したという有名な逸話があります。",
@@ -560,6 +689,7 @@
             walrus: {
                 title: "I Am The Walrus",
                 artist: "The Beatles",
+                album: "Magical Mystery Tour",
                 spotifyUrl: "https://open.spotify.com/track/4qmvOVUt7U8szKXspAoLVy",
                 durationSeconds: 274,
                 about: "ジョン・レノンがドラッグの影響下で書いたとされる、究極のサイケデリック・ナンセンス・ソング。\n\n「学校の先生がビートルズの歌詞を真面目に分析している」という手紙を受け取ったジョンが、「それなら絶対に意味のわからない歌詞を書いてやる」と悪ふざけで作ったと言われています。\nルイス・キャロルの『不思議の国のアリス』に登場するセイウチ（Walrus）や、警察官のサイレンの音（Ooh Ooh...）など、様々な混沌としたイメージがコラージュされています。",
@@ -648,6 +778,7 @@
             imSoTired: {
                 title: "I'm So Tired",
                 artist: "The Beatles",
+                album: "The Beatles (White Album)",
                 spotifyUrl: "https://open.spotify.com/track/2X9H5BokS1u5O46YpNYNsZ",
                 durationSeconds: 123,
                 about: "ビートルズがインドのリシケシュに赴き、マハリシ・マヘーシュ・ヨーギーのもとで超越瞑想の合宿に参加していた際に書かれた曲です。\n\nジョン・レノンは瞑想キャンプ中のストイックな生活や、当時の妻とは別に心を奪われていたオノ・ヨーコへの思慕から、深刻な不眠症に悩まされていました。\nその疲労困憊した精神状態と、タバコへの渇望、やり場のない苛立ちが、気怠くもパワフルなサウンドに乗せて生々しく歌われています。",
@@ -697,6 +828,7 @@
             blackbird: {
                 title: "Blackbird",
                 artist: "The Beatles",
+                album: "The Beatles (White Album)",
                 spotifyUrl: "https://open.spotify.com/track/5jgFfDIR6FR0gvlA56Nakr",
                 durationSeconds: 138,
                 about: "ポール・マッカートニーのアコースティックギターと歌、そして足でのタップ音のみで作られた、シンプルで美しい名曲。\n\n一見すると自然の中の鳥について歌っているように聞こえますが、実際は1960年代のアメリカにおける公民権運動（黒人差別の撤廃運動）にインスピレーションを受けて書かれました。\n「Blackbird（黒い鳥）」は抑圧された黒人女性を暗喩しており、「折れた翼で飛ぶことを学べ」という励ましのメッセージが込められています。",
@@ -755,14 +887,15 @@
         }
 
         function loadSong(id) {
-            document.getElementById('songSelector').value = id;
-            if (document.getElementById('mobileSongSelector')) {
-                document.getElementById('mobileSongSelector').value = id;
-            }
+            const desktopSelector = document.getElementById('songSelector');
+            if (desktopSelector) desktopSelector.value = id;
+            if (document.getElementById('mobileSongSelector')) document.getElementById('mobileSongSelector').value = id;
 
             const data = songs[id];
             currentSongId = id;
             document.getElementById('songTitle').innerText = data.title;
+            const heroArtistName = document.getElementById('heroArtistName');
+            if (heroArtistName) heroArtistName.innerText = data.artist || "The Beatles";
 
             const spotifySongTitle = document.getElementById('spotifySongTitle');
             const spotifyArtistName = document.getElementById('spotifyArtistName');
@@ -770,7 +903,7 @@
             if (spotifySongTitle) spotifySongTitle.innerText = data.title;
             if (spotifyArtistName) spotifyArtistName.innerText = data.artist || "The Beatles";
             if (playerStage) playerStage.dataset.spotifyUrl = data.spotifyUrl || "";
-            updateAlbumArt(id, data);
+            updateAlbumArt(data.album || data.title, data);
             const collapsedSongTitle = document.getElementById('collapsedSongTitle');
             if (collapsedSongTitle) collapsedSongTitle.innerText = data.title;
             const seekEnd = document.getElementById('seekEnd');
@@ -877,28 +1010,54 @@
         }
 
         function setAlbumGlow(src) {
-            const glow = document.getElementById('playerAlbumGlow');
-            if (!glow) return;
+            const heroPanel = document.getElementById('songHeroPanel');
+            const targets = [
+                { el: document.getElementById('heroAlbumArt'), visibleClass: 'is-visible', clearAlt: false },
+                { el: document.getElementById('heroAlbumGlow'), visibleClass: 'is-visible', clearAlt: true },
+                { el: document.getElementById('playerAlbumGlow'), visibleClass: 'is-visible', clearAlt: true },
+                { el: document.getElementById('playerAlbumThumb'), visibleClass: 'is-visible', clearAlt: false },
+                { el: document.getElementById('collapsedAlbumThumb'), visibleClass: 'is-visible', clearAlt: false }
+            ];
+
+            const visibleTargets = targets.filter(({ el }) => Boolean(el));
+            if (!visibleTargets.length) return;
+
             if (!src) {
-                glow.removeAttribute('src');
-                glow.classList.remove('is-visible');
+                if (heroPanel) heroPanel.style.removeProperty('--hero-cover');
+                visibleTargets.forEach(({ el, visibleClass, clearAlt }) => {
+                    el.removeAttribute('src');
+                    el.classList.remove(visibleClass);
+                    if (!clearAlt) el.alt = '';
+                });
                 return;
             }
-            glow.onload = () => glow.classList.add('is-visible');
-            glow.src = src;
-            if (glow.complete) glow.classList.add('is-visible');
+
+            if (heroPanel) heroPanel.style.setProperty('--hero-cover', `url("${src}")`);
+            visibleTargets.forEach(({ el, visibleClass, clearAlt }) => {
+                el.classList.remove(visibleClass);
+                el.onload = () => el.classList.add(visibleClass);
+                el.src = src;
+                if (!clearAlt) {
+                    const data = getCurrentSongData();
+                    el.alt = data.album ? `${data.album} album cover` : 'Album cover';
+                }
+                if (el.complete) el.classList.add(visibleClass);
+            });
         }
 
-        function getAlbumArtCandidates(songId) {
+        function getAlbumArtCandidates(albumName) {
+            const slug = getAlbumSlug(albumName);
             return [
-                `./album-art/${songId}.jpg`,
-                `./album-art/${songId}.png`,
-                `./album-art/${songId}.webp`
+                `./album-art/${slug}.jpg`,
+                `./album-art/${slug}.jpeg`,
+                `./album-art/${slug}.png`,
+                `./album-art/${slug}.webp`,
+                `./album-art/${slug}.svg`
             ];
         }
 
-        function loadLocalAlbumArt(songId) {
-            const candidates = getAlbumArtCandidates(songId);
+        function loadLocalAlbumArt(albumName) {
+            const candidates = getAlbumArtCandidates(albumName);
 
             return new Promise((resolve) => {
                 let index = 0;
@@ -920,21 +1079,41 @@
             });
         }
 
-        async function updateAlbumArt(songId, data) {
-            if (!data || !data.spotifyUrl) {
+        async function updateAlbumArt(albumName, data) {
+            if (!data) {
                 setAlbumGlow('');
                 return;
             }
 
-            const localSrc = await loadLocalAlbumArt(songId);
+            const albumKey = normalizeAlbumName(albumName || data.album || data.title);
+            if (!albumKey) {
+                setAlbumGlow('');
+                return;
+            }
+
+            const localSrc = await loadLocalAlbumArt(albumName || data.album || data.title);
             if (localSrc) {
+                albumArtCache[albumKey] = localSrc;
                 data.albumArt = localSrc;
                 setAlbumGlow(localSrc);
                 return;
             }
 
-            if (data.albumArt || albumArtCache[data.spotifyUrl]) {
-                setAlbumGlow(data.albumArt || albumArtCache[data.spotifyUrl]);
+            if (data.albumArt || albumArtCache[albumKey]) {
+                setAlbumGlow(data.albumArt || albumArtCache[albumKey]);
+                return;
+            }
+
+            const albumMeta = getAlbumMeta(albumName || data.album);
+            if (albumMeta && albumMeta.coverUrl) {
+                albumArtCache[albumKey] = albumMeta.coverUrl;
+                data.albumArt = albumMeta.coverUrl;
+                setAlbumGlow(albumMeta.coverUrl);
+                return;
+            }
+
+            if (!data.spotifyUrl) {
+                setAlbumGlow('');
                 return;
             }
 
@@ -944,7 +1123,7 @@
                 if (!response.ok) throw new Error('album art unavailable');
                 const payload = await response.json();
                 if (!payload.thumbnail_url) throw new Error('album art missing');
-                albumArtCache[data.spotifyUrl] = payload.thumbnail_url;
+                albumArtCache[albumKey] = payload.thumbnail_url;
                 data.albumArt = payload.thumbnail_url;
                 if (data === getCurrentSongData()) setAlbumGlow(payload.thumbnail_url);
             } catch (error) {
@@ -1167,8 +1346,10 @@
         function toggleDarkMode() {
             const html = document.documentElement;
             const isDark = html.classList.toggle('dark');
-            document.getElementById('icon-moon').classList.toggle('hidden', isDark);
-            document.getElementById('icon-sun').classList.toggle('hidden', !isDark);
+            const moonIcon = document.getElementById('icon-moon');
+            const sunIcon = document.getElementById('icon-sun');
+            if (moonIcon) moonIcon.classList.toggle('hidden', isDark);
+            if (sunIcon) sunIcon.classList.toggle('hidden', !isDark);
             updateThemeColor(isDark);
         }
 
@@ -1313,6 +1494,7 @@
         }
 
         window.onload = () => {
+            document.body.style.overflow = '';
             loadSong('dayInLife');
             toggleTranslation();
             updateThemeColor(document.documentElement.classList.contains('dark'));
