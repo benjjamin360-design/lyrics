@@ -182,6 +182,17 @@
             background: rgba(18, 18, 18, 0.96);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
+            overflow: hidden;
+        }
+
+        .player-album-glow {
+            opacity: 0;
+            transform: scale(1.08);
+            transition: opacity 0.45s ease;
+        }
+
+        .player-album-glow.is-visible {
+            opacity: 0.22;
         }
 
         .seek-track {
@@ -304,20 +315,21 @@
     </section>
 
     <nav id="bottomNav" class="fixed z-40 inset-x-0 bottom-0 text-white player-dock shadow-[0_-18px_48px_rgba(0,0,0,0.48)]">
-        <div class="max-w-4xl mx-auto px-3 pt-5 pb-[calc(env(safe-area-inset-bottom)+0.25rem)] md:px-5">
-            <div id="playerStage" class="px-0">
+        <img id="playerAlbumGlow" src="" alt="" aria-hidden="true" class="player-album-glow pointer-events-none absolute inset-x-0 -top-20 h-52 w-full object-cover blur-3xl saturate-150">
+        <div class="relative z-10 max-w-4xl mx-auto px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.1rem)] md:px-5">
+            <div id="playerStage" class="translate-y-1 px-0">
                 <div class="flex items-center justify-center gap-1.5 text-center">
-                    <img src="./spotify-logo.png" alt="Spotify" class="h-5 w-5 flex-shrink-0 rounded-full object-cover">
-                    <span class="text-[13px] font-extrabold tracking-wide text-white/88">Spotify</span>
-                    <span class="mx-0.5 h-3 w-px bg-white/18" aria-hidden="true"></span>
-                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[13.5px] font-light leading-none text-white/82 md:max-w-[260px]">A Day in the Life</span>
+                    <img src="./spotify-logo.png" alt="Spotify" class="h-4 w-4 flex-shrink-0 rounded-full object-cover">
+                    <span class="text-[12px] font-extrabold tracking-wide text-white/88">Spotify</span>
+                    <span class="mx-0.5 inline-block h-2.5 w-px flex-shrink-0 bg-white/35" aria-hidden="true"></span>
+                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[12.5px] font-light leading-none text-white/82 md:max-w-[260px]">A Day in the Life</span>
                     <span class="text-white/28">-</span>
-                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[13.5px] font-extralight text-white/68 md:max-w-[180px]">The Beatles</span>
+                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[12.5px] font-extralight text-white/68 md:max-w-[180px]">The Beatles</span>
                 </div>
 
-                <div class="mt-2 grid w-full grid-cols-[2rem_2.75rem_minmax(0,1fr)_2.55rem_2rem] items-center gap-2 md:grid-cols-[2.25rem_3rem_minmax(0,1fr)_3rem_2.25rem] md:gap-3">
-                    <div class="relative grid h-9 w-9 place-items-center text-white/88">
-                        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div class="mt-0.5 grid w-full grid-cols-[1.85rem_2.45rem_minmax(0,1fr)_2.35rem_1.85rem] items-center gap-2 md:grid-cols-[2.1rem_2.75rem_minmax(0,1fr)_2.75rem_2.1rem] md:gap-3">
+                    <div class="relative grid h-8 w-8 place-items-center text-white/88">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 7h11M4 12h11M4 17h8M18 10v8M14 14h8"></path>
                         </svg>
                         <select id="mobileSongSelector" onchange="loadSong(this.value)" class="absolute inset-0 h-full w-full cursor-pointer opacity-0">
@@ -329,8 +341,8 @@
                         </select>
                     </div>
 
-                    <button id="inlinePlayButton" onclick="playCurrentSpotifyInline()" type="button" aria-label="Spotifyで再生" class="grid h-11 w-11 place-items-center text-white transition-transform active:scale-95">
-                        <svg id="inlinePlayIcon" class="ml-1 h-9 w-9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <button id="inlinePlayButton" onclick="playCurrentSpotifyInline()" type="button" aria-label="Spotifyで再生" class="grid h-9 w-9 place-items-center text-white transition-transform active:scale-95">
+                        <svg id="inlinePlayIcon" class="ml-1 h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path d="M7 4v16l13-8z"></path>
                         </svg>
                     </button>
@@ -339,10 +351,10 @@
                         <input id="seekBar" type="range" min="0" max="100" value="0" oninput="scrubInlineProgress(this.value)" class="seek-track w-full appearance-none rounded-full bg-white/12 outline-none">
                     </div>
 
-                    <span id="seekEnd" class="text-right text-[12px] font-normal text-white/78">-3:58</span>
+                    <span id="seekEnd" class="text-right text-[11px] font-normal text-white/78">-3:58</span>
 
-                    <button id="dockHideButton" onclick="togglePlayerStage(false)" type="button" aria-label="プレイヤーを隠す" class="grid h-9 w-9 place-items-center text-white/72 transition-colors hover:text-white">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <button id="dockHideButton" onclick="togglePlayerStage(false)" type="button" aria-label="プレイヤーを隠す" class="grid h-8 w-8 place-items-center text-white/72 transition-colors hover:text-white">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.65" d="M18 6L6 18M6 6l12 12"></path>
                         </svg>
                     </button>
@@ -358,7 +370,7 @@
                 </div>
             </button>
 
-            <div class="mt-3 grid w-full translate-y-2 grid-cols-4 items-end gap-1">
+            <div class="mt-2 grid w-full translate-y-1 grid-cols-4 items-end gap-1">
                 <div class="dock-menu-item relative flex flex-col items-center justify-end gap-1">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                     <span class="text-[10px] font-light">Songs</span>
@@ -758,6 +770,7 @@
             if (spotifySongTitle) spotifySongTitle.innerText = data.title;
             if (spotifyArtistName) spotifyArtistName.innerText = data.artist || "The Beatles";
             if (playerStage) playerStage.dataset.spotifyUrl = data.spotifyUrl || "";
+            updateAlbumArt(data);
             const collapsedSongTitle = document.getElementById('collapsedSongTitle');
             if (collapsedSongTitle) collapsedSongTitle.innerText = data.title;
             const seekEnd = document.getElementById('seekEnd');
@@ -851,6 +864,7 @@
         let progressTimer = null;
         let progressOffset = 0;
         let playerStageVisible = true;
+        const albumArtCache = {};
 
         function formatDuration(totalSeconds) {
             const minutes = Math.floor(totalSeconds / 60);
@@ -860,6 +874,43 @@
 
         function getCurrentSongData() {
             return songs[currentSongId] || songs.dayInLife;
+        }
+
+        function setAlbumGlow(src) {
+            const glow = document.getElementById('playerAlbumGlow');
+            if (!glow) return;
+            if (!src) {
+                glow.classList.remove('is-visible');
+                return;
+            }
+            glow.onload = () => glow.classList.add('is-visible');
+            glow.src = src;
+            if (glow.complete) glow.classList.add('is-visible');
+        }
+
+        async function updateAlbumArt(data) {
+            if (!data || !data.spotifyUrl) {
+                setAlbumGlow('');
+                return;
+            }
+
+            if (data.albumArt || albumArtCache[data.spotifyUrl]) {
+                setAlbumGlow(data.albumArt || albumArtCache[data.spotifyUrl]);
+                return;
+            }
+
+            try {
+                const endpoint = `https://open.spotify.com/oembed?url=${encodeURIComponent(data.spotifyUrl)}`;
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('album art unavailable');
+                const payload = await response.json();
+                if (!payload.thumbnail_url) throw new Error('album art missing');
+                albumArtCache[data.spotifyUrl] = payload.thumbnail_url;
+                data.albumArt = payload.thumbnail_url;
+                if (data === getCurrentSongData()) setAlbumGlow(payload.thumbnail_url);
+            } catch (error) {
+                setAlbumGlow('');
+            }
         }
 
         function setInlinePlayState(playing) {
