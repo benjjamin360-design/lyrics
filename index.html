@@ -770,7 +770,7 @@
             if (spotifySongTitle) spotifySongTitle.innerText = data.title;
             if (spotifyArtistName) spotifyArtistName.innerText = data.artist || "The Beatles";
             if (playerStage) playerStage.dataset.spotifyUrl = data.spotifyUrl || "";
-            updateAlbumArt(data);
+            updateAlbumArt(id, data);
             const collapsedSongTitle = document.getElementById('collapsedSongTitle');
             if (collapsedSongTitle) collapsedSongTitle.innerText = data.title;
             const seekEnd = document.getElementById('seekEnd');
@@ -880,6 +880,7 @@
             const glow = document.getElementById('playerAlbumGlow');
             if (!glow) return;
             if (!src) {
+                glow.removeAttribute('src');
                 glow.classList.remove('is-visible');
                 return;
             }
@@ -888,9 +889,47 @@
             if (glow.complete) glow.classList.add('is-visible');
         }
 
-        async function updateAlbumArt(data) {
+        function getAlbumArtCandidates(songId) {
+            return [
+                `./album-art/${songId}.jpg`,
+                `./album-art/${songId}.png`,
+                `./album-art/${songId}.webp`
+            ];
+        }
+
+        function loadLocalAlbumArt(songId) {
+            const candidates = getAlbumArtCandidates(songId);
+
+            return new Promise((resolve) => {
+                let index = 0;
+
+                function tryNext() {
+                    if (index >= candidates.length) {
+                        resolve('');
+                        return;
+                    }
+
+                    const src = candidates[index++];
+                    const img = new Image();
+                    img.onload = () => resolve(src);
+                    img.onerror = () => tryNext();
+                    img.src = src;
+                }
+
+                tryNext();
+            });
+        }
+
+        async function updateAlbumArt(songId, data) {
             if (!data || !data.spotifyUrl) {
                 setAlbumGlow('');
+                return;
+            }
+
+            const localSrc = await loadLocalAlbumArt(songId);
+            if (localSrc) {
+                data.albumArt = localSrc;
+                setAlbumGlow(localSrc);
                 return;
             }
 
@@ -911,6 +950,12 @@
             } catch (error) {
                 setAlbumGlow('');
             }
+        }
+
+        function getSpotifyAppUrl(url) {
+            if (!url) return '';
+            const match = url.match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/);
+            return match ? `spotify:track:${match[1]}` : '';
         }
 
         function setInlinePlayState(playing) {
@@ -946,9 +991,28 @@
 
             setInlinePlayState(true);
             window.setTimeout(() => setInlinePlayState(false), 900);
+            const appUrl = getSpotifyAppUrl(data.spotifyUrl);
 
-            const opened = window.open(data.spotifyUrl, '_blank', 'noopener');
-            if (!opened) window.location.href = data.spotifyUrl;
+            if (appUrl) {
+                const fallbackTimer = window.setTimeout(() => {
+                    if (document.visibilityState === 'visible') {
+                        window.location.href = data.spotifyUrl;
+                    }
+                }, 900);
+
+                const clearFallback = () => {
+                    window.clearTimeout(fallbackTimer);
+                    document.removeEventListener('visibilitychange', clearFallback);
+                    window.removeEventListener('pagehide', clearFallback);
+                };
+
+                document.addEventListener('visibilitychange', clearFallback);
+                window.addEventListener('pagehide', clearFallback, { once: true });
+                window.location.href = appUrl;
+                return;
+            }
+
+            window.location.href = data.spotifyUrl;
         }
 
         function scrubInlineProgress(value) {
