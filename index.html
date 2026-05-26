@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#f1bb31" id="theme-color-meta">
+    <meta name="theme-color" content="#f6bd24" id="theme-color-meta">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Beatles Lyrics Reader</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -13,7 +15,9 @@
     <style>
         :root {
             --font-scale: 1;
-            --hero-status-color: #f1bb31;
+            --hero-status-color: #f6bd24;
+            --hero-mid-color: #d9bd67;
+            --hero-bottom-color: #8ccfc2;
         }
 
         body {
@@ -224,9 +228,7 @@
 
         .song-hero-panel {
             min-height: 13.25rem;
-            background:
-                linear-gradient(180deg, rgba(246, 189, 36, 0.82) 0%, rgba(114, 214, 198, 0.72) 100%),
-                var(--hero-status-color);
+            background: linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 48%, var(--hero-bottom-color) 100%);
             overflow: hidden;
         }
 
@@ -240,6 +242,8 @@
             filter: blur(34px) saturate(1.35);
             opacity: 0.22;
             transform: scale(1.05);
+            -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 14%, #000 46%, #000 100%);
+            mask-image: linear-gradient(180deg, transparent 0%, transparent 14%, #000 46%, #000 100%);
         }
 
         .song-hero-panel::after {
@@ -1348,7 +1352,7 @@
 
         function updateThemeColor(isDark) {
             const metaThemeColor = document.getElementById('theme-color-meta');
-            if (metaThemeColor) metaThemeColor.content = isDark ? '#09090b' : '#f1bb31';
+            if (metaThemeColor) metaThemeColor.content = isDark ? '#09090b' : '#f6bd24';
         }
 
         function toggleTranslation() {
