@@ -185,17 +185,17 @@
         }
 
         .seek-track {
-            height: 0.25rem;
+            height: 0.14rem;
         }
 
         #seekBar::-webkit-slider-runnable-track {
-            height: 0.25rem;
+            height: 0.14rem;
             background: rgba(255, 255, 255, 0.16);
             border-radius: 9999px;
         }
 
         #seekBar::-moz-range-track {
-            height: 0.25rem;
+            height: 0.14rem;
             background: rgba(255, 255, 255, 0.16);
             border-radius: 9999px;
         }
@@ -203,16 +203,16 @@
         #seekBar::-webkit-slider-thumb {
             background: #ffffff;
             border: 0;
-            width: 0.95rem;
-            height: 0.95rem;
-            margin-top: -0.35rem;
+            width: 0.66rem;
+            height: 0.66rem;
+            margin-top: -0.26rem;
         }
 
         #seekBar::-moz-range-thumb {
             background: #ffffff;
             border: 0;
-            width: 0.95rem;
-            height: 0.95rem;
+            width: 0.66rem;
+            height: 0.66rem;
         }
 
         .dock-menu-item {
@@ -279,16 +279,16 @@
         <div id="reading-progress" class="absolute bottom-0 left-0 h-[2px] bg-sky-400 dark:bg-sky-500 w-0 transition-[width] duration-75 z-50"></div>
     </header>
 
-    <div class="px-3 md:px-10 mt-6 md:mt-10 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-56 md:pb-48">
-        <main class="w-full transition-colors duration-300 relative z-10 pt-2 md:pt-10 pb-4 md:pb-6">
-            <div class="flex flex-col items-center mb-10 md:mb-16">
+    <div class="px-3 md:px-10 mt-5 md:mt-8 max-w-4xl mx-auto w-full flex-grow flex flex-col pb-0">
+        <main class="w-full transition-colors duration-300 relative z-10 pt-2 md:pt-8 pb-0">
+            <div class="flex flex-col items-center mb-8 md:mb-12">
                 <h2 id="songTitle" class="text-4xl md:text-6xl font-black text-slate-900 dark:text-zinc-50 text-center font-playfair tracking-tight transition-colors duration-300"></h2>
             </div>
             <div id="lyrics-container" class="lyrics-text w-full relative z-10 px-2 md:px-8"></div>
         </main>
     </div>
 
-    <section class="w-full bg-gradient-to-b from-[#363f4e] to-[#404b5e] dark:from-black dark:to-zinc-900 mt-6 md:mt-8 pt-10 md:pt-12 pb-20 md:pb-16 transition-colors duration-300">
+    <section class="w-full bg-gradient-to-b from-[#363f4e] to-[#404b5e] dark:from-black dark:to-zinc-900 mt-2 md:mt-3 pt-8 md:pt-10 pb-56 md:pb-52 transition-colors duration-300">
         <div class="max-w-3xl mx-auto px-6 md:px-10">
             <h3 class="text-5xl md:text-6xl font-bold text-white text-center tracking-tight mb-7 md:mb-8">About</h3>
             <div class="border-b border-white/20 dark:border-zinc-800 pb-3 mb-6 flex justify-between items-end">
@@ -304,15 +304,15 @@
     </section>
 
     <nav id="bottomNav" class="fixed z-40 inset-x-0 bottom-0 text-white player-dock shadow-[0_-18px_48px_rgba(0,0,0,0.48)]">
-        <div class="max-w-4xl mx-auto px-5 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+        <div class="max-w-4xl mx-auto px-5 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.7rem)]">
             <div id="playerStage" class="px-1">
                 <div class="flex items-center justify-center gap-2 text-center">
                     <img src="./spotify-logo.png" alt="Spotify" class="h-5 w-5 flex-shrink-0 rounded-full object-cover">
-                    <span class="text-[13px] font-semibold tracking-wide text-white/80">Spotify</span>
+                    <span class="text-[13px] font-extrabold tracking-wide text-white/88">Spotify</span>
                     <span class="text-white/28">|</span>
-                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[14px] font-semibold leading-none md:max-w-[260px]">A Day in the Life</span>
+                    <span id="spotifySongTitle" class="max-w-[36vw] truncate text-[14px] font-normal leading-none text-white/86 md:max-w-[260px]">A Day in the Life</span>
                     <span class="text-white/45">-</span>
-                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[14px] font-medium text-white/72 md:max-w-[180px]">The Beatles</span>
+                    <span id="spotifyArtistName" class="max-w-[26vw] truncate text-[14px] font-light text-white/72 md:max-w-[180px]">The Beatles</span>
                 </div>
 
                 <div class="mt-4 grid grid-cols-[2.25rem_3rem_minmax(0,1fr)_3rem_2.25rem] items-center gap-3">
@@ -339,11 +339,11 @@
                         <input id="seekBar" type="range" min="0" max="100" value="0" oninput="scrubInlineProgress(this.value)" class="seek-track w-full appearance-none rounded-full bg-white/12 outline-none">
                     </div>
 
-                    <span id="seekEnd" class="text-right text-[12px] font-semibold text-white/78">-3:58</span>
+                    <span id="seekEnd" class="text-right text-[12px] font-normal text-white/78">-3:58</span>
 
-                    <button id="dockHideButton" onclick="togglePlayerStage(false)" type="button" aria-label="プレイヤーを隠す" class="grid h-9 w-9 place-items-center text-white/90 transition-colors hover:text-white">
-                        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.7" d="M18 6L6 18M6 6l12 12"></path>
+                    <button id="dockHideButton" onclick="togglePlayerStage(false)" type="button" aria-label="プレイヤーを隠す" class="grid h-9 w-9 place-items-center text-white/72 transition-colors hover:text-white">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.65" d="M18 6L6 18M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
@@ -352,13 +352,13 @@
             <button id="collapsedPlayerBar" onclick="togglePlayerStage(true)" type="button" class="hidden w-full py-2 text-left text-white">
                 <div class="flex items-center justify-center gap-2">
                     <img src="./spotify-logo.png" alt="Spotify" class="h-5 w-5 rounded-full object-cover">
-                    <span class="text-[12px] font-semibold text-white/65">Spotify</span>
+                    <span class="text-[12px] font-extrabold text-white/72">Spotify</span>
                     <span class="text-white/24">|</span>
-                    <span class="truncate text-sm font-semibold" id="collapsedSongTitle">A Day in the Life</span>
+                    <span class="truncate text-sm font-normal" id="collapsedSongTitle">A Day in the Life</span>
                 </div>
             </button>
 
-            <div class="mt-4 grid grid-cols-4 items-end gap-1">
+            <div class="mt-6 grid translate-y-1 grid-cols-4 items-end gap-1">
                 <div class="dock-menu-item relative flex flex-col items-center justify-end gap-1">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                     <span class="text-[10px] font-semibold">Songs</span>
@@ -383,7 +383,7 @@
 
                 <button onclick="toggleDarkMode()" class="dock-menu-item flex flex-col items-center justify-end gap-1 focus:outline-none">
                     <svg class="h-5 w-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg class="h-5 w-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 0 018 0z"></path></svg>
+                    <svg class="h-5 w-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <span class="text-[10px] font-semibold">Theme</span>
                 </button>
             </div>
