@@ -48,7 +48,8 @@
         .font-lora { font-family: 'Lora', serif; }
 
         .app-scroll {
-            background-color: var(--hero-status-color);
+            background:
+                linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 6.5rem, var(--hero-bottom-color) 13.25rem, #ffffff 13.25rem);
             height: 100vh;
             height: 100dvh;
             overflow-x: hidden;
@@ -64,6 +65,22 @@
 
         html.dark .content-surface {
             background-color: #0a0a0a;
+        }
+
+        .compact-song-header {
+            min-height: calc(env(safe-area-inset-top) + 3.5rem);
+            padding-top: env(safe-area-inset-top);
+            background: linear-gradient(180deg, var(--hero-status-color) 0%, #e6b838 100%);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-0.65rem);
+            transition: opacity 0.22s ease, transform 0.22s ease;
+        }
+
+        .compact-song-header.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
         }
 
         .eng-text {
@@ -250,7 +267,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 48%, rgba(17,17,17,0.06));
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 18%, rgba(17,17,17,0.045) 100%);
         }
 
         .song-hero-art {
@@ -349,6 +366,9 @@
 </head>
 <body class="transition-colors duration-300 flex flex-col min-h-screen">
     <input type="checkbox" id="langCheckbox" onchange="toggleTranslation()" checked class="sr-only">
+    <div id="compactSongHeader" class="compact-song-header fixed inset-x-0 top-0 z-40 flex items-center justify-center px-12 text-black/88">
+        <span id="compactSongTitle" class="truncate text-xl font-normal leading-none"></span>
+    </div>
 
     <div id="appScroll" class="app-scroll">
     <section id="songHeroPanel" class="song-hero-panel relative w-full transition-colors duration-300">
@@ -935,6 +955,8 @@
             const data = songs[id];
             currentSongId = id;
             document.getElementById('songTitle').innerText = data.title;
+            const compactSongTitle = document.getElementById('compactSongTitle');
+            if (compactSongTitle) compactSongTitle.innerText = data.title;
             const heroArtistName = document.getElementById('heroArtistName');
             if (heroArtistName) heroArtistName.innerText = data.artist || "The Beatles";
 
@@ -1458,6 +1480,12 @@
 
                     const progressBar = document.getElementById('reading-progress');
                     if (progressBar) progressBar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
+
+                    const compactHeader = document.getElementById('compactSongHeader');
+                    const heroPanel = document.getElementById('songHeroPanel');
+                    if (compactHeader && heroPanel) {
+                        compactHeader.classList.toggle('is-visible', winScroll > heroPanel.offsetHeight - 12);
+                    }
 
                     isTicking = false;
                 });
