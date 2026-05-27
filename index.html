@@ -28,7 +28,6 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--hero-gradient);
             background-color: var(--hero-status-color);
             color: #111;
             margin: 0;
@@ -42,7 +41,6 @@
             -webkit-tap-highlight-color: transparent;
         }
         html {
-            background: var(--hero-gradient);
             background-color: var(--hero-status-color);
             margin: 0;
             height: 100%;
@@ -59,8 +57,7 @@
 
         .app-scroll {
             background-color: var(--hero-status-color);
-            background:
-                linear-gradient(180deg, var(--hero-status-color) 0%, var(--hero-mid-color) 6.5rem, var(--hero-bottom-color) 13.25rem, rgba(255,255,255,0) 15.25rem, #ffffff 19rem);
+            background-image: none;
             height: 100vh;
             height: 100dvh;
             overflow-x: hidden;
@@ -768,6 +765,7 @@
         };
 
         const versionHistory = [
+            { version: 'v1.8.8', note: 'Match pull-down overscroll color to hero top' },
             { version: 'v1.8.7', note: 'Keep lyrics surface white before About' },
             { version: 'v1.8.6', note: 'Pronunciation overlay toggle' },
             { version: 'v1.8.5', note: 'Saved font size and translation state' },
