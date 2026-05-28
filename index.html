@@ -84,11 +84,6 @@
         html.theme-sync .about-panel,
         html.theme-sync .song-hero-panel,
         html.theme-sync .compact-song-header,
-        html.theme-sync .player-dock,
-        html.theme-sync .dock-menu-item,
-        html.theme-sync .lang-toggle,
-        html.theme-sync .lang-toggle-slider,
-        html.theme-sync .custom-select,
         html.theme-sync #fontSettingsPanel,
         html.theme-sync #detailsModal,
         html.theme-sync #modalContent,
@@ -97,10 +92,24 @@
         html.theme-sync #heroArtistName,
         html.theme-sync #reading-progress,
         html.theme-sync #versionHistory {
-            transition-property: background-color, background-image, border-color, color, text-decoration-color, box-shadow, fill, stroke, opacity, transform !important;
-            transition-duration: 260ms !important;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transition-property: none !important;
+            transition-duration: 0ms !important;
+            transition-timing-function: linear !important;
             transition-delay: 0s !important;
+        }
+
+        .theme-fade-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 45;
+            pointer-events: none;
+            background: #09090b;
+            opacity: 0;
+            transition: opacity 380ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        html.theme-fade-visible .theme-fade-overlay {
+            opacity: 0.22;
         }
 
         .content-surface {
@@ -382,19 +391,6 @@
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             overflow: hidden;
-            isolation: isolate;
-        }
-
-        .player-dock::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: calc(6.25rem + env(safe-area-inset-bottom));
-            background: #121212;
-            z-index: 0;
-            pointer-events: none;
         }
 
         .song-hero-panel {
@@ -562,6 +558,7 @@
     <div id="compactSongHeader" class="compact-song-header fixed inset-x-0 top-0 z-40 flex items-center justify-center px-12 text-black/88">
         <span id="compactSongTitle" class="truncate text-[1rem] font-normal leading-none md:text-[1.12rem]" style="transform: translateY(-0.125rem);"></span>
     </div>
+    <div id="themeFadeOverlay" class="theme-fade-overlay" aria-hidden="true"></div>
 
     <div id="appScroll" class="app-scroll">
     <section id="songHeroPanel" class="song-hero-panel relative w-full transition-colors duration-300">
@@ -601,7 +598,7 @@
     </section>
     </div>
 
-    <nav id="bottomNav" class="fixed z-40 inset-x-0 bottom-0 text-white player-dock shadow-[0_-18px_48px_rgba(0,0,0,0.48)]">
+    <nav id="bottomNav" class="fixed z-50 inset-x-0 bottom-0 text-white player-dock shadow-[0_-18px_48px_rgba(0,0,0,0.48)]">
         <img id="playerAlbumGlow" src="" alt="" aria-hidden="true" class="player-album-glow pointer-events-none absolute inset-x-0 -top-20 h-52 w-full object-cover blur-3xl saturate-150">
         <div class="relative z-10 max-w-4xl mx-auto px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.1rem)] md:px-5">
             <div id="playerStage" class="translate-y-1 px-0">
@@ -887,6 +884,7 @@
         };
 
         const versionHistory = [
+            { version: 'v1.9.4', note: 'Restore dock blend and soften theme fade' },
             { version: 'v1.9.3', note: 'Unify dark mode transition timing' },
             { version: 'v1.9.2', note: 'Restore visible dark mode surfaces' },
             { version: 'v1.9.1', note: 'Fix bottom dock sync and playback state' },
@@ -1428,6 +1426,7 @@
 
         let currentThemeColor = '#f6bd24';
         let themeTransitionTimer = null;
+        let themeFadeTimer = null;
         const prefKeys = {
             fontScale: 'beatsLyrics.fontScale',
             translationVisible: 'beatsLyrics.translationVisible',
@@ -1452,16 +1451,32 @@
             }
         }
 
-        function beginThemeTransition() {
+        function beginThemeTransition(applyChange) {
             const root = document.documentElement;
-            root.classList.add('theme-sync');
+            root.classList.add('theme-sync', 'theme-fade-visible');
+            if (themeFadeTimer) {
+                window.clearTimeout(themeFadeTimer);
+            }
             if (themeTransitionTimer) {
                 window.clearTimeout(themeTransitionTimer);
             }
+            themeFadeTimer = window.setTimeout(() => {
+                if (typeof applyChange === 'function') {
+                    applyChange();
+                }
+                themeFadeTimer = window.setTimeout(() => {
+                    root.classList.remove('theme-fade-visible');
+                    themeFadeTimer = null;
+                }, 90);
+            }, 120);
             themeTransitionTimer = window.setTimeout(() => {
-                root.classList.remove('theme-sync');
+                root.classList.remove('theme-sync', 'theme-fade-visible');
                 themeTransitionTimer = null;
-            }, 420);
+                if (themeFadeTimer) {
+                    window.clearTimeout(themeFadeTimer);
+                    themeFadeTimer = null;
+                }
+            }, 560);
         }
 
         function syncThemeToggleIcons(isDark) {
@@ -1941,8 +1956,7 @@
 
         function toggleDarkMode() {
             const html = document.documentElement;
-            beginThemeTransition();
-            window.requestAnimationFrame(() => {
+            beginThemeTransition(() => {
                 const isDark = html.classList.toggle('dark');
                 writeStoredPreference(prefKeys.darkMode, String(isDark));
                 syncThemeToggleIcons(isDark);
