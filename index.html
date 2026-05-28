@@ -445,25 +445,6 @@
             transform: translateY(0) scale(1);
         }
 
-        .song-hero-glow {
-            opacity: 0;
-            transition: opacity 0.45s ease;
-        }
-
-        .song-hero-glow.is-visible {
-            opacity: 0.34;
-        }
-
-        .player-album-glow {
-            opacity: 0;
-            transform: scale(1.08);
-            transition: opacity 0.45s ease;
-        }
-
-        .player-album-glow.is-visible {
-            opacity: 0;
-        }
-
         .player-album-thumb {
             opacity: 0;
             transform: scale(0.96);
@@ -600,7 +581,6 @@
     </div>
 
     <nav id="bottomNav" class="fixed z-50 inset-x-0 bottom-0 text-white player-dock shadow-[0_-18px_48px_rgba(0,0,0,0.48)]">
-        <img id="playerAlbumGlow" src="" alt="" aria-hidden="true" class="player-album-glow pointer-events-none absolute inset-x-0 -top-20 h-52 w-full object-cover blur-3xl saturate-150">
         <div class="relative z-10 max-w-4xl mx-auto px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.1rem)] md:px-5">
             <div id="playerStage" class="translate-y-1 px-0">
                 <div class="flex items-center justify-center gap-1.5 text-center">
@@ -1625,8 +1605,6 @@
             const heroPanel = document.getElementById('songHeroPanel');
             const targets = [
                 { el: document.getElementById('heroAlbumArt'), visibleClass: 'is-visible', clearAlt: false },
-                { el: document.getElementById('heroAlbumGlow'), visibleClass: 'is-visible', clearAlt: true },
-                { el: document.getElementById('playerAlbumGlow'), visibleClass: 'is-visible', clearAlt: true },
                 { el: document.getElementById('playerAlbumThumb'), visibleClass: 'is-visible', clearAlt: false },
                 { el: document.getElementById('collapsedAlbumThumb'), visibleClass: 'is-visible', clearAlt: false }
             ];
@@ -1841,10 +1819,6 @@
             const collapsed = document.getElementById('collapsedPlayerBar');
             if (stage) stage.classList.toggle('hidden', !show);
             if (collapsed) collapsed.classList.toggle('hidden', show);
-        }
-
-        function openCurrentSpotify() {
-            playCurrentSpotifyInline();
         }
 
         let isTouchDevice = false;
