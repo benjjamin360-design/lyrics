@@ -382,6 +382,19 @@
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             overflow: hidden;
+            isolation: isolate;
+        }
+
+        .player-dock::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: calc(6.25rem + env(safe-area-inset-bottom));
+            background: #121212;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .song-hero-panel {
@@ -1448,7 +1461,7 @@
             themeTransitionTimer = window.setTimeout(() => {
                 root.classList.remove('theme-sync');
                 themeTransitionTimer = null;
-            }, 320);
+            }, 420);
         }
 
         function syncThemeToggleIcons(isDark) {
@@ -1929,10 +1942,12 @@
         function toggleDarkMode() {
             const html = document.documentElement;
             beginThemeTransition();
-            const isDark = html.classList.toggle('dark');
-            writeStoredPreference(prefKeys.darkMode, String(isDark));
-            syncThemeToggleIcons(isDark);
-            updateThemeColor(isDark);
+            window.requestAnimationFrame(() => {
+                const isDark = html.classList.toggle('dark');
+                writeStoredPreference(prefKeys.darkMode, String(isDark));
+                syncThemeToggleIcons(isDark);
+                updateThemeColor(isDark);
+            });
         }
 
         function toggleFontSettings() {
