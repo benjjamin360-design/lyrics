@@ -387,9 +387,10 @@
         }
 
         .player-dock {
-            background: rgba(18, 18, 18, 0.96);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
+            background: #121212;
+            background-color: #121212;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
             overflow: hidden;
         }
 
@@ -460,7 +461,7 @@
         }
 
         .player-album-glow.is-visible {
-            opacity: 0.3;
+            opacity: 0;
         }
 
         .player-album-thumb {
@@ -884,6 +885,7 @@
         };
 
         const versionHistory = [
+            { version: 'v1.9.5', note: 'Stabilize dock color and IPA fallback' },
             { version: 'v1.9.4', note: 'Restore dock blend and soften theme fade' },
             { version: 'v1.9.3', note: 'Unify dark mode transition timing' },
             { version: 'v1.9.2', note: 'Restore visible dark mode surfaces' },
@@ -1267,6 +1269,17 @@
         const pronDict = {
             "read": "ríːd", "news": "njúːz", "today": "tədéɪ", "boy": "bɔɪ", "lucky": "lʌ́ki", "man": "mǽn", "made": "méɪd", "grade": "gréɪd", "though": "ðóʊ", "rather": "rǽðɚ", "sad": "sǽd", "well": "wél", "just": "dʒʌ́st", "laugh": "lǽf", "saw": "sɔ́ː", "photograph": "fóʊtəgræ̀f", "blew": "blúː", "mind": "máɪnd", "car": "kɑ́ɚ", "notice": "nóʊtɪs", "lights": "láɪts", "changed": "tʃéɪndʒd", "crowd": "kráʊd", "people": "píːpl", "stood": "stʊ́d", "stared": "stéɚd", "seen": "síːn", "face": "féɪs", "before": "bɪfɔ́ɚ", "nobody": "nóʊbədi", "really": "ríːəli", "sure": "ʃʊ́ɚ", "film": "fílm", "english": "íŋglɪʃ", "army": "ɑ́ɚmi", "won": "wʌ́n", "war": "wɔ́ɚ", "turned": "tɚ́nd", "away": "əwéɪ", "look": "lʊ́k", "book": "bʊ́k", "turn": "tɚ́n", "woke": "wóʊk", "fell": "fél", "bed": "béd", "dragged": "drǽgd", "comb": "kóʊm", "across": "əkrɔ́s", "head": "héd", "found": "fáʊnd", "way": "wéɪ", "downstairs": "dáʊnstéɚz", "drank": "drǽŋk", "cup": "kʌ́p", "looking": "lʊ́kɪŋ", "up": "ʌ́p", "late": "léɪt", "coat": "kóʊt", "grabbed": "grǽbd", "hat": "hǽt", "bus": "bʌ́s", "seconds": "sékəndz", "flat": "flǽt", "upstairs": "ʌ́pstéɚz", "smoke": "smóʊk", "somebody": "sʌ́mbədi", "spoke": "spóʊk", "went": "wént", "dream": "dríːm", "thousand": "θáʊzənd", "holes": "hóʊlz", "small": "smɔ́ːl", "count": "káʊnt", "know": "nóʊ", "many": "méni", "takes": "téɪks", "fill": "fíl"
         };
+        const fallbackPronDict = {
+            "i": "aɪ", "a": "ə", "an": "ən", "the": "ðə", "and": "ænd", "or": "ɔɚ", "of": "əv", "to": "tuː", "for": "fɔɚ", "in": "ɪn", "on": "ɑːn", "at": "æt", "with": "wɪð", "from": "frʌm", "by": "baɪ",
+            "you": "juː", "your": "jʊɚ", "youre": "jʊɚ", "youd": "juːd", "me": "miː", "my": "maɪ", "we": "wiː", "they": "ðeɪ", "theyd": "ðeɪd", "he": "hiː", "hed": "hiːd", "his": "hɪz", "it": "ɪt", "its": "ɪts", "im": "aɪm", "ive": "aɪv", "ill": "aɪl",
+            "am": "æm", "are": "ɑɚ", "is": "ɪz", "was": "wʌz", "were": "wɚ", "be": "biː", "been": "bɪn", "being": "biːɪŋ", "have": "hæv", "has": "hæz", "had": "hæd", "do": "duː", "does": "dʌz", "doesnt": "dʌzənt", "dont": "doʊnt", "didnt": "dɪdənt", "cant": "kænt",
+            "no": "noʊ", "yes": "jɛs", "not": "nɑːt", "nothing": "nʌθɪŋ", "real": "riːəl", "all": "ɔːl", "one": "wʌn", "some": "sʌm", "so": "soʊ", "too": "tuː", "much": "mʌtʃ", "more": "mɔɚ",
+            "there": "ðɛɚ", "that": "ðæt", "this": "ðɪs", "what": "wʌt", "when": "wɛn", "where": "wɛɚ", "who": "huː", "why": "waɪ", "how": "haʊ",
+            "strawberry": "strɔːbɛri", "fields": "fiːldz", "forever": "fɚɛvɚ", "let": "lɛt", "take": "teɪk", "down": "daʊn", "cause": "kəz", "going": "goʊɪŋ", "living": "lɪvɪŋ", "easy": "iːzi", "eyes": "aɪz", "closed": "kloʊzd", "misunderstanding": "mɪsʌndɚstændɪŋ", "see": "siː", "getting": "gɛtɪŋ", "hard": "hɑɚd", "someone": "sʌmwʌn", "works": "wɚks", "out": "aʊt", "matter": "mætɚ", "tree": "triː", "mean": "miːn", "must": "mʌst", "high": "haɪ", "low": "loʊ", "tune": "tuːn", "right": "raɪt", "bad": "bæd", "always": "ɔːlweɪz", "sometimes": "sʌmtaɪmz", "wrong": "rɔːŋ", "disagree": "dɪsəgriː",
+            "places": "pleɪsɪz", "remember": "rɪmɛmbɚ", "forever": "fɚɛvɚ", "better": "bɛtɚ", "gone": "gɔːn", "remain": "rɪmeɪn", "moments": "moʊmənts", "lovers": "lʌvɚz", "friends": "frɛndz", "still": "stɪl", "recall": "rɪkɔːl", "dead": "dɛd", "loved": "lʌvd", "them": "ðɛm", "compares": "kəmpɛɚz", "memries": "mɛmɚiz", "memories": "mɛmɚiz", "lose": "luːz", "meaning": "miːnɪŋ", "think": "θɪŋk", "something": "sʌmθɪŋ", "new": "nuː", "never": "nɛvɚ", "affection": "əfɛkʃən", "things": "θɪŋz", "often": "ɔːfən", "stop": "stɑːp",
+            "tired": "taɪɚd", "havent": "hævənt", "slept": "slɛpt", "wink": "wɪŋk", "wonder": "wʌndɚ", "should": "ʃʊd", "call": "kɔːl", "putting": "pʊtɪŋ", "joke": "dʒoʊk", "harm": "hɑɚm", "sleep": "sliːp", "brain": "breɪn", "insane": "ɪnseɪn", "peace": "piːs", "feeling": "fiːlɪŋ", "upset": "ʌpsɛt", "although": "ɔːlðoʊ", "another": "ənʌðɚ", "cigarette": "sɪgɚɛt",
+            "blackbird": "blækbɚd", "singing": "sɪŋɪŋ", "broken": "broʊkən", "wings": "wɪŋz", "learn": "lɚn", "fly": "flaɪ", "only": "oʊnli", "moment": "moʊmənt", "arise": "əraɪz", "sunken": "sʌŋkən", "free": "friː", "light": "laɪt", "dark": "dɑɚk", "black": "blæk", "night": "naɪt"
+        };
         const ignoreSet = new Set(['i', 'a', 'an', 'the', 'is', 'of', 'and', 'in', 'to', 'that', 'but', 'you', 'he', 'she', 'it', 'my', 'his', 'her', 'their', 'with', 'for', 'was', 'if', 'from', 'had', 'as', 'are', 'we', 'they', 'how', 'like', 'on', 'at', 'be']);
 
         function escapeHtml(str) {
@@ -1280,14 +1293,62 @@
             return tokens.map((token) => {
                 if (/^[A-Za-z']+$/.test(token)) {
                     const clean = token.replace(/^'|'$/g, '').toLowerCase().replace(/'/g, '');
-                    const pron = pronDict[clean];
+                    const pron = pronDict[clean] || fallbackPronDict[clean];
                     if (pron) {
                         return `<span class="pron-word">${escapeHtml(pron)}</span>`;
                     }
-                    return `<span class="pron-word pron-word--fallback">${escapeHtml(token)}</span>`;
+                    return `<span class="pron-word pron-word--fallback">${escapeHtml(guessPronunciation(clean))}</span>`;
                 }
                 return escapeHtml(token);
             }).join('');
+        }
+
+        function guessPronunciation(word) {
+            if (!word) return '';
+            let ipa = word.toLowerCase();
+            ipa = ipa
+                .replace(/tion\b/g, 'ʃən')
+                .replace(/sion\b/g, 'ʒən')
+                .replace(/ough/g, 'ɔː')
+                .replace(/augh/g, 'ɔː')
+                .replace(/eigh/g, 'eɪ')
+                .replace(/igh/g, 'aɪ')
+                .replace(/air/g, 'ɛɚ')
+                .replace(/ear/g, 'ɪɚ')
+                .replace(/er\b/g, 'ɚ')
+                .replace(/ow\b/g, 'oʊ')
+                .replace(/ow/g, 'aʊ')
+                .replace(/ou/g, 'aʊ')
+                .replace(/oa/g, 'oʊ')
+                .replace(/oo/g, 'uː')
+                .replace(/ee/g, 'iː')
+                .replace(/ea/g, 'iː')
+                .replace(/ai/g, 'eɪ')
+                .replace(/ay/g, 'eɪ')
+                .replace(/oy/g, 'ɔɪ')
+                .replace(/oi/g, 'ɔɪ')
+                .replace(/ar/g, 'ɑɚ')
+                .replace(/or/g, 'ɔɚ')
+                .replace(/ir/g, 'ɚ')
+                .replace(/ur/g, 'ɚ')
+                .replace(/th/g, 'θ')
+                .replace(/sh/g, 'ʃ')
+                .replace(/ch/g, 'tʃ')
+                .replace(/ph/g, 'f')
+                .replace(/ng/g, 'ŋ')
+                .replace(/ck/g, 'k')
+                .replace(/qu/g, 'kw')
+                .replace(/x/g, 'ks')
+                .replace(/c(?=[eiy])/g, 's')
+                .replace(/c/g, 'k')
+                .replace(/g(?=[eiy])/g, 'dʒ')
+                .replace(/a/g, 'æ')
+                .replace(/e/g, 'ɛ')
+                .replace(/i/g, 'ɪ')
+                .replace(/o/g, 'ɑ')
+                .replace(/u/g, 'ʌ')
+                .replace(/y/g, 'i');
+            return ipa || '·';
         }
 
         function loadSong(id) {
