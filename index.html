@@ -75,6 +75,34 @@
             background-color: #09090b;
         }
 
+        html.theme-sync,
+        html.theme-sync body,
+        html.theme-sync .app-scroll,
+        html.theme-sync .content-surface,
+        html.theme-sync .lyrics-surface,
+        html.theme-sync .lyrics-surface main,
+        html.theme-sync .about-panel,
+        html.theme-sync .song-hero-panel,
+        html.theme-sync .compact-song-header,
+        html.theme-sync .player-dock,
+        html.theme-sync .dock-menu-item,
+        html.theme-sync .lang-toggle,
+        html.theme-sync .lang-toggle-slider,
+        html.theme-sync .custom-select,
+        html.theme-sync #fontSettingsPanel,
+        html.theme-sync #detailsModal,
+        html.theme-sync #modalContent,
+        html.theme-sync #tooltip,
+        html.theme-sync #songTitle,
+        html.theme-sync #heroArtistName,
+        html.theme-sync #reading-progress,
+        html.theme-sync #versionHistory {
+            transition-property: background-color, background-image, border-color, color, text-decoration-color, box-shadow, fill, stroke, opacity, transform !important;
+            transition-duration: 260ms !important;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transition-delay: 0s !important;
+        }
+
         .content-surface {
             background: #ffffff;
             background-color: #ffffff;
@@ -488,6 +516,31 @@
         .dock-menu-item:active {
             transform: translateY(1px);
         }
+
+        .theme-toggle-icon-shell {
+            position: relative;
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle-icon {
+            position: absolute;
+            inset: 0;
+            transition: opacity 0.24s ease, transform 0.24s ease, color 0.24s ease;
+            transform-origin: 50% 50%;
+        }
+
+        .theme-toggle-icon.is-hidden {
+            opacity: 0;
+            transform: scale(0.78) rotate(-18deg);
+            pointer-events: none;
+        }
+
+        .theme-toggle-icon.is-visible {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
     </style>
 </head>
 <body class="transition-colors duration-300 flex flex-col min-h-screen">
@@ -624,8 +677,10 @@
                 </button>
 
                 <button onclick="toggleDarkMode()" class="dock-menu-item flex flex-col items-center justify-end gap-1 focus:outline-none">
-                    <svg class="h-5 w-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg class="h-5 w-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <span class="theme-toggle-icon-shell">
+                        <svg id="themeMoonIcon" class="theme-toggle-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg id="themeSunIcon" class="theme-toggle-icon h-5 w-5 is-hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </span>
                     <span class="text-[10px] font-light">Theme</span>
                 </button>
             </div>
@@ -819,6 +874,7 @@
         };
 
         const versionHistory = [
+            { version: 'v1.9.3', note: 'Unify dark mode transition timing' },
             { version: 'v1.9.2', note: 'Restore visible dark mode surfaces' },
             { version: 'v1.9.1', note: 'Fix bottom dock sync and playback state' },
             { version: 'v1.9.0', note: 'Persist dark mode, selected song, and progress loop' },
@@ -1358,6 +1414,7 @@
         }
 
         let currentThemeColor = '#f6bd24';
+        let themeTransitionTimer = null;
         const prefKeys = {
             fontScale: 'beatsLyrics.fontScale',
             translationVisible: 'beatsLyrics.translationVisible',
@@ -1379,6 +1436,31 @@
                 window.localStorage.setItem(key, value);
             } catch (error) {
                 return;
+            }
+        }
+
+        function beginThemeTransition() {
+            const root = document.documentElement;
+            root.classList.add('theme-sync');
+            if (themeTransitionTimer) {
+                window.clearTimeout(themeTransitionTimer);
+            }
+            themeTransitionTimer = window.setTimeout(() => {
+                root.classList.remove('theme-sync');
+                themeTransitionTimer = null;
+            }, 320);
+        }
+
+        function syncThemeToggleIcons(isDark) {
+            const moonIcon = document.getElementById('themeMoonIcon');
+            const sunIcon = document.getElementById('themeSunIcon');
+            if (moonIcon) {
+                moonIcon.classList.toggle('is-hidden', isDark);
+                moonIcon.classList.toggle('is-visible', !isDark);
+            }
+            if (sunIcon) {
+                sunIcon.classList.toggle('is-hidden', !isDark);
+                sunIcon.classList.toggle('is-visible', isDark);
             }
         }
 
@@ -1417,10 +1499,7 @@
             if (savedDarkMode !== null) {
                 const isDark = savedDarkMode === 'true';
                 document.documentElement.classList.toggle('dark', isDark);
-                const moonIcon = document.getElementById('icon-moon');
-                const sunIcon = document.getElementById('icon-sun');
-                if (moonIcon) moonIcon.classList.toggle('hidden', isDark);
-                if (sunIcon) sunIcon.classList.toggle('hidden', !isDark);
+                syncThemeToggleIcons(isDark);
             }
         }
 
@@ -1849,12 +1928,10 @@
 
         function toggleDarkMode() {
             const html = document.documentElement;
+            beginThemeTransition();
             const isDark = html.classList.toggle('dark');
             writeStoredPreference(prefKeys.darkMode, String(isDark));
-            const moonIcon = document.getElementById('icon-moon');
-            const sunIcon = document.getElementById('icon-sun');
-            if (moonIcon) moonIcon.classList.toggle('hidden', isDark);
-            if (sunIcon) sunIcon.classList.toggle('hidden', !isDark);
+            syncThemeToggleIcons(isDark);
             updateThemeColor(isDark);
         }
 
